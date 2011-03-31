@@ -11,7 +11,7 @@ import beast.core.Description;
 import java.util.*;
 
 /**
- * @author Alexei Drummond, Denise KŸhnert
+ * @author Alexei Drummond, Denise Kuehnert
  */
 
 @Description("Adaptation of Tanja Stadler's BirthDeathSerialSamplingModel, to allow for birth and death rates to change at times t_i")
@@ -19,28 +19,28 @@ import java.util.*;
 public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 
     public Input<RealParameter> times =
-            new Input<RealParameter>("times", "times t_i specifying when rate changes can occur", Input.Validate.REQUIRED);
+            new Input<RealParameter>("times", "The times t_i specifying when rate changes can occur", Input.Validate.REQUIRED);
     public Input<RealParameter> birthRate =
-            new Input<RealParameter>("birthRate", "birthRate vector with birthRates between times times", Input.Validate.REQUIRED);
+            new Input<RealParameter>("birthRate", "The birthRate vector with birthRates between times times", Input.Validate.REQUIRED);
     public Input<RealParameter> deathRate =
-            new Input<RealParameter>("deathRate", "deathRate vector with birthRates between times times", Input.Validate.REQUIRED);
+            new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times times", Input.Validate.REQUIRED);
     public Input<Double> serialSamplingRate =
-            new Input<Double>("serialSamplingRate", "serial sampling proportion", Input.Validate.REQUIRED);      // psi
+            new Input<Double>("serialSamplingRate", "The serial sampling proportion", Input.Validate.REQUIRED);      // psi
     public Input<Double> extantSamplingRate =
-            new Input<Double>("extantSamplingRate", "extant sampling proportion", Input.Validate.REQUIRED);
+            new Input<Double>("extantSamplingRate", "The extant sampling proportion", Input.Validate.REQUIRED);
 
     public Input<Boolean> relativeDeath =
-            new Input<Boolean>("relativeDeath", "is death relative?", Input.Validate.REQUIRED);
+            new Input<Boolean>("relativeDeath", "Boolean, is death relative?", Input.Validate.REQUIRED);
 
     public Input<Boolean> sampledIndividualsRemainInfectious =
-            new Input<Boolean>("sampledIndividualsRemainInfectious", "stating whether sampled individuals remain infectious, or become non-infectious", Input.Validate.REQUIRED);
+            new Input<Boolean>("sampledIndividualsRemainInfectious", "Boolean, stating whether sampled individuals remain infectious, or become non-infectious", Input.Validate.REQUIRED);
 
     public Input<Double> finalTimeInterval =
-            new Input<Double>("finalTimeInterval", "final time interval", Input.Validate.REQUIRED);
+            new Input<Double>("finalTimeInterval", "The final time interval", Input.Validate.REQUIRED);
 
     // the origin of the infection x0 which is greater than tree.getRoot();
     public Input<Double> origin =
-            new Input<Double>("origin", "the origin of infection x0", Input.Validate.REQUIRED);
+            new Input<Double>("origin", "The origin of infection x0", Input.Validate.REQUIRED);
 
     // need TYPES?? 
 //    public Input<String> m_pType =
@@ -211,9 +211,9 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
             index = index(y);
 
             // sampledIndividualsRemainInfectious is r_i, but we dont allow it to change here. can only be 1 or 0 for the whole time
-            TestFactor[2] += (sampledIndividualsRemainInfectious.get() ? Math.log(p0(index, y, times[index])) : 0 ) - Math.log(g(index, y, times[index]) ) ;
+            TestFactor[2] += (sampledIndividualsRemainInfectious.get() ? 0 : Math.log(p0(index, y, times[index]))) - Math.log(g(index, y, times[index]) ) ;
 
-            logL += (sampledIndividualsRemainInfectious.get() ? Math.log(p0(index, y, times[index])) : 0 ) - Math.log(g(index, y, times[index]) ) ;
+            logL += (sampledIndividualsRemainInfectious.get() ? 0 : Math.log(p0(index, y, times[index]))) - Math.log(g(index, y, times[index]) ) ;
 
         }
 
