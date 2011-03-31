@@ -12,18 +12,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author dkuh004
+ * @author Denise Kuehnert
  * Date: Mar 29, 2011
  */
 
-@Description("Test BirthDeathSerialSkylineModel")
+@Description("Test the BirthDeathSerialSkylineModel with a small tree example")
 
 public class BirthDeathSerialSkylineTest extends TestCase {
 
     @Test
     public void testLikelihoodCalculation() throws Exception {
 
-        double PRECISION = 1e-14;
+        double PRECISION = 1e-12;
         RealParameter times = new RealParameter(new double[]{2.0});
         RealParameter birthRate = new RealParameter(new double[]{1/200., 1/300.});
         RealParameter deathRate = new RealParameter(new double[]{1/4., 1/7.});
@@ -72,14 +72,13 @@ public class BirthDeathSerialSkylineTest extends TestCase {
         //factors in likelihood formula
         assertEquals(0.00903653058533336, Math.exp(bdssm.TestFactor[0]), PRECISION); // T0
         assertEquals(3.792761262897912e-09, Math.exp(bdssm.TestFactor[1]), PRECISION); // T1
-        assertEquals(r?0.06250000000000577:1., Math.exp(bdssm.TestFactor[2]), PRECISION); // T2
+        assertEquals(r?1.:0.06250000000000577, Math.exp(bdssm.TestFactor[2]), PRECISION); // T2
         assertEquals(0.01105500968848732, Math.exp(bdssm.TestFactor[3]), PRECISION); // T3
 
 
 
         // total likelihood
-        assertEquals( r ? 3.788928039364497e-13: 2.36808002460303e-14 , Math.exp(logL), 1e-12);
-
+        assertEquals(1., (r ? 3.788928039364497e-13: 2.36808002460303e-14) / Math.exp(logL), PRECISION);
         System.out.println("loglikelihood: " + logL + " " + Math.exp(logL));
         
     }
