@@ -2,6 +2,7 @@ package beast.evolution.speciation;
 
 
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.Node;
 import beast.evolution.alignment.Taxon;
 import beast.core.parameter.*;
 import beast.core.Input;
@@ -54,6 +55,8 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
     Boolean birthChanges;
     Boolean deathChanges;
 
+    public double[] TestFactor = new double[4];
+
 
     @Override
     public void initAndValidate() throws Exception {
@@ -105,7 +108,10 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 
     public double p0(int index, double t, double ti){
 
-        return p0(birthRate.get().getArrayValue(index), deathRate.get().getArrayValue(index), serialSamplingRate.get(), Ai[index], Bi[index], t, ti);
+        double testp = p0(birthRate.get().getArrayValue(index), deathRate.get().getArrayValue(index), serialSamplingRate.get(), Ai[index], Bi[index], t, ti);
+//        System.out.println("Calculating p0(" + index + ", " + t + ", " + ti + ") ... " + testp) ;
+
+        return testp;
 
     }
 
@@ -143,7 +149,27 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
         }
 
         return Math.max((epoch - 1), 0);
-     }
+    }
+
+    public int nCurrentLineages(double time, Node root){
+        int count = 0;
+        if (root.getHeight() < time) return 0;
+        count = getCurrentChildren(time, root, count);
+        return count;
+    }
+
+    public int getCurrentChildren(double time, Node node, int count){
+
+        if (node.m_left.getHeight() < time)
+            count++;
+        else count = getCurrentChildren(time, node.m_left, count);
+
+        if (node.m_right.getHeight() < time)
+            count++;
+        else count = getCurrentChildren(time, node.m_left, count);
+
+        return count;
+    }
 
 
     public double calculateTreeLogLikelihood(Tree tree) {
@@ -156,55 +182,51 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
         int nTips = tree.getLeafNodeCount();
         preCalculation(times);
 
-        double x0 = tree.getRoot().getHeight() + finalTime;
+        double x0 = origin.get() + finalTime; //tree.getRoot().getHeight() + finalTime;
 
         int index = m-1;      // x0 must be in last interval
-        double print;
 
         // the first factor for origin
-        print =nTips * Math.log(serialSamplingRate.get()) + Math.log(g(index, x0, times[index]));
-        double logL = print;
+        TestFactor[0] = nTips * Math.log(serialSamplingRate.get()) + Math.log(g(index, x0, times[index]));
+        double logL = nTips * Math.log(serialSamplingRate.get()) + Math.log(g(index, x0, times[index]));
 
-//        double logL = nTips * Math.log(serialSamplingRate.get()) + Math.log(g(index, x0, times[index]));
-        System.out.println("p0_0_t1: " + Math.exp(print));
-
-         // first product term in f[T]
+        // first product term in f[T]
         for (int i = 0; i < tree.getInternalNodeCount(); i++) {
 
             double x = tree.getNode(nTips+i).getHeight() + finalTime;
 
             index = index(x);
-//            print = Math.log(birthRate.get().getArrayValue(index) * g(index, x, times[index]));
-//            logL += print;
+
+            TestFactor[1] += Math.log(birthRate.get().getArrayValue(index) * g(index, x, times[index]));
+
             logL += Math.log(birthRate.get().getArrayValue(index) * g(index, x, times[index]));
 
         }
 
-         // middle product term in f[T]
+        // middle product term in f[T]
         for (int i = 0; i < nTips; i++) {
 
             double y = tree.getNode(i).getHeight() + finalTime;
 
             index = index(y);
 
-
             // sampledIndividualsRemainInfectious is r_i, but we dont allow it to change here. can only be 1 or 0 for the whole time
-            logL += Math.log( g(index, y, times[index]) ) + (sampledIndividualsRemainInfectious.get() ? Math.log(p0(index, y, times[index])) : 0);
+            TestFactor[2] += (sampledIndividualsRemainInfectious.get() ? Math.log(p0(index, y, times[index])) : 0 ) - Math.log(g(index, y, times[index]) ) ;
+
+            logL += (sampledIndividualsRemainInfectious.get() ? Math.log(p0(index, y, times[index])) : 0 ) - Math.log(g(index, y, times[index]) ) ;
 
         }
 
         // last product term in f[T], factorizing from 1 to m
-        for (int j = 1; j < m; j++){
-            double time = times[j];
-            for (int i = 0; i < nTips; i++) {
-                if (tree.getNode(i).getHeight() >= time)  n[j] += 1;
-            }
-
+        for (int j = 0; j < m-1; j++){
+            double time = times[j+1];
+            n[j] = nCurrentLineages(time, tree.getRoot());
             if (n[j] > 0) {
-                logL += n[j] * Math.log(g(j-1, time, times[j]));     
+                TestFactor[3] +=  n[j] * Math.log(g(j, time, times[j]));
+                logL +=  n[j] * Math.log(g(j, time, times[j]));
             }
         }
-
+        logP = logL;
         return logL;
     }
 
