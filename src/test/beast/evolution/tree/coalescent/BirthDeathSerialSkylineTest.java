@@ -21,7 +21,7 @@ import java.util.List;
 public class BirthDeathSerialSkylineTest extends TestCase {
 
     @Test
-    public void testLikelihooCalculation() throws Exception {
+    public void testLikelihoodCalculation() throws Exception {
 
         double PRECISION = 1e-14;
         RealParameter times = new RealParameter(new double[]{2.0});
