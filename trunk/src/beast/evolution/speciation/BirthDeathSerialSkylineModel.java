@@ -20,10 +20,13 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 
     public Input<RealParameter> times =
             new Input<RealParameter>("times", "The times t_i specifying when rate changes can occur", Input.Validate.REQUIRED);
-    public Input<RealParameter> birthRate =
-            new Input<RealParameter>("birthRate", "The birthRate vector with birthRates between times times", Input.Validate.REQUIRED);
+    public Input<RealParameter> birthRateVector =
+            new Input<RealParameter>("birthRateVector", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time", Input.Validate.REQUIRED);
+    public Input<RealParameter> birthRateScalar =
+                new Input<RealParameter>("birthRateScalar", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time", Input.Validate.REQUIRED);
+
     public Input<RealParameter> deathRate =
-            new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times times", Input.Validate.REQUIRED);
+            new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times", Input.Validate.REQUIRED);
     public Input<Double> serialSamplingRate =
             new Input<Double>("serialSamplingRate", "The serial sampling proportion", Input.Validate.REQUIRED);      // psi
     public Input<Double> extantSamplingRate =
@@ -47,6 +50,7 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 //            new Input<String>("type", "tree type, should be one of " + Arrays.toString(TYPES)+" (default unscaled)",
 //                    "unscaled", TYPES);
 
+    RealParameter birthRate;
     protected double[] p0_iMinus1;
     protected double[] Ai;
     protected double[] Bi;
@@ -55,19 +59,24 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
     Boolean birthChanges;
     Boolean deathChanges;
 
+    //Testvector for BirthDeathSerialSkylineTest
     public double[] TestFactor = new double[4];
-
 
     @Override
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
+        epiutil.ElementwiseMultiplication mult = new epiutil.ElementwiseMultiplication();
+        mult.setInputValue("vector", birthRateVector);
+        mult.setInputValue("scalar", birthRateScalar);
+        birthRate = mult.get();
+
         m = times.get().getDimension() + 1; // t0 separately: finalTimeInterval
 
-        if (birthRate.get().getDimension() != 1 && birthRate.get().getDimension() != m)
+        if (birthRate.getDimension() != 1 && birthRate.getDimension() != m)
             throw new RuntimeException("Length of birthRate parameter should be one or equal to the size of time parameter (size = " + (m+1) + ")");
 
-        birthChanges = (birthRate.get().getDimension() == m) ;
+        birthChanges = (birthRate.getDimension() == m) ;
 
         if (deathRate.get().getDimension() != 1 && deathRate.get().getDimension() != m)
             throw new RuntimeException("Length of mu parameter should be one or equal to the size of time parameter (size = " + (m+1) + ")");
@@ -84,13 +93,13 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
         p0_iMinus1 = new double[m];
 
         for (int i = 0; i < m; i++){
-            Ai[i] = Ai(birthRate.get().getArrayValue(birthChanges? i : 0), deathRate.get().getArrayValue(deathChanges? i : 0), serialSamplingRate.get());
+            Ai[i] = Ai(birthRate.getArrayValue(birthChanges? i : 0), deathRate.get().getArrayValue(deathChanges? i : 0), serialSamplingRate.get());
         }
 
-        Bi[0] = Bi(birthRate.get().getArrayValue(0), deathRate.get().getArrayValue(0), serialSamplingRate.get(), Ai[0], 1);
+        Bi[0] = Bi(birthRate.getArrayValue(0), deathRate.get().getArrayValue(0), serialSamplingRate.get(), Ai[0], 1);
         for (int i = 1; i < m; i++){
-            p0_iMinus1[i-1] = p0(birthRate.get().getArrayValue(birthChanges? (i-1) : 0), deathRate.get().getArrayValue(deathChanges? (i-1) : 0), serialSamplingRate.get(), Ai[i-1], Bi[i-1], times[i] , times[i]);
-            Bi[i] = Bi(birthRate.get().getArrayValue(birthChanges? i : 0), deathRate.get().getArrayValue(deathChanges? i : 0), serialSamplingRate.get(), Ai[i], p0_iMinus1[i-1]);
+            p0_iMinus1[i-1] = p0(birthRate.getArrayValue(birthChanges? (i-1) : 0), deathRate.get().getArrayValue(deathChanges? (i-1) : 0), serialSamplingRate.get(), Ai[i-1], Bi[i-1], times[i] , times[i]);
+            Bi[i] = Bi(birthRate.getArrayValue(birthChanges? i : 0), deathRate.get().getArrayValue(deathChanges? i : 0), serialSamplingRate.get(), Ai[i], p0_iMinus1[i-1]);
         }
     }
 
@@ -108,7 +117,7 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 
     public double p0(int index, double t, double ti){
 
-        double testp = p0(birthRate.get().getArrayValue(index), deathRate.get().getArrayValue(index), serialSamplingRate.get(), Ai[index], Bi[index], t, ti);
+        double testp = p0(birthRate.getArrayValue(index), deathRate.get().getArrayValue(index), serialSamplingRate.get(), Ai[index], Bi[index], t, ti);
 //        System.out.println("Calculating p0(" + index + ", " + t + ", " + ti + ") ... " + testp) ;
 
         return testp;
@@ -197,9 +206,9 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 
             index = index(x);
 
-            TestFactor[1] += Math.log(birthRate.get().getArrayValue(index) * g(index, x, times[index]));
+            TestFactor[1] += Math.log(birthRate.getArrayValue(index) * g(index, x, times[index]));
 
-            logL += Math.log(birthRate.get().getArrayValue(index) * g(index, x, times[index]));
+            logL += Math.log(birthRate.getArrayValue(index) * g(index, x, times[index]));
 
         }
 
