@@ -25,14 +25,15 @@ public class BirthDeathSerialSkylineTest extends TestCase {
 
         double PRECISION = 1e-12;
         RealParameter times = new RealParameter(new double[]{2.0});
-        RealParameter birthRate = new RealParameter(new double[]{1/200., 1/300.});
+        RealParameter birthRateVector = new RealParameter(new double[]{1/200., 1/300.});
         RealParameter deathRate = new RealParameter(new double[]{1/4., 1/7.});
 
 
         BirthDeathSerialSkylineModel bdssm = new BirthDeathSerialSkylineModel();
 
         bdssm.setInputValue("times", times);
-        bdssm.setInputValue("birthRate", birthRate);
+        bdssm.setInputValue("birthRateVector", birthRateVector);
+        bdssm.setInputValue("birthRateScalar", 1.0);
         bdssm.setInputValue("deathRate", deathRate);
 
         bdssm.setInputValue("serialSamplingRate", 0.5);

@@ -22,8 +22,8 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
             new Input<RealParameter>("times", "The times t_i specifying when rate changes can occur", Input.Validate.REQUIRED);
     public Input<RealParameter> birthRateVector =
             new Input<RealParameter>("birthRateVector", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time", Input.Validate.REQUIRED);
-    public Input<RealParameter> birthRateScalar =
-                new Input<RealParameter>("birthRateScalar", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time", Input.Validate.REQUIRED);
+    public Input<Double> birthRateScalar =
+                new Input<Double>("birthRateScalar", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time", Input.Validate.REQUIRED);
 
     public Input<RealParameter> deathRate =
             new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times", Input.Validate.REQUIRED);
@@ -67,9 +67,10 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
         super.initAndValidate();
 
         epiutil.ElementwiseMultiplication mult = new epiutil.ElementwiseMultiplication();
-        mult.setInputValue("vector", birthRateVector);
-        mult.setInputValue("scalar", birthRateScalar);
+        mult.setInputValue("vector", birthRateVector.get());
+        mult.setInputValue("scalar", birthRateScalar.get());
         birthRate = mult.get();
+
 
         m = times.get().getDimension() + 1; // t0 separately: finalTimeInterval
 
