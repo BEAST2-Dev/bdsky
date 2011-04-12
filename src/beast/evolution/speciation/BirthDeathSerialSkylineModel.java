@@ -69,6 +69,7 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
         epiutil.ElementwiseMultiplication mult = new epiutil.ElementwiseMultiplication();
         mult.setInputValue("vector", birthRateVector.get());
         mult.setInputValue("scalar", birthRateScalar.get());
+        mult.initAndValidate();
         birthRate = mult.get();
 
 

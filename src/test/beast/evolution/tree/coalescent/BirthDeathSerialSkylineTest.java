@@ -29,59 +29,66 @@ public class BirthDeathSerialSkylineTest extends TestCase {
         RealParameter deathRate = new RealParameter(new double[]{1/4., 1/7.});
 
 
-        BirthDeathSerialSkylineModel bdssm = new BirthDeathSerialSkylineModel();
+        for (int i = 0; i <2; i++){
 
-        bdssm.setInputValue("times", times);
-        bdssm.setInputValue("birthRateVector", birthRateVector);
-        bdssm.setInputValue("birthRateScalar", 1.0);
-        bdssm.setInputValue("deathRate", deathRate);
+            Boolean r = (i!=0);
 
-        bdssm.setInputValue("serialSamplingRate", 0.5);
-        bdssm.setInputValue("extantSamplingRate", 0.5);
-        bdssm.setInputValue("relativeDeath", false);
-        Boolean r = true;
-        bdssm.setInputValue("sampledIndividualsRemainInfectious", r);
-        bdssm.setInputValue("finalTimeInterval", 0.);
-        bdssm.setInputValue("origin", 5.0);
+            BirthDeathSerialSkylineModel bdssm = new BirthDeathSerialSkylineModel();
 
-        bdssm.initAndValidate();
-        
-        Tree tree = new Tree("(((1:1,2:1):2,3:3):1,4:4);");
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
+            bdssm.setInputValue("times", times);
+            bdssm.setInputValue("birthRateVector", birthRateVector);
+            bdssm.setInputValue("birthRateScalar", 1.0);
+            bdssm.setInputValue("deathRate", deathRate);
 
-//        for (int i = 0; i < size; i += 1) {
-//            System.out.println("deathRate at time " + i + " is " + bdssm.deathRate(i));
-//            System.out.println("p0 at time " + i + " is " + bdssm.p0(i, i));
-//        }
+            bdssm.setInputValue("serialSamplingRate", 0.5);
+            bdssm.setInputValue("extantSamplingRate", 0.5);
+            bdssm.setInputValue("relativeDeath", false);
 
-        double logL = bdssm.calculateTreeLogLikelihood(tree);
+            bdssm.setInputValue("sampledIndividualsRemainInfectious", r);
+            bdssm.setInputValue("finalTimeInterval", 0.);
+            bdssm.setInputValue("origin", 5.0);
 
-        // parts of likelihood calculation
-        assertEquals(0.5000000000000115, bdssm.p0(0,2,2), PRECISION); // p0_0_t1
-        assertEquals(0.4111946067942296, bdssm.p0(0,1,0), PRECISION); // p0_0_x3
-        assertEquals(0.5000000000000115, bdssm.p0(0,0,0), PRECISION); // p0_0_y
-//
-        assertEquals(1.0, bdssm.g(0,0,0), PRECISION); // g_y
-        assertEquals(0.1445844893653338, bdssm.g(1, 5, 2), PRECISION); // g_x0
-        assertEquals(0.2754869293957173, bdssm.g(1, 4, 2), PRECISION); // g_x1
-        assertEquals(0.5248860533202707, bdssm.g(1, 3, 2), PRECISION); // g_x2
+            bdssm.initAndValidate();
 
-        assertEquals(0.472130416276374, bdssm.g(0, 1, 0), PRECISION); // g_x3
-        assertEquals(0.2227681214206327, bdssm.g(0, 2, 0), PRECISION); // g_0_t1
+            Tree tree = new Tree("(((1:1,2:1):2,3:3):1,4:4);");
+            TreeIntervals intervals = new TreeIntervals();
+            intervals.init(tree);
 
-        //factors in likelihood formula
-        assertEquals(0.00903653058533336, Math.exp(bdssm.TestFactor[0]), PRECISION); // T0
-        assertEquals(3.792761262897912e-09, Math.exp(bdssm.TestFactor[1]), PRECISION); // T1
-        assertEquals(r?1.:0.06250000000000577, Math.exp(bdssm.TestFactor[2]), PRECISION); // T2
-        assertEquals(0.01105500968848732, Math.exp(bdssm.TestFactor[3]), PRECISION); // T3
+    //        for (int i = 0; i < size; i += 1) {
+    //            System.out.println("deathRate at time " + i + " is " + bdssm.deathRate(i));
+    //            System.out.println("p0 at time " + i + " is " + bdssm.p0(i, i));
+    //        }
+
+            double logL = bdssm.calculateTreeLogLikelihood(tree);
+
+            // parts of likelihood calculation
+            assertEquals(0.5000000000000115, bdssm.p0(0,2,2), PRECISION); // p0_0_t1
+            assertEquals(0.4111946067942296, bdssm.p0(0,1,0), PRECISION); // p0_0_x3
+            assertEquals(0.5000000000000115, bdssm.p0(0,0,0), PRECISION); // p0_0_y
+    //
+            assertEquals(1.0, bdssm.g(0,0,0), PRECISION); // g_y
+            assertEquals(0.1445844893653338, bdssm.g(1, 5, 2), PRECISION); // g_x0
+            assertEquals(0.2754869293957173, bdssm.g(1, 4, 2), PRECISION); // g_x1
+            assertEquals(0.5248860533202707, bdssm.g(1, 3, 2), PRECISION); // g_x2
+
+            assertEquals(0.472130416276374, bdssm.g(0, 1, 0), PRECISION); // g_x3
+            assertEquals(0.2227681214206327, bdssm.g(0, 2, 0), PRECISION); // g_0_t1
+
+            //factors in likelihood formula
+            assertEquals(0.00903653058533336, Math.exp(bdssm.TestFactor[0]), PRECISION); // T0
+//            assertEquals(3.792761262897912e-09, Math.exp(bdssm.TestFactor[1]), PRECISION); // T1
+
+            System.out.println("sampledIndividualsRemainInfectious = " + r);
+            assertEquals((r?1.:0.06250000000000577), Math.exp(bdssm.TestFactor[2]), PRECISION); // T2
+            assertEquals(0.01105500968848732, Math.exp(bdssm.TestFactor[3]), PRECISION); // T3
 
 
 
-        // total likelihood
-        assertEquals(1., (r ? 3.788928039364497e-13: 2.36808002460303e-14) / Math.exp(logL), PRECISION);
-        System.out.println("loglikelihood: " + logL + " " + Math.exp(logL));
-        
+            // total likelihood
+            assertEquals(1., (r ? 3.788928039364497e-13: 2.36808002460303e-14) / Math.exp(logL), PRECISION);
+            System.out.println("loglikelihood: " + logL + " " + Math.exp(logL));
+            System.out.println();
+        }
     }
 
 
