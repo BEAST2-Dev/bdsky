@@ -10,6 +10,8 @@ import beast.core.Description;
 
 import java.util.*;
 
+import util.ElementwiseMultiplication;
+
 /**
  * @author Alexei Drummond, Denise Kuehnert
  */
@@ -66,7 +68,7 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        epiutil.ElementwiseMultiplication mult = new epiutil.ElementwiseMultiplication();
+        ElementwiseMultiplication mult = new ElementwiseMultiplication();
         mult.setInputValue("vector", birthRateVector.get());
         mult.setInputValue("scalar", birthRateScalar.get());
         mult.initAndValidate();

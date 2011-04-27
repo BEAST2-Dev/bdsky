@@ -8,9 +8,6 @@ import beast.core.parameter.RealParameter;
 import beast.core.Description;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Denise Kuehnert
  * Date: Mar 29, 2011
@@ -24,9 +21,9 @@ public class BirthDeathSerialSkylineTest extends TestCase {
     public void testLikelihoodCalculation() throws Exception {
 
         double PRECISION = 1e-12;
-        RealParameter times = new RealParameter(new double[]{2.0});
-        RealParameter birthRateVector = new RealParameter(new double[]{1/200., 1/300.});
-        RealParameter deathRate = new RealParameter(new double[]{1/4., 1/7.});
+        RealParameter times = new RealParameter(new Double[]{2.0});
+        RealParameter birthRateVector = new RealParameter(new Double[]{1/200., 1/300.});
+        RealParameter deathRate = new RealParameter(new Double[]{1/4., 1/7.});
 
 
         for (int i = 0; i <2; i++){
