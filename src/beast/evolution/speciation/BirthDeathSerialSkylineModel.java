@@ -13,7 +13,10 @@ import java.util.*;
 import util.ElementwiseMultiplication;
 
 /**
- * @author Alexei Drummond, Denise Kuehnert
+ * @author Denise KŸhnert
+ * @author Alexei Drummond
+ *
+ * likelihood formulae: Tanja Stadler
  */
 
 @Description("Adaptation of Tanja Stadler's BirthDeathSerialSamplingModel, to allow for birth and death rates to change at times t_i")
@@ -179,7 +182,7 @@ public class BirthDeathSerialSkylineModel extends SpeciationLikelihood {
 
         if (node.m_right.getHeight() < time)
             count++;
-        else count = getCurrentChildren(time, node.m_left, count);
+        else count = getCurrentChildren(time, node.m_right, count);
 
         return count;
     }
