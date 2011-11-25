@@ -1,0 +1,98 @@
+<beast version='2.0'
+       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>
+
+<!-- tree priors -->
+<mergewith point='treePriorTemplates'>
+<!-- Birth Death Skyline model-->
+        <subtemplate id='BirthDeathSkyline' spec='BeautiSubTemplate' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BirthDeathSky.$(n)'>
+<![CDATA[
+	<parameter id="birthRate.$(n)" value="1. 1. 1." lower="0." upper="Infinity"/>
+	<parameter id="deathRate.$(n)" value="0.02" lower="0." upper="Infinity"/>
+	<intervalNumber id="intervalNumber.$(n)" spec="beast.core.parameter.IntegerParameter"  value="3" />	
+	<parameter id="intervalTimes.$(n)" value="0. 0.002 0.01" />	
+	<parameter id="samplingRate.$(n)" value=".007" lower="0." upper="Infinity"/>
+
+	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="BirthDeathSky.$(n)" tree="@Tree.$(n)" 
+		intervalNumber="@intervalNumber.$(n)" 
+		intervalTimes="@intervalTimes.$(n)"
+		birthRate="@birthRate.$(n)" 
+		deathRate="@deathRate.$(n)" 
+		samplingRate="@samplingRate.$(n)"> 
+		<parameter name="orig_root" id="orig_root.$(n)" value ="1." lower="0." upper="Infinity"/>  	
+	</BirthDeathSkylineModel>
+
+
+	<distribution id="birthPrior.$(n)" spec="beast.math.distributions.Prior" x="@birthRate.$(n)">
+		<distr spec="beast.math.distributions.Gamma" alpha="20" beta="2." offset="0."/>
+	</distribution>
+	<distribution id="samplingPrior.$(n)" spec="beast.math.distributions.Prior" x="@samplingRate.$(n)">
+		<distr spec="beast.math.distributions.Gamma" alpha="8" beta="2." offset="0."/>
+	</distribution>
+	<distribution id="deathPrior.$(n)" spec="beast.math.distributions.Prior" x="@deathRate.$(n)">
+		<distr spec="beast.math.distributions.Gamma" alpha="12" beta="2." offset="0."/>
+	</distribution>
+
+
+	<!-- sampling proportion -->
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="psi/(psi+death).$(n)" expression="samplingRate deathRate samplingRate + /"> <!-- s/(d+s) -->
+		<parameter idref="deathRate.$(n)"/>
+		<parameter idref="samplingRate.$(n)"/>        
+	</RPNcalculator>
+	
+	<!-- R0 --> 
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="R_0.$(n)" expression="birthRate deathRate samplingRate + /"> <!-- b/(d+s) -->
+		<parameter idref="birthRate.$(n)"/>
+		<parameter idref="deathRate.$(n)"/>
+		<parameter idref="samplingRate.$(n)"/>        
+    </RPNcalculator>
+
+
+		<operator id='birthOperator.$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@birthRate.$(n)"/>
+		<operator id='deathOperator.$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@deathRate.$(n)"/>
+		<operator id='samplingOperator.$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@samplingRate.$(n)"/>
+		<operator id="updownBD.$(n)" spec="UpDownOperator" scaleFactor=".75" weight="10">
+			 <up idref="birthRate.$(n)"/>
+			 <down idref="deathRate.$(n)"/>
+			 <down idref="samplingRate.$(n)"/>
+		</operator>
+
+		<operator id='origOperator.$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@orig_root.$(n)"/>
+		<operator id='intervalTimesOperator.$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@intervalTimes.$(n)"/>
+
+]]>
+            <connect spec='BeautiConnector' srcID='BirthDeathSky.$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSky.$(n)) and Tree.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='birthRate.$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='deathRate.$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='intervalNumber.$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='intervalTimes.$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='samplingRate.$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+
+            <connect spec='BeautiConnector' srcID='birthPrior.$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='samplingPrior.$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSky.$(n)) and samplingRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='deathPrior.$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSky.$(n)) and deathRate.$(n)/estimate=true'/>
+
+            <connect spec='BeautiConnector' srcID='birthOperator.$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='deathOperator.$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSky.$(n)) and deathRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='samplingOperator.$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSky.$(n)) and samplingRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='updownBD.$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSky.$(n))'/>
+            <connect spec='BeautiConnector' srcID='birthRate.$(n)' targetID='updownBD.$(n)' inputName='up'     if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='deathRate.$(n)' targetID='updownBD.$(n)' inputName='down'     if='inposterior(BirthDeathSky.$(n)) and deathRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='samplingRate.$(n)' targetID='updownBD.$(n)' inputName='down'     if='inposterior(BirthDeathSky.$(n)) and samplingRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='origOperator.$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSky.$(n))'/>
+            <connect spec='BeautiConnector' srcID='intervalTimesOperator.$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSky.$(n))'/>
+
+            <connect spec='BeautiConnector' srcID='BirthDeathSky.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n))'/>
+            <connect spec='BeautiConnector' srcID='birthRate.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n)) and birthRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='deathRate.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n)) and deathRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='intervalNumber.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n)) and intervalNumber.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='intervalTimes.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n)) and intervalTimes.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='samplingRate.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n)) and samplingRate.$(n)/estimate=true'/>
+            <connect spec='BeautiConnector' srcID='R_0.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n))'/>
+            <connect spec='BeautiConnector' srcID='psi/(psi+death).$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n))'/>
+            <connect spec='BeautiConnector' srcID='orig_root.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n))'/>
+            <connect spec='BeautiConnector' srcID='intervalTimes.$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSky.$(n))'/>
+        </subtemplate>
+
+</mergewith>
+
+</beast>
