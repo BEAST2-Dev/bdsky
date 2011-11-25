@@ -10,7 +10,7 @@ import beast.core.Description;
 import java.util.*;
 
 /**
- * @author Denise KŸhnert
+ * @author Denise Kuehnert
  *
  * maths: Tanja Stadler
  */
