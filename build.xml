@@ -11,14 +11,15 @@
 	<property name="srcBDSSM" location="src" />
 	<property name="buildBDSSM" location="build" />
 	<property name="libBDSSM" location="lib" />
+	<property name="release_dir" value="release" />
 	<property name="distBDSSM" location="${buildBDSSM}/dist" />
 	<property name="beast2path" location="../beast2" />
 	<property name="libBeast2" location="${beast2path}/lib" />
 	<property name="srcBeast2" location="${beast2path}/src" />
 	<property name="beast2classpath" location="${beast2path}/build" />
+	<property name="Add_on_dir" value="${release_dir}/add-on" />
 
     <import file="${beast2path}/build.xml" />
-
 
 	<property name="main_class_BEAST" value="beast.app.BeastMCMC" />
 	<property name="report" value="${buildBDSSM}/junitreport"/>
@@ -106,6 +107,16 @@
 				<include name="beast/**/*.xsl" />
 			</fileset>
         </jar>
+		<jar jarfile="${dist}/BDSSM.addon.jar">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+			</manifest>
+			<fileset dir="${build}">
+				<include name="beast/**/*.class" />
+				<include name="util/**/*.class" />
+				<include name="**/*.properties" />
+			</fileset>
+		</jar>
 	</target>
 
 	<!-- run beast.jar -->
@@ -145,4 +156,34 @@
 		</junitreport>
 		<echo message="JUnit test report finished." />
 	</target>
+
+
+	<target name="addon"
+	        depends="build_jar_all_BDSSM_NoJUnitTest"
+	        description="release BEAST 2 add-on version of BDSKY">
+
+		<delete dir="${Add_on_dir}" />
+		<!-- Create the release directory -->
+		<mkdir dir="${Add_on_dir}" />
+		<mkdir dir="${Add_on_dir}/lib" />
+		<mkdir dir="${Add_on_dir}/templates" />
+
+		<copy todir="${Add_on_dir}/lib">
+			<fileset dir="${dist}" includes="BDSSM.addon.jar" />
+		</copy>
+		<copy todir="${Add_on_dir}">
+			<fileset dir="${dist}" includes="BDSSM.src.jar" />
+		</copy>
+		<copy todir="${Add_on_dir}/templates">
+			<fileset file="templates/BDSKY.xml" />
+		</copy>
+
+		<jar jarfile="${dist}/BDSKY.addon.zip">
+			<fileset dir="${Add_on_dir}">
+				<include name="**/*" />
+			</fileset>
+        </jar>
+		<echo message="Add-on version release is finished." />
+	</target>
+
 </project>
