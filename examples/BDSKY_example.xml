@@ -1,0 +1,166 @@
+<beast version='2.0'
+       namespace='beast.core:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter'>
+
+
+    <!-- The sequence alignment (each sequence refers to a taxon above).         -->
+    <!-- ntax=6 nchar=768                                                        -->
+    <!-- npatterns=69                                                            -->
+    <data id="alignment" dataType="nucleotide">
+        <sequence taxon="human">
+            AGAAATATGTCTGATAAAAGAGTTACTTTGATAGAGTAAATAATAGGAGCTTAAACCCCCTTATTTCTACTAGGACTATGAGAATCGAACCCATCCCTGAGAATCCAAAATTCTCCGTGCCACCTATCACACCCCATCCTAAGTAAGGTCAGCTAAATAAGCTATCGGGCCCATACCCCGAAAATGTTGGTTATACCCTTCCCGTACTAAGAAATTTAGGTTAAATACAGACCAAGAGCCTTCAAAGCCCTCAGTAAGTTG-CAATACTTAATTTCTGTAAGGACTGCAAAACCCCACTCTGCATCAACTGAACGCAAATCAGCCACTTTAATTAAGCTAAGCCCTTCTAGACCAATGGGACTTAAACCCACAAACACTTAGTTAACAGCTAAGCACCCTAATCAAC-TGGCTTCAATCTAAAGCCCCGGCAGG-TTTGAAGCTGCTTCTTCGAATTTGCAATTCAATATGAAAA-TCACCTCGGAGCTTGGTAAAAAGAGGCCTAACCCCTGTCTTTAGATTTACAGTCCAATGCTTCA-CTCAGCCATTTTACCACAAAAAAGGAAGGAATCGAACCCCCCAAAGCTGGTTTCAAGCCAACCCCATGGCCTCCATGACTTTTTCAAAAGGTATTAGAAAAACCATTTCATAACTTTGTCAAAGTTAAATTATAGGCT-AAATCCTATATATCTTA-CACTGTAAAGCTAACTTAGCATTAACCTTTTAAGTTAAAGATTAAGAGAACCAACACCTCTTTACAGTGA
+        </sequence>
+        <sequence taxon="chimp">
+            AGAAATATGTCTGATAAAAGAATTACTTTGATAGAGTAAATAATAGGAGTTCAAATCCCCTTATTTCTACTAGGACTATAAGAATCGAACTCATCCCTGAGAATCCAAAATTCTCCGTGCCACCTATCACACCCCATCCTAAGTAAGGTCAGCTAAATAAGCTATCGGGCCCATACCCCGAAAATGTTGGTTACACCCTTCCCGTACTAAGAAATTTAGGTTAAGCACAGACCAAGAGCCTTCAAAGCCCTCAGCAAGTTA-CAATACTTAATTTCTGTAAGGACTGCAAAACCCCACTCTGCATCAACTGAACGCAAATCAGCCACTTTAATTAAGCTAAGCCCTTCTAGATTAATGGGACTTAAACCCACAAACATTTAGTTAACAGCTAAACACCCTAATCAAC-TGGCTTCAATCTAAAGCCCCGGCAGG-TTTGAAGCTGCTTCTTCGAATTTGCAATTCAATATGAAAA-TCACCTCAGAGCTTGGTAAAAAGAGGCTTAACCCCTGTCTTTAGATTTACAGTCCAATGCTTCA-CTCAGCCATTTTACCACAAAAAAGGAAGGAATCGAACCCCCTAAAGCTGGTTTCAAGCCAACCCCATGACCTCCATGACTTTTTCAAAAGATATTAGAAAAACTATTTCATAACTTTGTCAAAGTTAAATTACAGGTT-AACCCCCGTATATCTTA-CACTGTAAAGCTAACCTAGCATTAACCTTTTAAGTTAAAGATTAAGAGGACCGACACCTCTTTACAGTGA
+        </sequence>
+        <sequence taxon="bonobo">
+            AGAAATATGTCTGATAAAAGAATTACTTTGATAGAGTAAATAATAGGAGTTTAAATCCCCTTATTTCTACTAGGACTATGAGAGTCGAACCCATCCCTGAGAATCCAAAATTCTCCGTGCCACCTATCACACCCCATCCTAAGTAAGGTCAGCTAAATAAGCTATCGGGCCCATACCCCGAAAATGTTGGTTATACCCTTCCCGTACTAAGAAATTTAGGTTAAACACAGACCAAGAGCCTTCAAAGCTCTCAGTAAGTTA-CAATACTTAATTTCTGTAAGGACTGCAAAACCCCACTCTGCATCAACTGAACGCAAATCAGCCACTTTAATTAAGCTAAGCCCTTCTAGATTAATGGGACTTAAACCCACAAACATTTAGTTAACAGCTAAACACCCTAATCAGC-TGGCTTCAATCTAAAGCCCCGGCAGG-TTTGAAGCTGCTTCTTTGAATTTGCAATTCAATATGAAAA-TCACCTCAGAGCTTGGTAAAAAGAGGCTTAACCCCTGTCTTTAGATTTACAGTCCAATGCTTCA-CTCAGCCATTTTACCACAAAAAAGGAAGGAATCGAACCCCCTAAAGCTGGTTTCAAGCCAACCCCATGACCCCCATGACTTTTTCAAAAGATATTAGAAAAACTATTTCATAACTTTGTCAAAGTTAAATTACAGGTT-AAACCCCGTATATCTTA-CACTGTAAAGCTAACCTAGCATTAACCTTTTAAGTTAAAGATTAAGAGGACCAACACCTCTTTACAGTGA
+        </sequence>
+        <sequence taxon="gorilla">
+            AGAAATATGTCTGATAAAAGAGTTACTTTGATAGAGTAAATAATAGAGGTTTAAACCCCCTTATTTCTACTAGGACTATGAGAATTGAACCCATCCCTGAGAATCCAAAATTCTCCGTGCCACCTGTCACACCCCATCCTAAGTAAGGTCAGCTAAATAAGCTATCGGGCCCATACCCCGAAAATGTTGGTCACATCCTTCCCGTACTAAGAAATTTAGGTTAAACATAGACCAAGAGCCTTCAAAGCCCTTAGTAAGTTA-CAACACTTAATTTCTGTAAGGACTGCAAAACCCTACTCTGCATCAACTGAACGCAAATCAGCCACTTTAATTAAGCTAAGCCCTTCTAGATCAATGGGACTCAAACCCACAAACATTTAGTTAACAGCTAAACACCCTAGTCAAC-TGGCTTCAATCTAAAGCCCCGGCAGG-TTTGAAGCTGCTTCTTCGAATTTGCAATTCAATATGAAAT-TCACCTCGGAGCTTGGTAAAAAGAGGCCCAGCCTCTGTCTTTAGATTTACAGTCCAATGCCTTA-CTCAGCCATTTTACCACAAAAAAGGAAGGAATCGAACCCCCCAAAGCTGGTTTCAAGCCAACCCCATGACCTTCATGACTTTTTCAAAAGATATTAGAAAAACTATTTCATAACTTTGTCAAGGTTAAATTACGGGTT-AAACCCCGTATATCTTA-CACTGTAAAGCTAACCTAGCGTTAACCTTTTAAGTTAAAGATTAAGAGTATCGGCACCTCTTTGCAGTGA
+        </sequence>
+        <sequence taxon="orangutan">
+            AGAAATATGTCTGACAAAAGAGTTACTTTGATAGAGTAAAAAATAGAGGTCTAAATCCCCTTATTTCTACTAGGACTATGGGAATTGAACCCACCCCTGAGAATCCAAAATTCTCCGTGCCACCCATCACACCCCATCCTAAGTAAGGTCAGCTAAATAAGCTATCGGGCCCATACCCCGAAAATGTTGGTTACACCCTTCCCGTACTAAGAAATTTAGGTTA--CACAGACCAAGAGCCTTCAAAGCCCTCAGCAAGTCA-CAGCACTTAATTTCTGTAAGGACTGCAAAACCCCACTTTGCATCAACTGAGCGCAAATCAGCCACTTTAATTAAGCTAAGCCCTCCTAGACCGATGGGACTTAAACCCACAAACATTTAGTTAACAGCTAAACACCCTAGTCAAT-TGGCTTCAGTCCAAAGCCCCGGCAGGCCTTAAAGCTGCTCCTTCGAATTTGCAATTCAACATGACAA-TCACCTCAGGGCTTGGTAAAAAGAGGTCTGACCCCTGTTCTTAGATTTACAGCCTAATGCCTTAACTCGGCCATTTTACCGCAAAAAAGGAAGGAATCGAACCTCCTAAAGCTGGTTTCAAGCCAACCCCATAACCCCCATGACTTTTTCAAAAGGTACTAGAAAAACCATTTCGTAACTTTGTCAAAGTTAAATTACAGGTC-AGACCCTGTGTATCTTA-CATTGCAAAGCTAACCTAGCATTAACCTTTTAAGTTAAAGACTAAGAGAACCAGCCTCTCTTTGCAATGA
+        </sequence>
+        <sequence taxon="siamang">
+            AGAAATACGTCTGACGAAAGAGTTACTTTGATAGAGTAAATAACAGGGGTTTAAATCCCCTTATTTCTACTAGAACCATAGGAGTCGAACCCATCCTTGAGAATCCAAAACTCTCCGTGCCACCCGTCGCACCCTGTTCTAAGTAAGGTCAGCTAAATAAGCTATCGGGCCCATACCCCGAAAATGTTGGTTATACCCTTCCCATACTAAGAAATTTAGGTTAAACACAGACCAAGAGCCTTCAAAGCCCTCAGTAAGTTAACAAAACTTAATTTCTGCAAGGGCTGCAAAACCCTACTTTGCATCAACCGAACGCAAATCAGCCACTTTAATTAAGCTAAGCCCTTCTAGATCGATGGGACTTAAACCCATAAAAATTTAGTTAACAGCTAAACACCCTAAACAACCTGGCTTCAATCTAAAGCCCCGGCAGA-GTTGAAGCTGCTTCTTTGAACTTGCAATTCAACGTGAAAAATCACTTCGGAGCTTGGCAAAAAGAGGTTTCACCTCTGTCCTTAGATTTACAGTCTAATGCTTTA-CTCAGCCACTTTACCACAAAAAAGGAAGGAATCGAACCCTCTAAAACCGGTTTCAAGCCAGCCCCATAACCTTTATGACTTTTTCAAAAGATATTAGAAAAACTATTTCATAACTTTGTCAAAGTTAAATCACAGGTCCAAACCCCGTATATCTTATCACTGTAGAGCTAGACCAGCATTAACCTTTTAAGTTAAAGACTAAGAGAACTACCGCCTCTTTACAGTGA
+        </sequence>	
+    </data>
+
+    <!-- The HKY substitution model (Hasegawa, Kishino & Yano, 1985)             -->
+    <input spec='HKY' id="hky">
+        <parameter name='kappa' idref='hky.kappa'/>
+        <input id='freqs' name='frequencies' spec='Frequencies'>
+            <input name='data' idref='alignment'/>
+        </input>
+    </input>
+
+    <!-- site model                                                              -->
+    <input spec='SiteModel' id="siteModel" substModel="@hky"/>
+
+    <input spec='TreeLikelihood' id="treeLikelihood" data="@alignment" tree="@tree" siteModel="@siteModel" />
+
+    <input spec='beast.util.ClusterTree' id='tree' clusterType='upgma' taxa="@alignment"/>
+
+    <input spec='beast.core.parameter.RealParameter' id="hky.kappa">1.0</input>
+	
+	<parameter name="birthRate" id="birthRate" value="1. 1. 1." lower="0." upper="Infinity"/>
+	<parameter name="deathRate" id="deathRate" value="0.02" lower="0." upper="Infinity"/>
+	<parameter name="samplingRate" id="samplingRate" value=".007" lower="0." upper="Infinity"/>
+	<intervalNumber spec="IntegerParameter" id="intervalNumber" value="3" />	
+	<parameter id="intervalTimes" value="0. 0.002 0.01" />	
+
+	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="@intervalNumber" intervalTimes="@intervalTimes"
+				birthRate="@birthRate" deathRate="@deathRate" samplingRate="@samplingRate"> 
+		<parameter name="orig_root" id="orig_root" value ="1." lower="0." upper="Infinity"/>  	
+	</BirthDeathSkylineModel>
+	
+	<!-- sampling proportion -->
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="psi/(psi+death)" expression="samplingRate deathRate samplingRate + /"> <!-- s/(d+s) -->
+		<parameter idref="deathRate"/>
+		<parameter idref="samplingRate"/>        
+	</RPNcalculator>
+	
+	<!-- R0 --> 
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="R_0" expression="birthRate deathRate samplingRate + /"> <!-- b/(d+s) -->
+		<parameter idref="birthRate"/>
+		<parameter idref="deathRate"/>
+		<parameter idref="samplingRate"/>        
+    </RPNcalculator>
+
+
+    <run spec="MCMC" id="mcmc" chainLength="3000000"> 
+		<!-- stateNodes -->
+        <state>
+            <stateNode idref='hky.kappa'/>
+            <stateNode idref='tree'/>
+			<stateNode idref="orig_root"/>
+			<stateNode idref="birthRate"/>
+			<stateNode idref="deathRate"/>
+			<stateNode idref="samplingRate"/>
+			<stateNode idref="intervalTimes"/>
+        </state>
+
+		<!-- distribution -->
+        <distribution spec="CompoundDistribution" id="posterior">
+             <distribution spec="CompoundDistribution" id="prior">
+				 <distribution id="BDlikelihood" idref="birthDeath"/>	
+				 <!--distribution id="R0_prior" spec="beast.math.distributions.RPNExpressionPrior" rpn="@R_0">
+					<distr id="LogN_R0" spec="beast.math.distributions.LogNormalDistributionModel" M="1." S="1.25" offset="0."/>
+				</distribution-->
+				<distribution id="birthPrior" spec="beast.math.distributions.Prior" x="@birthRate">
+					<distr id="birth_sampling" spec="beast.math.distributions.Gamma" alpha="20" beta="2." offset="0."/>
+				</distribution>
+				<distribution id="samplingPrior" spec="beast.math.distributions.Prior" x="@samplingRate">
+					<distr id="gamma_sampling" spec="beast.math.distributions.Gamma" alpha="8" beta="2." offset="0."/>
+				</distribution>
+				<distribution id="deathPrior" spec="beast.math.distributions.Prior" x="@deathRate">
+					<distr id="gamma_death" spec="beast.math.distributions.Gamma" alpha="12" beta="2." offset="0."/>
+				</distribution>
+        	</distribution>
+             <distribution id='likelihood' idref="treeLikelihood"/>
+        </distribution>
+
+		<!-- operators -->
+        <operator id='kappaScaler' spec='ScaleOperator' scaleFactor="0.5" weight="1" parameter="@hky.kappa"/>
+  
+  		<operator id='treeScaler' spec='ScaleOperator' scaleFactor="0.5" weight="1" tree="@tree"/>
+        <operator spec='Uniform' weight="10" tree="@tree"/>
+        <operator spec='SubtreeSlide' weight="5" gaussian="true" size="0.1"  tree="@tree"/>
+        <operator id='narrow' spec='Exchange' isNarrow='true' weight="1" tree="@tree"/>
+        <operator id='wide' spec='Exchange' isNarrow='false' weight="1" tree="@tree"/>
+        <operator spec='WilsonBalding' weight="1" tree="@tree"/>
+
+		<operator id='birthOperator' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@birthRate"/>
+		<operator id='deathOperator' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@deathRate"/>
+		<operator id='samplingOperator' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@samplingRate"/>
+		<operator id="updownBD" spec="UpDownOperator" scaleFactor=".75" weight="10">
+			 <up idref="birthRate"/>
+			 <down idref="deathRate"/>
+			 <down idref="samplingRate"/>
+		</operator>
+
+		<operator id='origOperator' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@orig_root"/>
+		<operator id='intervalTimesOperator' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@intervalTimes"/>
+
+		<!-- loggers -->
+        <logger logEvery="10000" fileName="BDSKY_example.$(seed).log">
+   	        <model idref='posterior'/>
+            <log idref="posterior"/>
+   	        <log idref='prior'/>
+            <log idref="likelihood"/>
+			<log id="TreeHeight" spec="beast.evolution.tree.TreeHeightLogger" tree="@tree"/>
+            <log idref="hky.kappa"/>
+			<log idref="BDlikelihood"/>
+         	<log idref="birthRate"/>
+        	<log idref="deathRate"/>
+			<log idref="samplingRate"/>
+			<log idref="R_0"/>
+			<log idref="psi/(psi+death)"/>
+			<log idref="orig_root"/>
+			<log idref="intervalTimes"/>
+
+        </logger>
+        
+        <logger logEvery="10000" fileName="BDSKY_example.$(seed).trees">
+            <log idref="tree"/>
+        </logger>
+        <logger logEvery="10000">
+	        <model idref='posterior'/>
+            <log idref="posterior"/>
+   	        <log idref='prior'/>
+            <log idref="likelihood"/>
+            <log idref="TreeHeight"/>
+            <log idref="hky.kappa"/>
+			<log idref="BDlikelihood"/>
+         	<log idref="birthRate"/>
+        	<log idref="deathRate"/>
+			<log idref="samplingRate"/>
+			<log idref="R_0"/>
+			<log idref="psi/(psi+death)"/>
+			<log idref="orig_root"/>
+			<log idref="intervalTimes"/>
+			
+        </logger>
+    </run>
+
+</beast>
