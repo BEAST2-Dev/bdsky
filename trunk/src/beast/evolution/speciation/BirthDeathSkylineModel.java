@@ -27,11 +27,20 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             new Input<IntegerParameter>("intervalNumber", "The number of intervals in which rates can change", Input.Validate.REQUIRED);
 
     public Input<RealParameter> birthRate =
-            new Input<RealParameter>("birthRate", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time", Input.Validate.REQUIRED);
+            new Input<RealParameter>("birthRate", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time");
     public Input<RealParameter> deathRate =
-            new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times", Input.Validate.REQUIRED);
+            new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times");
     public Input<RealParameter> samplingRate =
-            new Input<RealParameter>("samplingRate", "The sampling rate per individual", Input.Validate.REQUIRED);      // psi
+            new Input<RealParameter>("samplingRate", "The sampling rate per individual");      // psi
+
+
+    public Input<RealParameter> R0 =
+            new Input<RealParameter>("R0", "Basic reproduction number", Input.Validate.XOR, birthRate);
+    public Input<RealParameter> becomeUninfectiousRate =
+            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (throuch recovery or sampling)", Input.Validate.XOR, deathRate);
+    public Input<RealParameter> samplingProportion =
+            new Input<RealParameter>("samplingProportion", "samplingRate / becomeUninfectiousRate", Input.Validate.XOR, samplingRate);
+
 
     public Input<Boolean> forceRateChange =
             new Input<Boolean>("forceRateChange", "If there is more than one interval and we estimate the time of rate change, do we enforce it to be within the tree interval? Default true", true);
@@ -51,6 +60,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Boolean samplingChanges;
     Double[] times;
     Boolean timesFromXML;
+    Boolean transform;
+
+
+/************************************************************************************************/
+/*              "constructor"                                                                   */
+/************************************************************************************************/
 
     @Override
     public void initAndValidate() throws Exception {
@@ -58,24 +73,64 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         m = intervalNumber.get().getValue();
 
-        death = deathRate.get().getValues();
-        psi = samplingRate.get().getValues();
-        birth = new Double[m];
 
-        if (birth.length != 1 && birth.length != m)
-            throw new RuntimeException("Length of birthRate parameter ("+ birth.length + ") should be one or equal to intervalNumber (" + m + ")");
+        if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null){
 
-        birthChanges = (birthRate.get().getDimension() == m && m > 1)  ;
+            transform = false;
+            death = deathRate.get().getValues();
+            psi = samplingRate.get().getValues();
+            birth = new Double[m];
 
-        if (death.length != 1 && death.length != m)
-            throw new RuntimeException("Length of mu parameter should be one or equal to intervalNumber (" + m + ")");
+        }
+        else if (R0.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null){
 
-        deathChanges = (death.length == m && m > 1) ;
+            birth = new Double[m];
+            death = new Double[m];
+            psi = new Double[m];
 
-        if (psi.length != 1 && psi.length != m)
-            throw new RuntimeException("Length of birthRate parameter ("+ psi.length + ") should be one or equal to intervalNumber (" + m + ")");
+            transform = true;
+            transformParameters(1);
 
-        samplingChanges = (psi.length == m && m > 1) ;
+        }
+
+        else{
+            throw new RuntimeException("Either specify birthRate, deathRate and samplingRate OR specify R0, becomeUninfectiousRate and samplingProportion!");
+        }
+
+        if (transform){
+            if (R0.get().getDimension() != 1 && R0.get().getDimension() != m)
+                throw new RuntimeException("Length of R0 parameter should be one or equal to intervalNumber (" + m + ")");
+
+            birthChanges = (R0.get().getDimension() == m && m > 1)  ;
+
+            if (becomeUninfectiousRate.get().getDimension() != 1 && becomeUninfectiousRate.get().getDimension() != m)
+                throw new RuntimeException("Length of becomeUninfectiousRate parameter should be one or equal to intervalNumber (" + m + ")");
+
+            if (samplingProportion.get().getDimension() != 1 && samplingProportion.get().getDimension() != m)
+                throw new RuntimeException("Length of samplingProportion parameter should be one or equal to intervalNumber (" + m + ")");
+
+            deathChanges = samplingChanges = (samplingProportion.get().getDimension() == m && m > 1) ;
+
+        }
+        else {
+
+            if (birth.length != 1 && birth.length != m)
+                throw new RuntimeException("Length of birthRate parameter ("+ birth.length + ") should be one or equal to intervalNumber (" + m + ")");
+
+            birthChanges = (birthRate.get().getDimension() == m && m > 1)  ;
+
+            if (death.length != 1 && death.length != m)
+                throw new RuntimeException("Length of mu parameter should be one or equal to intervalNumber (" + m + ")");
+
+            deathChanges = (death.length == m && m > 1) ;
+
+            if (psi.length != 1 && psi.length != m)
+                throw new RuntimeException("Length of birthRate parameter ("+ psi.length + ") should be one or equal to intervalNumber (" + m + ")");
+
+            samplingChanges = (psi.length == m && m > 1) ;
+
+        }
+
 
         if (intervalTimes.get() != null){
             if (intervalTimes.get().getDimension() != m)
@@ -93,11 +148,18 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         }
     }
 
+/************************************************************************************************/
+    /*                   calculations for likelihood                                                */
+/************************************************************************************************/
+
     /*    calculate and store Ai, Bi and p0_iMinus1        */
     public Double preCalculation(){
 
-        death = deathRate.get().getValues();
-        birth = birthRate.get().getValues();
+        if (!transform){
+            death = deathRate.get().getValues();
+            birth = birthRate.get().getValues();
+            psi = samplingRate.get().getValues();
+        }
 
         t_root = m_tree.get().getRoot().getHeight();
 
@@ -109,19 +171,19 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 if (times[i] <= times[i-1]) return Double.NEGATIVE_INFINITY;
             }
 
-            // if forceRateChange: force rate change to be within tree range
-            if (forceRateChange.get()){
-                if ( times[times.length-1] >= (t_root + orig_root.get().getValue()) )
-                    return Double.NEGATIVE_INFINITY;
-            }
-
-
             Double[] temp = new Double[m];
             temp[0] = 0.;
             for (int i = 1; i < m; i++) {
                 temp[i] = Math.max(t_root + orig_root.get().getValue() - times[m-i], 0);
             }
             times = temp;
+
+            // if forceRateChange: force rate change to be within tree range
+            if (forceRateChange.get()){
+                if ( times[times.length-1] >= (t_root + orig_root.get().getValue()) )
+                    return Double.NEGATIVE_INFINITY;
+            }
+            
 
         } else {
             times  = new Double[m];
@@ -229,9 +291,25 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return count;
     }
 
+    public void transformParameters(int S0){
+
+        Double[] p = samplingProportion.get().getValues();
+        Double[] b = becomeUninfectiousRate.get().getValues();
+        Double[] R0 = this.R0.get().getValues();
+
+        for (int i = 0; i < m; i++){
+            birth[i] = R0[R0.length > 1 ? i : 0] * b[b.length > 1 ? i : 0] / S0;
+            psi[i] = p[p.length > 1 ? i : 0]  * b[b.length > 1 ? i : 0] ;
+            death[i] = b[b.length > 1 ? i : 0] - psi[i];
+        }
+    }
+
+
     public double calculateTreeLogLikelihood(Tree tree) {
 
         m = intervalNumber.get().getValue();
+
+        if (transform) transformParameters(1);
 
         // number of lineages at each time ti
         int[] n = new int[m];
@@ -245,7 +323,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         double temp;
 
         // the first factor for origin
-        temp =  Math.log(g(index, x0, times[index]));
+        //temp =  Math.log(g(index, x0, times[index])) ;  // NOT conditioned on at least one sampled individual
+        temp =  Math.log(g(index, x0, times[index])) - Math.log(1 - p0(index, x0, times[index]));   // conditioned on at least one sampled individual
         logP = temp;
 //        System.out.println("orig = " + temp);
 
@@ -267,6 +346,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             double y = tree.getNode(i).getHeight();
             index = index(y);
 
+            temp = Math.log(psi[samplingChanges? index : 0]) - Math.log(g(index, y, times[index]) ) ;
             temp = Math.log(psi[samplingChanges? index : 0]) - Math.log(g(index, y, times[index]) ) ;
             logP += temp;
 //            System.out.println(temp);
