@@ -30,6 +30,7 @@ public class BirthDeathSkylineTest extends TestCase {
         intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("orig_root", new RealParameter("1."));
+        bdssm.setInputValue("conditionOnSurvival", false);
 
 
         PrintStream treeString = new PrintStream("out.tree");
@@ -52,13 +53,11 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
         // test with rate change outside tree range
-        bdssm.setInputValue("intervalNumber", new IntegerParameter("2"));
-        bdssm.setInputValue("birthRate", new RealParameter("2. 4."));
-        bdssm.setInputValue("deathRate", new RealParameter("1. 2."));
-//        bdssm.setInputValue("birthRate", new RealParameter("4. 2."));
-//         bdssm.setInputValue("deathRate", new RealParameter("2. 1."));
-        bdssm.setInputValue("samplingRate", new RealParameter("0.5 0.5"));
-        bdssm.setInputValue("intervalTimes", new RealParameter("0. 8."));
+        bdssm.setInputValue("intervalNumber", new IntegerParameter("1"));
+        bdssm.setInputValue("birthRate", new RealParameter("2."));
+        bdssm.setInputValue("deathRate", new RealParameter("1."));
+        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+        bdssm.setInputValue("intervalTimes", new RealParameter("0."));
         bdssm.setInputValue("forceRateChange", false);
 
         bdssm.initAndValidate();
@@ -99,6 +98,7 @@ public class BirthDeathSkylineTest extends TestCase {
 
         //same test with epi-parametrization
         bdssm = new BirthDeathSkylineModel();
+        bdssm.setInputValue("conditionOnSurvival", false);
 
         intervals.init(tree);
         bdssm.setInputValue("tree", tree);
