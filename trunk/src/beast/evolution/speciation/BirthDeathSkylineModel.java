@@ -35,11 +35,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
 
     public Input<RealParameter> R0 =
-            new Input<RealParameter>("R0", "Basic reproduction number", Input.Validate.XOR, birthRate);
+            new Input<RealParameter>("R0", "The basic reproduction number", Input.Validate.XOR, birthRate);
     public Input<RealParameter> becomeUninfectiousRate =
             new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (throuch recovery or sampling)", Input.Validate.XOR, deathRate);
     public Input<RealParameter> samplingProportion =
-            new Input<RealParameter>("samplingProportion", "samplingRate / becomeUninfectiousRate", Input.Validate.XOR, samplingRate);
+            new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate", Input.Validate.XOR, samplingRate);
 
 
     public Input<Boolean> forceRateChange =
