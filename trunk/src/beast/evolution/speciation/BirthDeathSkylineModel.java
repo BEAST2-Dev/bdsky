@@ -44,6 +44,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Input<Boolean> forceRateChange =
             new Input<Boolean>("forceRateChange", "If there is more than one interval and we estimate the time of rate change, do we enforce it to be within the tree interval? Default true", true);
+    public Input<Boolean> conditionOnSurvival =
+            new Input<Boolean>("conditionOnSurvival", "condition on at least one survival? Default true", true);
 
     double t_root;
     protected double[] p0_iMinus1;
@@ -61,6 +63,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Double[] times;
     Boolean timesFromXML;
     Boolean transform;
+    Boolean m_forceRateChange;
 
 
 /************************************************************************************************/
@@ -72,7 +75,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         super.initAndValidate();
 
         m = intervalNumber.get().getValue();
-
+        m_forceRateChange = forceRateChange.get();
 
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null){
 
@@ -139,6 +142,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             if (intervalTimes.get().getValue() != 0)
                 throw new RuntimeException("First entry in intervalTimes must be 0!");
             timesFromXML = true;
+            if (m_forceRateChange && intervalTimes.get().getArrayValue(m-1) > orig_root.get().getValue() + m_tree.get().getRoot().getHeight())
+                throw new RuntimeException("IntervalTimes have to be between [0, tree + origroot] ([0," + (orig_root.get().getValue() + m_tree.get().getRoot().getHeight()) + "])!");
+
+
         }
         else {
             times  = new Double[m];
@@ -171,19 +178,21 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 if (times[i] <= times[i-1]) return Double.NEGATIVE_INFINITY;
             }
 
+            // if forceRateChange: force rate change to be within tree range
+            if (m_forceRateChange && times[m-1] > t_root ) return Double.NEGATIVE_INFINITY; 
+
             Double[] temp = new Double[m];
             temp[0] = 0.;
             for (int i = 1; i < m; i++) {
-                temp[i] = Math.max(t_root + orig_root.get().getValue() - times[m-i], 0);
+
+                temp[i] = t_root + orig_root.get().getValue() - times[m-i];   // reverse times order to start at origin
+
+                if (temp[i] < 0) return Double.NEGATIVE_INFINITY; 
             }
             times = temp;
 
-            // if forceRateChange: force rate change to be within tree range
-            if (forceRateChange.get()){
-                if ( times[times.length-1] >= (t_root + orig_root.get().getValue()) )
-                    return Double.NEGATIVE_INFINITY;
-            }
-            
+            double t = times[m-1];
+
 
         } else {
             times  = new Double[m];
@@ -323,8 +332,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         double temp;
 
         // the first factor for origin
-        //temp =  Math.log(g(index, x0, times[index])) ;  // NOT conditioned on at least one sampled individual
-        temp =  Math.log(g(index, x0, times[index])) - Math.log(1 - p0(index, x0, times[index]));   // conditioned on at least one sampled individual
+        if (!conditionOnSurvival.get())
+            temp =  Math.log(g(index, x0, times[index])) ;  // NOT conditioned on at least one sampled individual
+        else
+            temp =  Math.log(g(index, x0, times[index])) - Math.log(1 - p0(index, x0, times[index]));   // DEFAULT: conditioned on at least one sampled individual
         logP = temp;
 //        System.out.println("orig = " + temp);
 
