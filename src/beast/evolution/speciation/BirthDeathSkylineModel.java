@@ -92,7 +92,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             psi = new Double[m];
 
             transform = true;
-            transformParameters(1);
+            transformParameters((this instanceof BDSIR) ? ((BDSIR) this).S0 :1);
 
         }
 
