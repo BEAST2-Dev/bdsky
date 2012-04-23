@@ -4,7 +4,6 @@ import junit.framework.TestCase;
 import beast.evolution.tree.coalescent.TreeIntervals;
 import beast.evolution.tree.Tree;
 import beast.evolution.speciation.BirthDeathSkylineModel;
-import beast.evolution.speciation.bdsky_forward;
 import beast.core.parameter.RealParameter;
 import beast.core.parameter.IntegerParameter;
 import beast.core.Description;
@@ -24,18 +23,12 @@ public class BirthDeathSkylineTest extends TestCase {
     @Test
     public void testRho() throws Exception{
 
-//        for (int i =0; i<2; i++){
-
-
-//            BirthDeathSkylineModel bdssm =  ( i==0?new BirthDeathSkylineModel():new bdsky_forward());
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new Tree("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);");
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("orig_root", new RealParameter("1."));
         bdssm.setInputValue("conditionOnSurvival", true);
-        //
-        //
         //        bdssm.setInputValue("birthRate", new RealParameter("2."));
         //        bdssm.setInputValue("deathRate", new RealParameter("1."));
         //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
@@ -113,16 +106,11 @@ public class BirthDeathSkylineTest extends TestCase {
 //        //
 //        ////        assertEquals(-19.0198, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
 
-//        }
     }
 
     @Test
     public void testLikelihoodCalculation() throws Exception {
 
-//        for (int i =0; i<2; i++){
-
-
-//        BirthDeathSkylineModel bdssm =  ( i==0?new BirthDeathSkylineModel():new bdsky_forward());
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new Tree("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);");
@@ -197,7 +185,6 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
         //same test with epi-parametrization
-//            bdssm = ( i==0?new BirthDeathSkylineModel():new bdsky_forward());
         bdssm =  new BirthDeathSkylineModel();
 
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -219,7 +206,6 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
-//    }
 
 }
 
