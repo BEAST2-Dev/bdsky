@@ -25,8 +25,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
             new Input<RealParameter>("intervalTimes", "The times t_i specifying when rate changes can occur", (RealParameter) null);
     public Input<RealParameter> orig_root =
             new Input<RealParameter>("orig_root", "The origin of infection x0", Input.Validate.REQUIRED);
-    public Input<IntegerParameter> intervalNumber =
-            new Input<IntegerParameter>("intervalNumber", "The number of intervals in which rates can change", Input.Validate.REQUIRED);
+    public Input<Integer> intervalNumber =
+            new Input<Integer>("intervalNumber", "The number of intervals in which rates can change", Input.Validate.REQUIRED);
 
     public Input<RealParameter> birthRate =
             new Input<RealParameter>("birthRate", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time");
@@ -93,7 +93,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        m = intervalNumber.get().getValue();
+        m = intervalNumber.get();
         m_forceRateChange = forceRateChange.get();
 
         contempData =  contemp.get();
@@ -245,7 +245,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
             Double[] tempTimes = intervalTimes.get().getValues();
 
             // if forceRateChange: force rate change to be within tree range
-            if (m_forceRateChange && tempTimes[m-1] > t_root ) return Double.NEGATIVE_INFINITY;
+            if (m_forceRateChange && tempTimes[m-1] > t_root )
+                return Double.NEGATIVE_INFINITY;
 
 
             // make sure intervalTimes are increasing
@@ -273,6 +274,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(Tree tree){
 
+        updateRates();
+        
         if (m_rho.get()!=null) {
             if (contempData){
                 Arrays.fill(rho, 0.);
@@ -405,17 +408,23 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
         }
     }
 
-    @Override
-    public double calculateTreeLogLikelihood(Tree tree){
 
-        m = intervalNumber.get().getValue();
+    public double updateRates(){
 
         if (transform) transformParameters(S0_input.get()==null?1:S0_input.get().getValue());
         else {
             death = deathRate.get().getValues();
             birth = birthRate.get().getValues();
-            psi = samplingRate.get().getValues(); 
+            psi = samplingRate.get().getValues();
         }
+
+        return 0.;
+    }
+
+    @Override
+    public double calculateTreeLogLikelihood(Tree tree){
+
+        m = intervalNumber.get();
 
         // number of lineages at each time ti
         int[] n = new int[m];
