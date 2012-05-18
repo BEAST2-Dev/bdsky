@@ -46,10 +46,9 @@
 	<parameter name="birthRate" id="birthRate" value="1. 1. 1." lower="0." upper="Infinity"/>
 	<parameter name="deathRate" id="deathRate" value="0.02" lower="0." upper="Infinity"/>
 	<parameter name="samplingRate" id="samplingRate" value=".007" lower="0." upper="Infinity"/>
-	<intervalNumber spec="IntegerParameter" id="intervalNumber" value="3" />	
 	<parameter id="intervalTimes" value="0. 0.002 0.01" />	
 
-	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="@intervalNumber" intervalTimes="@intervalTimes"
+	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="3" intervalTimes="@intervalTimes"
 				birthRate="@birthRate" deathRate="@deathRate" samplingRate="@samplingRate"> 
 		<parameter name="orig_root" id="orig_root" value ="1." lower="0." upper="Infinity"/>  	
 	</BirthDeathSkylineModel>
