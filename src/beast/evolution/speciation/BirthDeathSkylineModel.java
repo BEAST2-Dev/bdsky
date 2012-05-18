@@ -274,7 +274,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(Tree tree){
 
-        updateRates();
+
+        updateRates(tree);
         
         if (m_rho.get()!=null) {
             if (contempData){
@@ -409,7 +410,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     }
 
 
-    public double updateRates(){
+    public double updateRates(Tree tree){
 
         if (transform) transformParameters(S0_input.get()==null?1:S0_input.get().getValue());
         else {
