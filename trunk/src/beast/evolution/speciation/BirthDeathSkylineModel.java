@@ -275,7 +275,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     public Double preCalculation(Tree tree){
 
 
-        updateRates(tree);
+        if (updateRates(tree) < 0) return Double.NEGATIVE_INFINITY; 
         
         if (m_rho.get()!=null) {
             if (contempData){
