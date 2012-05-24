@@ -196,9 +196,10 @@
 			<log idref="sampling"/>
 		</logger>
 		
-		<logger fileName="BDSKY_contemp_$(seed).trees" id="treelog" logEvery="10000" mode="tree">
-			<log spec='beast.evolution.tree.TreeWithTraitLogger' tree='@tree'>
+		<logger fileName="BDSKY_sequential_$(seed).trees" id="treelog" logEvery="10000" mode="tree">
+			<log spec='beast.evolution.tree.TreeWithMetaDataLogger' tree='@tree'>
 				<metadata idref="posterior"/>
+				<branchratemodel idref='StrictClock'/>
 			</log>
 		</logger>
 
