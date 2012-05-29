@@ -32,7 +32,6 @@
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastiiclasspath}"/>
         <pathelement path="${beastclassicclasspath}"/>
-		<fileset dir="${libBDSSM}" includes="EpisimsN.jar"/>
 	</path>
 
 	<!-- start -->
