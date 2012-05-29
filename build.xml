@@ -26,13 +26,13 @@
 	<property name="main_class_BEAST" value="beast.app.BeastMCMC" />
 	<property name="report" value="${buildBDSSM}/junitreport"/>
 
-	<path id="myclasspath">
+	<path id="classpath">
         <pathelement path="${buildBDSSM}"/>
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
-		<fileset dir="${libBDSSM}" includes="EpisimsN.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastiiclasspath}"/>
         <pathelement path="${beastclassicclasspath}"/>
+		<fileset dir="${libBDSSM}" includes="EpisimsN.jar"/>
 	</path>
 
 	<!-- start -->
@@ -67,12 +67,12 @@
 	    <!-- Capture the path as a delimited property using the refid attribute -->
 	    <property name="myclasspath" refid="classpath"/>
 	    <!-- Emit the property to the ant console -->
-	    <echo message="Classpath = ${classpath}"/>
+	    <echo message="Classpath = ${myclasspath}"/>
 
 		<mkdir dir="${buildBDSSM}" />
 
 		<!-- Compile the java code from ${srcBDSSM} into ${buildBDSSM} /bin -->
-		<javac srcdir="${srcBDSSM}" destdir="${buildBDSSM}" classpathref="myclasspath" 
+		<javac srcdir="${srcBDSSM}" destdir="${buildBDSSM}" classpathref="classpath" 
 		       fork="true"
 		       memoryinitialsize="256m"
 		       memorymaximumsize="256m"
