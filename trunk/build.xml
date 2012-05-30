@@ -116,7 +116,7 @@
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
-			<fileset dir="${build}">
+			<fileset dir="${buildBDSSM}">
 				<include name="beast/**/*.class" />
 				<include name="util/**/*.class" />
 				<include name="**/*.properties" />
