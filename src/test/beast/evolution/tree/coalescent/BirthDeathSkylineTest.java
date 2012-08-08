@@ -3,6 +3,7 @@ package test.beast.evolution.tree.coalescent;
 import junit.framework.TestCase;
 import beast.evolution.tree.coalescent.TreeIntervals;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.Node;
 import beast.evolution.speciation.BirthDeathSkylineModel;
 import beast.core.parameter.RealParameter;
 import beast.core.parameter.IntegerParameter;
@@ -127,12 +128,12 @@ public class BirthDeathSkylineTest extends TestCase {
 
         // test without rate change
         bdssm.setInputValue("intervalNumber", 1);
-        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
-        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
-        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
-        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
-        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
+                bdssm.setInputValue("birthRate", new RealParameter("2."));
+                bdssm.setInputValue("deathRate", new RealParameter("1."));
+                bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+//        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+//        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
+//        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
 
 //        bdssm.setInputValue("intervalTimes", new RealParameter("0."));
 
@@ -207,13 +208,54 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+    @Test
+    public void testMini() throws Exception {
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("(1 : 1.5, 2 : 0.5);",false);
+        TreeIntervals intervals = new TreeIntervals();
+        intervals.init(tree);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("orig_root", new RealParameter("1."));
+        bdssm.setInputValue("conditionOnSurvival", false);
+
+        bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("birthRate", new RealParameter("2."));
+        bdssm.setInputValue("deathRate", new RealParameter("1."));
+        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+
+        bdssm.initAndValidate();
+
+        assertEquals(-4.719294304452187, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+
+    }
+
+    public void testTreeParser() throws Exception {
+
+        TreeParser tree = new TreeParser();
+        String newick = "(((1[&state='1']:1, (2[&state='0']:.5)[&state='1']:1.5)[&state='1']:2)[&state='0']:1, (3[&state='0']:1.5, (4[&state='1']:1.5)[&state='0']:1 )[&state='0']:2)[&state='0']:1;";
+        tree.initByName("adjustTipHeights",false, "singlechild", true, "newick", newick);
+
+        printNodeState(tree.getRoot());
+        
+    }
+
+    void printNodeState(Node node){
+
+        System.out.println("Node " + node.getNr() + " has colour " + node.m_sMetaData + "\t" + Integer.parseInt(node.m_sMetaData.split("=")[1].replaceAll("'","").replaceAll("\"","")));
+        if (node.getLeft()!=null)
+            printNodeState(node.getLeft());
+        if (node.getRight()!=null)
+            printNodeState(node.getRight());
+    }
 
 }
 
 
 /* R code for test example
 
-# calculate BDSSM treelikelihood for Tree("(((1:1,2:1):2,3:3):1,4:4);")
+# calculate BDSSM treelikelihood for Tree('(((1:1,2:1):2,3:3):1,4:4);')
 
 
 A <- function(b, g, psi){ return (sqrt((b - g - psi)^2 + 4*b*psi))}

@@ -128,7 +128,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
         else rho = new Double[]{0.};
         isRhoTip = new boolean[m_tree.get().getLeafNodeCount()];
 
-        
+        if (psiConstrainer.get() != null)  psiConstrainer.get().initialConstrain();
+
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null){
 
             transform = false;
@@ -274,8 +275,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(Tree tree){
 
-
-        if (updateRates(tree) < 0) return Double.NEGATIVE_INFINITY; 
+        if (updateRates(tree) < 0) return Double.NEGATIVE_INFINITY;
         
         if (m_rho.get()!=null) {
             if (contempData){
@@ -290,9 +290,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
 
         if (getTimes(tree) < 0)
             return Double.NEGATIVE_INFINITY;
-
-        if (psiConstrainer.get()!=null)
-            psi = psiConstrainer.get().get(psi, m) ;
 
         if (m_rho.get()!=null)
             if (computeN(tree) < 0)
@@ -320,10 +317,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
         }
 
         if (printTempResults) {
-            System.out.println("g(index, x0, times[index]):" +g(0, times[0],0));
-            System.out.println("g 1 :" +g(index(1), times[index(1)],1.));
-            System.out.println("g 2 :" +g(index(2), times[index(2)],2));
-            System.out.println("g 4 :" +g(index(4), times[index(4)],4));
+            System.out.println("g(0, x0, 0):" +g(0, times[0],0));
+            System.out.println("g(index(1),times[index(1)],1.) :" +g(index(1), times[index(1)],1.));
+            System.out.println("g(index(2),times[index(2)],2.) :" +g(index(2), times[index(2)],2));
+            System.out.println("g(index(4),times[index(4)],4.):" +g(index(4), times[index(4)],4));
+                             
         }
 
         return 0.;
@@ -397,8 +395,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
         birth = new Double[m];
         death = new Double[m];
         psi = new Double[m];
-        
-        Double[] p = samplingProportion.get().getValues();
+
+        Double[] p = (psiConstrainer.get()==null)? samplingProportion.get().getValues() : psiConstrainer.get().getConstrained().getValues();
         Double[] b = becomeUninfectiousRate.get().getValues();
         Double[] R = R0.get().getValues();
 
@@ -412,11 +410,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
 
     public double updateRates(Tree tree){
 
-        if (transform) transformParameters(S0_input.get()==null?1:S0_input.get().getValue());
+        if (psiConstrainer.get() != null)  psiConstrainer.get().constrain();
+
+        if (transform)
+            transformParameters(S0_input.get()==null?1:S0_input.get().getValue());
         else {
             death = deathRate.get().getValues();
             birth = birthRate.get().getValues();
-            psi = samplingRate.get().getValues();
+            psi = (psiConstrainer.get()==null)? samplingRate.get().getValues() : psiConstrainer.get().getConstrained().getValues();
         }
 
         return 0.;
@@ -520,6 +521,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution{
     protected boolean requiresRecalculation() {
         return true;
     }
+
 
 
 }
