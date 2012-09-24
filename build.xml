@@ -112,7 +112,7 @@
 				<include name="beast/**/*.xsl" />
 			</fileset>
         </jar>
-		<jar jarfile="${dist}/BDSSM.addon.jar">
+		<jar jarfile="${distBDSSM}/BDSSM.addon.jar">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
@@ -181,16 +181,16 @@
 			<fileset dir="examples" />
 		</copy>
 		<copy todir="${Add_on_dir}/lib">
-			<fileset dir="${dist}" includes="BDSSM.addon.jar" />
+			<fileset dir="${distBDSSM}" includes="BDSSM.addon.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}">
-			<fileset dir="${dist}" includes="BDSSM.src.jar" />
+			<fileset dir="${distBDSSM}" includes="BDSSM.src.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}/templates">
 			<fileset file="templates/BDSKY.xml" />
 		</copy>
 
-		<jar jarfile="${dist}/BDSKY.addon.zip">
+		<jar jarfile="${distBDSSM}/BDSKY.addon.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />
 			</fileset>
