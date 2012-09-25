@@ -29,6 +29,7 @@
 	<path id="classpath">
         <pathelement path="${buildBDSSM}"/>
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
+		<fileset dir="${libBeast2}" includes="fest.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastiiclasspath}"/>
         <!--pathelement path="${beastclassicclasspath}"/-->
