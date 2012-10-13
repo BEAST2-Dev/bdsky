@@ -131,13 +131,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     private List<Double> deathRateChangeTimes = new ArrayList<Double>();
     private List<Double> samplingRateChangeTimes = new ArrayList<Double>();
 
-    /**
-     * map of birth rate parameters keyed by times in timesSet
-     */
-//    private Map<Double, Double> birthRates = new HashMap<Double, Double>();
-//    private Map<Double, Double> deathRates = new HashMap<Double, Double>();
-//    private Map<Double, Double> samplingRates = new HashMap<Double, Double>();
-
     Boolean contempData;
     //List<Interval> intervals = new ArrayList<Interval>();
     SortedSet<Double> timesSet = new TreeSet<Double>();
@@ -164,6 +157,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     @Override
     public void initAndValidate() throws Exception {
         super.initAndValidate();
+
+        birth = null;
+        death = null;
+        psi = null;
+        rho = null;
+        birthRateChangeTimes.clear();
+        deathRateChangeTimes.clear();
+        samplingRateChangeTimes.clear();
+        totalIntervals = 0;
 
         m_forceRateChange = forceRateChange.get();
         birthRateTimesRelative = birthRateChangeTimesRelativeInput.get();
@@ -239,7 +241,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             } else {
 
                 rho = new Double[totalIntervals];
-
 
                 RealParameter rhoSampling = rhoSamplingTimes.get();
                 if (rhoSampling != null) {
@@ -332,8 +333,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 0; i < tipCount; i++) {
 
                 if (Math.abs((times[totalIntervals - 1] - times[k]) - dates[i]) < 1e-10) {
-                    if (rho[k] == 0)
+                    if (rho[k] == 0) {
                         return Double.NEGATIVE_INFINITY;
+                    }
                     N[k] += 1;
                     isRhoTip[i] = true;
                 }
@@ -346,6 +348,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      * Collect all the times of parameter value changes and rho-sampling events
      */
     private void collectTimes() {
+
+        timesSet.clear();
 
         if (intervalNumber.get() != null) {
             birthChanges = intervalNumber.get() - 1;
@@ -390,7 +394,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         System.out.println("times = " + timesSet);
 
-        times = timesSet.toArray(times);
+        times = timesSet.toArray(new Double[timesSet.size()]);
         totalIntervals = times.length;
 
         System.out.println("total intervals = " + totalIntervals);
@@ -459,6 +463,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (m_rho.get() != null) {
             if (contempData) {
+                rho = new Double[totalIntervals];
                 Arrays.fill(rho, 0.);
                 rho[totalIntervals - 1] = m_rho.get().getValue();
             } else {
