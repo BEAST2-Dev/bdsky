@@ -45,9 +45,13 @@ public class BirthDeathSkylineTest extends TestCase {
         //
         //
 //        // a)
-//        bdssm.setInputValue("rho", new RealParameter("0.01"));
-//        bdssm.initAndValidate();
+        bdssm.setInputValue("rho", new RealParameter("0.01"));
+        bdssm.setInputValue("rhoSamplingTimes", new RealParameter("6.0"));
+        bdssm.initAndValidate();
 //        System.out.println("\na) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-22.54937791357737, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+//-22.54937791357737
+
         // b)
         bdssm.setInputValue("intervalNumber", 3);
 
@@ -63,7 +67,9 @@ public class BirthDeathSkylineTest extends TestCase {
 //        bdssm.setInputValue("rho", new RealParameter("0.01 0.02 0.05"));
         bdssm.setInputValue("rho", new RealParameter("0.05 0.02 0.01"));
         bdssm.initAndValidate();
-        System.out.println("\nb) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+//        System.out.println("\nb) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-28.19069830850966, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+ //-28.19069830850966
 
         // c1)
         bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
@@ -77,21 +83,25 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("rhoSamplingTimes", new RealParameter("6.0"));
         bdssm.setInputValue("rho", new RealParameter("0.1"));
         bdssm.initAndValidate();
-        System.out.println("\nc) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+//        System.out.println("\nc) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-20.74594782518312, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+
         //        // c3)
         bdssm.setInputValue("intervalNumber", 1);
         bdssm.setInputValue("rhoSamplingTimes", new RealParameter("2.7 3.7 6"));
         bdssm.setInputValue("rho", new RealParameter("0 0 0.1"));
         bdssm.initAndValidate();
-        System.out.println("\nc3) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
-
+//        System.out.println("\nc3) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-20.745947825183116, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+          
         // d)
         bdssm.setInputValue("rho", null);
         bdssm.setInputValue("intervalNumber", 1);
         bdssm.setInputValue("intervalTimes", new RealParameter("0."));
         bdssm.initAndValidate();
-        System.out.println("\nd) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
-
+//        System.out.println("\nd) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-18.574104165089775, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+        
 
         // --------------
 
@@ -108,8 +118,9 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("rho", new RealParameter("0.01"));
         bdssm.initAndValidate();
 
-        System.out.println("\ne) Contemp. TreeLikelihood: " + bdssm.calculateTreeLogLikelihood(tree));
-
+//        System.out.println("\ne) Contemp. TreeLikelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-8.130835517289412, bdssm.calculateTreeLogLikelihood(tree), 1e-5); //-8.130835517289412
+              
 
         //f) contemp tree:
 
@@ -122,10 +133,9 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("rho", new RealParameter("0. 0. 0.01"));
         bdssm.initAndValidate();
 
-        System.out.println("\nf) Contemp. TreeLikelihood: " + bdssm.calculateTreeLogLikelihood(tree));
-
-        //
-        ////        assertEquals(-19.0198, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+//        System.out.println("\nf) Contemp. TreeLikelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-7.176847889608425, bdssm.calculateTreeLogLikelihood(tree), 1e-5);  //-7.176847889608425
+               
 
     }
 
