@@ -49,9 +49,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             new Input<Boolean>("samplingRateTimesRelative", "True if sampling rate times specified relative to tree height? Default false", false);
 
     public Input<BooleanParameter> reverseTimeArrays =
-            new Input<BooleanParameter>("reverseTimeArrays", "True the time arrays are given in backwards time (from the present back to root). Order: 1) birth 2) death 3) sampling. Default false." +
+            new Input<BooleanParameter>("reverseTimeArrays", "True the time arrays are given in backwards time (from the present back to root). Order: 1) birth 2) death 3) sampling 4) rho. Default false." +
                     "Careful, rate array must still be given in FORWARD time (root to tips).",
-                    new BooleanParameter(new Boolean[]{false, false, false}));
+                    new BooleanParameter(new Boolean[]{false, false, false, false}));
 
     // the times for rho sampling
     public Input<RealParameter> rhoSamplingTimes =
@@ -212,7 +212,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         }
 
         collectTimes();
-        
 
         if (m_rho.get() != null) {
 
@@ -241,7 +240,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 RealParameter rhoSampling = rhoSamplingTimes.get();
                 if (rhoSampling != null) {
                     for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                        rho[index(rhoSampling.getValue(i))] = m_rho.get().getValue(i);
+                        rho[index(reverseTimeArrays.get().getValue(3) ? (t_root+orig_root.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-i-1)) : rhoSampling.getValue(i))] = m_rho.get().getValue(i);
                     }
                     rhoSamplingCount = rho.length;
                 }
@@ -295,18 +294,20 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 throw new RuntimeException("The time interval parameter should be numChanges + 1 long (" + (numChanges + 1));
             }
 
-            int dim = intervalTimes.getDimension();
-            double start = 0.0;
-            double end;
-            for (int i = 1; i < dim; i++) {
-                end = reverse? (maxTime - intervalTimes.getValue(dim-i-1)) : intervalTimes.getValue(i);
-                if (relative) end *= maxTime;
+//            if (numChanges>0){
+                int dim = intervalTimes.getDimension();
+                double start = 0.0;
+                double end;
+                for (int i = 1; i < dim; i++) {
+                    end = reverse? (maxTime - intervalTimes.getValue(dim-i-1)) : intervalTimes.getValue(i);
+                    if (relative) end *= maxTime;
+                    changeTimes.add(end);
+                    start = end;
+                }
+                end = maxTime;
                 changeTimes.add(end);
-                start = end;
             }
-            end = maxTime;
-            changeTimes.add(end);
-        }
+//        }
     }
 
     /*
@@ -386,9 +387,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         RealParameter rhoSampling = rhoSamplingTimes.get();
         if (rhoSampling != null) {
-            for (int i = 0; i < rhoSampling.getDimension(); i++) {
+
+            double maxTime = m_tree.get().getRoot().getHeight() + orig_root.get().getValue();
+            int dim = rhoSampling.getDimension();
+
+            for (int i = 0; i < dim; i++) {
                 //eventsSet.add(new BDSEvent(BDSEvent.Type.rhoSampling, rhoSampling.getValue(i)));
-                timesSet.add(rhoSampling.getValue(i));
+                timesSet.add(reverseTimeArrays.get().getValue(3) ? (maxTime - rhoSampling.getValue(dim-i-1)) : rhoSampling.getValue(i));
             }
         }
 
@@ -432,14 +437,16 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        if (m_rho.get() != null && rhoSamplingTimes.get()!=null) {
+        if (m_rho.get() != null) {
 
             Double[] rhos = m_rho.get().getValues();
             RealParameter rhoSampling = rhoSamplingTimes.get();
 
             for (int i = 0; i < totalIntervals; i++) {
+
                 for (int j = 0; i < rhos.length; i++) {
-                    if (times[i].equals(rhoSampling.getValue(j))) rho[i] = rhos[j];
+                    if (times[i].equals(reverseTimeArrays.get().getValue(3) ? (t_root+orig_root.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-j-1)) : rhoSampling.getValue(j)))
+                        rho[i] = rhos[j];
                 }
             }
         }
@@ -470,11 +477,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 rho[totalIntervals - 1] = m_rho.get().getValue();
             } else {
                 rho = new Double[totalIntervals];
+                Arrays.fill(rho, 0.);
 
                 RealParameter rhoSampling = rhoSamplingTimes.get();
 
                 for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                    rho[index(rhoSampling.getValue(i))] = m_rho.get().getValue(i);
+                    rho[index(reverseTimeArrays.get().getValue(3) ? (t_root+orig_root.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-i-1)) : rhoSampling.getValue(i))] = m_rho.get().getValue(i);
                 }
                 rhoSamplingCount = rho.length;
             }
@@ -485,7 +493,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (m_rho.get() != null)
             if (computeN(tree) < 0)
-                return Double.NEGATIVE_INFINITY;  // todo: check if it's enough to do this once at the beginning (only if interval times and sample dates don't change)
+                return Double.NEGATIVE_INFINITY;
 
         int intervalCount = times.length;
 
@@ -656,9 +664,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
 
         for (int i = 0; i < totalIntervals; i++) {
-            birth[i] = R[index(times[i], birthRateChangeTimes)] * b[index(times[i], deathRateChangeTimes)] / S0;
-            psi[i] = p[index(times[i], samplingRateChangeTimes)] * b[index(times[i], deathRateChangeTimes)];
-            death[i] = b[index(times[i], deathRateChangeTimes)] - psi[i];
+            birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] / S0;
+            psi[i] = p[samplingChanges>0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
+            death[i] = b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
 
         }
     }
