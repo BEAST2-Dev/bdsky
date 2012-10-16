@@ -437,7 +437,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        if (m_rho.get() != null) {
+        if (m_rho.get() != null && rhoSamplingTimes.get()!=null) {
 
             Double[] rhos = m_rho.get().getValues();
             RealParameter rhoSampling = rhoSamplingTimes.get();
