@@ -406,7 +406,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     }
 
-    private Double updateRatesAndTimes(Tree tree) {
+    protected Double updateRatesAndTimes(Tree tree) {
 
         collectTimes();
 
@@ -652,7 +652,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return count;
     }
 
-    private void transformParameters(int S0) {
+    protected void transformParameters(int S0) {
 
         Double[] R = R0.get().getValues();
         Double[] b = becomeUninfectiousRate.get().getValues();
