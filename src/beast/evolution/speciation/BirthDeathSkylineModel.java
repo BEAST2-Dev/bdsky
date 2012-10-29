@@ -89,9 +89,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Input<ParameterConstrainer> psiConstrainer = new Input<ParameterConstrainer>("psiConstrainer", "psiConstrainer, constrain samplingRate to period of sampling");
 
-    public Input<IntegerParameter> S0_input =
-            new Input<IntegerParameter>("S0", "The numbers of susceptible individuals");
-
     double t_root;
     protected double[] p0;
     protected double[] Ai;
@@ -132,9 +129,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      */
     int totalIntervals;
 
-    private List<Double> birthRateChangeTimes = new ArrayList<Double>();
-    private List<Double> deathRateChangeTimes = new ArrayList<Double>();
-    private List<Double> samplingRateChangeTimes = new ArrayList<Double>();
+    protected List<Double> birthRateChangeTimes = new ArrayList<Double>();
+    protected List<Double> deathRateChangeTimes = new ArrayList<Double>();
+    protected List<Double> samplingRateChangeTimes = new ArrayList<Double>();
 
     Boolean contempData;
     //List<Interval> intervals = new ArrayList<Interval>();
@@ -150,7 +147,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Boolean samplingRateTimesRelative = false;
 
 
-    public Boolean printTempResults = true;
+    public Boolean printTempResults;
 
 /************************************************************************************************/
     /*              "constructor"                                                                   */
@@ -179,7 +176,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         contempData = contemp.get();
         rhoSamplingCount = 0;
-        printTempResults = true;
+        printTempResults = false;
 
 
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null) {
@@ -192,7 +189,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         } else if (R0.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
 
             transform = true;
-            //transformParameters(S0_input.get() == null ? 1 : S0_input.get().getValue());
 
         } else {
             throw new RuntimeException("Either specify birthRate, deathRate and samplingRate OR specify R0, becomeUninfectiousRate and samplingProportion!");
@@ -417,7 +413,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         //}
 
         if (transform)
-            transformParameters(S0_input.get() == null ? 1 : S0_input.get().getValue());
+            transformParameters();
         else {
 
             Double[] birthRates = birthRate.get().getValues();
@@ -652,7 +648,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return count;
     }
 
-    protected void transformParameters(int S0) {
+    protected void transformParameters() {
 
         Double[] R = R0.get().getValues();
         Double[] b = becomeUninfectiousRate.get().getValues();
@@ -664,7 +660,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
 
         for (int i = 0; i < totalIntervals; i++) {
-            birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] / S0;
+            birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             psi[i] = p[samplingChanges>0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             death[i] = b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
 
