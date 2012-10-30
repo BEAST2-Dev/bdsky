@@ -196,13 +196,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (transform) {
 
-            birthChanges = R0.get().getDimension() - 1;
+            if (birthChanges < 1) birthChanges = R0.get().getDimension() - 1;
             samplingChanges = samplingProportion.get().getDimension() - 1;
             deathChanges = becomeUninfectiousRate.get().getDimension() - 1;
 
         } else {
 
-            birthChanges = birthRate.get().getDimension() - 1;
+            if (birthChanges < 1) birthChanges = birthRate.get().getDimension() - 1;
             deathChanges = deathRate.get().getDimension() - 1;
             samplingChanges = samplingRate.get().getDimension() - 1;
         }
