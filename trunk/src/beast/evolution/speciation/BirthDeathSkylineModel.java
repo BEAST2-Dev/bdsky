@@ -283,7 +283,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
 
             if (reverse && intervalTimes.getValue(intervalTimes.getDimension()-1) != 0.0) {
-                throw new RuntimeException("Last time in backward interval times parameter should always be zero, because it will be replaced by (treeHeigtht+origRoot)");
+                throw new RuntimeException("Last time in backward interval times parameter should always be zero, because it will be replaced by (treeHeight+origRoot)");
             }
 
             if (numChanges > 0 && intervalTimes.getDimension() != numChanges + 1) {
@@ -737,7 +737,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             n[j] = (j == (0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree));
 
             if (n[j] > 0) {
-                temp = n[j] * Math.log(g(j, times[j], time));
+                temp = n[j] * (Math.log(g(j, times[j], time)) + Math.log(1-rho[j]));
                 logP += temp;
                 if (printTempResults)
                     System.out.println("3rd factor (nj loop) = " + temp + "; interval = " + j + "; n[j] = " + n[j]);//+ "; Math.log(g(j, times[j], time)) = " + Math.log(g(j, times[j], time)));
