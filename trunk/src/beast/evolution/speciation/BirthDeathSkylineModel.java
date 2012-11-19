@@ -87,7 +87,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> conditionOnSurvival =
             new Input<Boolean>("conditionOnSurvival", "condition on at least one survival? Default true.", true);
 
-    public Input<ParameterConstrainer> psiConstrainer = new Input<ParameterConstrainer>("psiConstrainer", "psiConstrainer, constrain samplingRate to period of sampling");
 
     double t_root;
     protected double[] p0;
