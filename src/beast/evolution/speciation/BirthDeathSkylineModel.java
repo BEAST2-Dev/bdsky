@@ -238,7 +238,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 RealParameter rhoSampling = rhoSamplingTimes.get();
                 if (rhoSampling != null) {
                     for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                        rho[index(reverseTimeArrays.get().getValue(3) ? (t_root+orig_root.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-i-1)) : rhoSampling.getValue(i))]
+                        rho[index(reverseTimeArrays.get().getValue(3) ? (times[totalIntervals-1] - rhoSampling.getValue(rhoSampling.getDimension()-i-1)) : rhoSampling.getValue(i))]
                                 = m_rho.get().getValue(constantRho ? 0 : i);
                     }
                     rhoSamplingCount = rho.length;
@@ -333,11 +333,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 0; i < tipCount; i++) {
 
                 if (Math.abs((times[totalIntervals - 1] - times[k]) - dates[i]) < 1e-10) {
-                    if (rho[k] == 0) {
+                    if (rho[k] == 0 && psi[k]==0) {
                         return Double.NEGATIVE_INFINITY;
                     }
-                    N[k] += 1;
-                    isRhoTip[i] = true;
+                    if (rho[k] > 0 ){
+                        N[k] += 1;
+                        isRhoTip[i] = true;
+                    }
                 }
             }
         }
@@ -392,7 +394,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             for (int i = 0; i < dim; i++) {
                 //eventsSet.add(new BDSEvent(BDSEvent.Type.rhoSampling, rhoSampling.getValue(i)));
-                timesSet.add(reverseTimeArrays.get().getValue(3) ? (maxTime - rhoSampling.getValue(dim-i-1)) : rhoSampling.getValue(i));
+                    timesSet.add(reverseTimeArrays.get().getValue(3) ? (maxTime - rhoSampling.getValue(dim-i-1)) : rhoSampling.getValue(i));
             }
         }
 
@@ -481,7 +483,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 RealParameter rhoSampling = rhoSamplingTimes.get();
 
                 for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                    rho[index(reverseTimeArrays.get().getValue(3) ? (t_root+orig_root.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-i-1)) : rhoSampling.getValue(i))]
+                    rho[index(reverseTimeArrays.get().getValue(3) ? (times[totalIntervals-1] - rhoSampling.getValue(rhoSampling.getDimension()-i-1)) : rhoSampling.getValue(i))]
                             = m_rho.get().getValue(constantRho ? 0 : i);
 
                 }
