@@ -6,7 +6,6 @@ import beast.evolution.alignment.Taxon;
 import beast.core.parameter.*;
 import beast.core.Input;
 import beast.core.Description;
-import beast.core.util.ParameterConstrainer;
 
 import java.util.*;
 
@@ -774,4 +773,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     protected boolean requiresRecalculation() {
         return true;
     }
+    
+    @Override
+	public boolean canHandleTipDates() {
+		return (m_rho.get() == null);
+	}
 }
