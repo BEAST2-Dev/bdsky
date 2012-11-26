@@ -15,7 +15,11 @@ public class BeautiBDSKYTest extends BeautiBase {
 		f.selectTab("Priors");
 		
 		warning("Change Tree prior to Birth Death Skyline");
-		beautiFrame.comboBox("TreeDistribution").selectItem("Birth Death Skyline");
+		beautiFrame.comboBox("TreeDistribution").selectItem("Birth Death Skyline Contemporary");
+		printBeautiState(f);
+
+		warning("Change Tree prior to Birth Death Skyline");
+		beautiFrame.comboBox("TreeDistribution").selectItem("Birth Death Skyline Serial");
 		printBeautiState(f);
 
 		makeSureXMLParses();
