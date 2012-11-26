@@ -21,6 +21,9 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes'>
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
