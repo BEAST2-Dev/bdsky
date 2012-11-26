@@ -74,8 +74,8 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 
             <connect srcID='origRootPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and orig_root.t:$(n)/estimate=true'>prior on orig_root.t:$(n)</connect>
             <connect srcID='rhoPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'>prior on sampling proprtion t:$(n)</connect>
-            <connect srcID='deltaSmoother.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>smoothing over becomeUninfectiousRate.t:$(n)</connect>
-            <connect srcID='R0Smoother.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true'>smoothing over R0.t:$(n)</connect>
+            <connect srcID='becomeUninfectiousRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior over becomeUninfectiousRate.t:$(n)</connect>
+            <connect srcID='R0Prior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true'>prior over R0.t:$(n)</connect>
 
             <connect srcID='becomeUninfectiousRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'/>
             <connect srcID='rhoScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'/>
