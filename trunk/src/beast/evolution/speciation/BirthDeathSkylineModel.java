@@ -145,6 +145,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Boolean deathRateTimesRelative = false;
     Boolean samplingRateTimesRelative = false;
 
+    Boolean bdsir;
 
     public Boolean printTempResults;
 
@@ -159,6 +160,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
+        bdsir = this.getClass().getName().equals("beast.evolution.speciation.BDSIR");
+        
         birth = null;
         death = null;
         psi = null;
@@ -248,7 +251,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             Arrays.fill(rho, 0.);
         }
         isRhoTip = new boolean[m_tree.get().getLeafNodeCount()];
-
 
         printTempResults = false;
     }
@@ -352,7 +354,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         timesSet.clear();
 
-        if (this instanceof BDSIR && intervalNumber.get() != null) {
+        if (bdsir && intervalNumber.get() != null) {
             birthChanges = intervalNumber.get() - 1;
 //            deathChanges = birthChanges;
 //            samplingChanges = birthChanges;
@@ -425,12 +427,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             Double[] samplingRates = samplingRate.get().getValues();
 
             for (int i = 0; i < totalIntervals; i++) {
-                if (!(this instanceof BDSIR)) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
+                if (!bdsir) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
                 death[i] = deathRates[index(times[i], deathRateChangeTimes)];
                 psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
 
                 if (printTempResults){
-                    if (!(this instanceof BDSIR)) System.out.println("birth["+i+"]=" + birth[i]);
+                    if (!bdsir) System.out.println("birth["+i+"]=" + birth[i]);
                     System.out.println("death["+i+"]=" + death[i]);
                     System.out.println("psi["+i+"]=" + psi[i]);
                 }
@@ -663,10 +665,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         death = new Double[totalIntervals];
         psi = new Double[totalIntervals];
 
-        if (this instanceof BDSIR) birth[0] = R[0] * b[0];
+        if (bdsir) birth[0] = R[0] * b[0];
 
         for (int i = 0; i < totalIntervals; i++) {
-            if (!(this instanceof BDSIR)) birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
+            if (!bdsir) birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             psi[i] = p[samplingChanges>0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             death[i] = b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
 
