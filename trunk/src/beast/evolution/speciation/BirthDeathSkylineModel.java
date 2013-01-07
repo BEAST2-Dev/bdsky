@@ -352,11 +352,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         timesSet.clear();
 
-//        if (intervalNumber.get() != null) {
-//            birthChanges = intervalNumber.get() - 1;
+        if (this instanceof BDSIR && intervalNumber.get() != null) {
+            birthChanges = intervalNumber.get() - 1;
 //            deathChanges = birthChanges;
 //            samplingChanges = birthChanges;
-//        }
+        }
 
         getChangeTimes(birthRateChangeTimes,
                 birthRateChangeTimesInput.get() != null ? birthRateChangeTimesInput.get() :intervalTimes.get(),
@@ -425,12 +425,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             Double[] samplingRates = samplingRate.get().getValues();
 
             for (int i = 0; i < totalIntervals; i++) {
-                birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
+                if (!(this instanceof BDSIR)) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
                 death[i] = deathRates[index(times[i], deathRateChangeTimes)];
                 psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
 
                 if (printTempResults){
-                    System.out.println("birth["+i+"]=" + birth[i]);
+                    if (!(this instanceof BDSIR)) System.out.println("birth["+i+"]=" + birth[i]);
                     System.out.println("death["+i+"]=" + death[i]);
                     System.out.println("psi["+i+"]=" + psi[i]);
                 }
@@ -630,7 +630,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             epoch = -epoch - 1;
         }
 
-        // TODO this minimum should not be activated unless the time is greater than the root of the tree?
         return Math.min(epoch, totalIntervals - 1); //Math.max((epoch - 1), 0);
     }
 
@@ -664,9 +663,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         death = new Double[totalIntervals];
         psi = new Double[totalIntervals];
 
+        if (this instanceof BDSIR) birth[0] = R[0] * b[0];
 
         for (int i = 0; i < totalIntervals; i++) {
-            birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
+            if (!(this instanceof BDSIR)) birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             psi[i] = p[samplingChanges>0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             death[i] = b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
 
@@ -717,7 +717,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     " = " + temp + "; interval = " + i);
             if (Double.isInfinite(logP))
                 return logP;
-
         }
 
         // middle product term in f[T]
