@@ -650,7 +650,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         }
         for (int i = 0; i < tipCount; i++) {
-            if (tree.getNode(i).getHeight() >= time) count -= 1;
+            if (tree.getNode(i).getHeight() > time) count -= 1;
         }
         return count;
     }
@@ -665,7 +665,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         death = new Double[totalIntervals];
         psi = new Double[totalIntervals];
 
-        if (bdsir) birth[0] = R[0] * b[0];
+        if (bdsir) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
 
         for (int i = 0; i < totalIntervals; i++) {
             if (!bdsir) birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
