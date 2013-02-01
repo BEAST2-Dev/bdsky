@@ -94,7 +94,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     protected int[] N;   // number of leaves sampled at each time t_i
 
     // these four arrays are totalIntervals in length
-    Double[] birth;
+    protected Double[] birth;
     Double[] death;
     Double[] psi;
     Double[] rho;
@@ -105,7 +105,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     /**
      * The number of change points in the birth rate
      */
-    int birthChanges;
+    protected int birthChanges;
 
     /**
      * The number of change points in the death rate
@@ -138,14 +138,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     Double[] times = new Double[]{0.};
 
-    Boolean transform;
+    protected Boolean transform;
     Boolean m_forceRateChange;
 
     Boolean birthRateTimesRelative = false;
     Boolean deathRateTimesRelative = false;
     Boolean samplingRateTimesRelative = false;
-
-    Boolean bdsir;
 
     public Boolean printTempResults;
 
@@ -160,8 +158,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        bdsir = this.getClass().getName().equals("beast.evolution.speciation.BDSIR");
-        
         birth = null;
         death = null;
         psi = null;
@@ -354,7 +350,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         timesSet.clear();
 
-        if (bdsir && intervalNumber.get() != null) {
+        if (isBDSIR() && intervalNumber.get() != null) {
             birthChanges = intervalNumber.get() - 1;
 //            deathChanges = birthChanges;
 //            samplingChanges = birthChanges;
@@ -427,12 +423,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             Double[] samplingRates = samplingRate.get().getValues();
 
             for (int i = 0; i < totalIntervals; i++) {
-                if (!bdsir) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
+                if (!isBDSIR()) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
                 death[i] = deathRates[index(times[i], deathRateChangeTimes)];
                 psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
 
                 if (printTempResults){
-                    if (!bdsir) System.out.println("birth["+i+"]=" + birth[i]);
+                    if (!isBDSIR()) System.out.println("birth["+i+"]=" + birth[i]);
                     System.out.println("death["+i+"]=" + death[i]);
                     System.out.println("psi["+i+"]=" + psi[i]);
                 }
@@ -665,10 +661,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         death = new Double[totalIntervals];
         psi = new Double[totalIntervals];
 
-        if (bdsir) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
+        if (isBDSIR()) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
 
         for (int i = 0; i < totalIntervals; i++) {
-            if (!bdsir) birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
+            if (!isBDSIR()) birth[i] = R[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             psi[i] = p[samplingChanges>0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0];
             death[i] = b[deathChanges>0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
 
@@ -779,4 +775,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 	public boolean canHandleTipDates() {
 		return (m_rho.get() == null);
 	}
+
+
+    public Boolean isBDSIR(){
+        return false;
+    }
 }
