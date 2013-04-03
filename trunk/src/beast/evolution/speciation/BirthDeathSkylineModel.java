@@ -49,7 +49,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Input<BooleanParameter> reverseTimeArrays =
             new Input<BooleanParameter>("reverseTimeArrays", "True if the time arrays are given in backwards time (from the present back to root). Order: 1) birth 2) death 3) sampling 4) rho. Default false." +
-                    "Careful, rate array must still be given in FORWARD time (root to tips).",
+                    "Careful, rate array must still be given in FORWARD time (root to tips). If rhosamplingTimes given, they should be backwards and this should be true.",
                     new BooleanParameter(new Boolean[]{false, false, false, false}));
 
     // the times for rho sampling
@@ -321,7 +321,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         double[] dates = new double[tipCount];
 
         for (int i = 0; i < tipCount; i++) {
-            dates[i] = tree.getNode(i).getDate();
+            dates[i] = tree.getNode(i).getHeight();
         }
 
         for (int k = 0; k < totalIntervals; k++) {
@@ -737,7 +737,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         double time;
         for (int j = 0; j < totalIntervals; j++) {
             time = j < 1 ? 0 : times[j - 1];
-            n[j] = (j == (0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree));
+            n[j] = ((j == 0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree));
 
             if (n[j] > 0) {
                 temp = n[j] * (Math.log(g(j, times[j], time)) + Math.log(1-rho[j]));
