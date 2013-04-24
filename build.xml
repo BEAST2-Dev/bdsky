@@ -189,7 +189,8 @@
 			<fileset dir="${distBDSSM}" includes="BDSSM.src.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}/templates">
-			<fileset file="templates/BDSKY.xml" />
+			<fileset file="templates/BDSKY_contemp.xml" />
+			<fileset file="templates/BDSKY_serial.xml" />
 		</copy>
 
 		<jar jarfile="${distBDSSM}/BDSKY.addon.zip">
