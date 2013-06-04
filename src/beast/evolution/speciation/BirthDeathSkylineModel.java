@@ -57,8 +57,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             new Input<RealParameter>("rhoSamplingTimes", "The times t_i specifying when rho-sampling occurs", (RealParameter) null);
 
 
-    public Input<RealParameter> orig_root =
-            new Input<RealParameter>("orig_root", "The origin of infection x0", Input.Validate.REQUIRED);
+    public Input<RealParameter> origin =
+            new Input<RealParameter>("origin", "The time from origin to last sample (must be larger than tree height)", Input.Validate.REQUIRED);
 
     public Input<RealParameter> birthRate =
             new Input<RealParameter>("birthRate", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time");
@@ -157,6 +157,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     @Override
     public void initAndValidate() throws Exception {
         super.initAndValidate();
+
+        if (m_tree.get().getRoot().getHeight() >= origin.get().getValue()) {
+                throw new RuntimeException("Error: origin ("+origin.get().getValue()+") must be larger than tree height ("+m_tree.get().getRoot().getHeight() +").");
+        }
 
         birth = null;
         death = null;
@@ -259,8 +263,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (printTempResults) System.out.println("relative = " + relative);
 
-        double maxTime = m_tree.get().getRoot().getHeight() + orig_root.get().getValue();
-
+        double maxTime = origin.get().getValue(); // m_tree.get().getRoot().getHeight() + orig_root.get().getValue();
+        
         if (intervalTimes == null) {
             //equidistant
 
@@ -386,7 +390,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         RealParameter rhoSampling = rhoSamplingTimes.get();
         if (rhoSampling != null) {
 
-            double maxTime = m_tree.get().getRoot().getHeight() + orig_root.get().getValue();
+            double maxTime = origin.get().getValue();
             int dim = rhoSampling.getDimension();
 
             for (int i = 0; i < dim; i++) {
@@ -447,7 +451,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 0; i < totalIntervals; i++) {
 
                 for (int j = 0; i < rhos.length; i++) {
-                    if (times[i].equals(reverseTimeArrays.get().getValue(3) ? (t_root+orig_root.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-j-1)) : rhoSampling.getValue(j)))
+                    if (times[i].equals(reverseTimeArrays.get().getValue(3) ? (origin.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension()-j-1)) : rhoSampling.getValue(j)))
                         rho[i] = rhos[j];
                 }
             }
@@ -465,6 +469,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(Tree tree) {
+
+        if (m_tree.get().getRoot().getHeight() >= origin.get().getValue()) {
+            return Double.NEGATIVE_INFINITY;
+        }
 
         // updateRatesAndTimes must be called before calls to index() below
         if (updateRatesAndTimes(tree) < 0)
