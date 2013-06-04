@@ -30,7 +30,7 @@
 	</tree>
 
 	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="10" contemp="true">
-		<parameter name="orig_root" id="orig_root" value ="1" lower="0." upper="1000."/>  	
+		<parameter name="origin" id="origin" value ="100" lower="0." upper="1000."/>  	
 		<parameter name="R0" id="R0" value="2" lower="0." dimension ="10" upper="10"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="1" lower="0." upper="10." dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion" value="0."/>
@@ -62,8 +62,8 @@
 			<distribution id="rho_prior" spec="beast.math.distributions.Prior" x="@rho">
 				<distr spec="beast.math.distributions.Beta" alpha="1." beta="9999." offset="0."/> 
 			</distribution>
-			<distribution  id='orig_root_Prior' x="@orig_root" spec='beast.math.distributions.Prior'>
-				<distr spec='beast.math.distributions.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
+			<distribution  id='origin_Prior' x="@origin" spec='beast.math.distributions.Prior'>
+				<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>	
 			</distribution>
 			<distribution id='delta_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@becomeUninfectiousRate"/>
             <distribution id='R0_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@R0"/>
@@ -93,7 +93,7 @@
      
 		<state id="state" storeEvery="100000">
 			<stateNode idref='tree'/>
-			<stateNode idref='orig_root'/>
+			<stateNode idref='origin'/>
 			<stateNode idref='becomeUninfectiousRate'/>
 			<stateNode idref='rho'/>
 			<stateNode idref='R0'/>
@@ -118,7 +118,7 @@
 			<down idref="becomeUninfectiousRate"/>
 		</operator>
 
-		<operator id='orig_scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@orig_root"/>
+		<operator id='orig_scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin"/>
 
 		<operator id="tree_updown" spec="UpDownOperator" scaleFactor=".75" weight="10">
 			<up idref="tree"/>
@@ -148,7 +148,7 @@
 			<log idref="BDlikelihood"/>
 			<log idref="jointTreeLikelihood"/>
 			<log id="TreeHeight" spec="beast.evolution.tree.TreeHeightLogger" tree="@tree"/>
-			<log idref="orig_root"/>
+			<log idref="origin"/>
 			<log idref='rho'/>
 
 			<log idref="gammaShape"/>
@@ -175,7 +175,7 @@
 			<log idref="BDlikelihood"/>
 			<log idref="jointTreeLikelihood"/>
 			<log idref="TreeHeight"/>
-			<log idref="orig_root"/>
+			<log idref="origin"/>
 			<log idref='rho'/>
 			
 			<log idref="gammaShape"/>

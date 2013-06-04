@@ -37,7 +37,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	</BirthDeathSkylineModel>
 
 	<distribution  id='origRootPrior.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
-		<distr spec='beast.math.distributions.Uniform' lower="0." upper="1."/>	</distribution>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>	</distribution>
 	<distribution id="rhoPrior.t:$(n)" spec="beast.math.distributions.Prior" x="@rho.t:$(n)">
 		<distr spec="beast.math.distributions.Beta" alpha="1." beta="1." offset="0."/>
 	</distribution>
