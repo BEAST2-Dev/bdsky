@@ -28,7 +28,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
 	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporary.t:$(n)" tree="@Tree.t:$(n)" intervalNumber="10">
-		<parameter name="orig_root" id="orig_root.t:$(n)" value ="1" lower="0." upper="1000."/>  	
+		<parameter name="origin" id="origin.t:$(n)" value ="1000" lower="0." upper="1000."/>  	
 		<parameter name="R0" id="R0.t:$(n)" value="2" lower="0." dimension ="10" upper="10"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="10." dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion.t:$(n)" value="0."/> 
@@ -36,9 +36,8 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	    <reverseTimeArrays spec='parameter.BooleanParameter' value='false false false false'/>
 	</BirthDeathSkylineModel>
 
-	<distribution  id='origRootPrior.t:$(n)' x="@orig_root.t:$(n)" spec='beast.math.distributions.Prior'>
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
-	</distribution>
+	<distribution  id='origRootPrior.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="1."/>	</distribution>
 	<distribution id="rhoPrior.t:$(n)" spec="beast.math.distributions.Prior" x="@rho.t:$(n)">
 		<distr spec="beast.math.distributions.Beta" alpha="1." beta="1." offset="0."/>
 	</distribution>
@@ -71,11 +70,11 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 		<down idref="becomeUninfectiousRate.t:$(n)"/>
 	</operator>
 
-	<operator id='origScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@orig_root.t:$(n)"/>
+	<operator id='origScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin.t:$(n)"/>
 ]]>
             <connect srcID='BirthDeathSkyContemporary.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
 
-            <connect srcID='origRootPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and orig_root.t:$(n)/estimate=true'>prior on orig_root.t:$(n)</connect>
+            <connect srcID='origRootPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and origin.t:$(n)/estimate=true'>prior on origin.t:$(n)</connect>
             <connect srcID='rhoPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'>prior on sampling proprtion t:$(n)</connect>
             <connect srcID='becomeUninfectiousRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior over becomeUninfectiousRate.t:$(n)</connect>
             <connect srcID='R0Prior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true'>prior over R0.t:$(n)</connect>
@@ -84,12 +83,12 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='rhoScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'/>
             <connect srcID='R0Scaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true'/>
             <connect srcID='updownBD.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true and becomeUninfectiousRate.t:$(n)/estimate=true'/>
-            <connect srcID='origScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and orig_root.t:$(n)/estimate=true'/>
+            <connect srcID='origScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and origin.t:$(n)/estimate=true'/>
 
 
 
             <connect srcID='BirthDeathSkyContemporary.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSkyContemporary.t:$(n))'/>
-            <plate var='p' range='orig_root,rho,becomeUninfectiousRate,R0'>
+            <plate var='p' range='origin,rho,becomeUninfectiousRate,R0'>
                     <connect srcID='$(p).t:$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and $(p).t:$(n)/estimate=true'/>
                     <connect srcID='$(p).t:$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and $(p).t:$(n)/estimate=true'/>
             </plate>
