@@ -429,6 +429,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             birth = new Double[totalIntervals];
             death = new Double[totalIntervals];
             psi = new Double[totalIntervals];
+
+            birth[0] = birthRates[0];
             
             for (int i = 0; i < totalIntervals; i++) {
                 if (!isBDSIR()) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
