@@ -472,7 +472,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(Tree tree) {
 
-        if (m_tree.get().getRoot().getHeight() >= origin.get().getValue()) {
+        if (tree.getRoot().getHeight() >= origin.get().getValue()) {
             return Double.NEGATIVE_INFINITY;
         }
 
