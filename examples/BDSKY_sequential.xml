@@ -70,7 +70,7 @@
 
     	</distribution>
         <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">      
-			<distribution data="@alignment" id="treeLikelihood" spec="ThreadedTreeLikelihood" tree="@tree" siteModel="@SiteModel" branchRateModel="@StrictClock"/>           
+			<distribution data="@alignment" id="treeLikelihood" spec="TreeLikelihood" tree="@tree" siteModel="@SiteModel" branchRateModel="@StrictClock"/>           
         </distribution>    	
     </distribution>
 
