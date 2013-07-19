@@ -6,6 +6,7 @@ import beast.evolution.alignment.Taxon;
 import beast.core.parameter.*;
 import beast.core.Input;
 import beast.core.Description;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -355,7 +356,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         timesSet.clear();
 
         if (isBDSIR() && intervalNumber.get() != null) {
-            birthChanges = intervalNumber.get() - 1;
+            birthChanges = getSIRdimension()-1;
 //            deathChanges = birthChanges;
 //            samplingChanges = birthChanges;
         }
@@ -793,5 +794,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Boolean isBDSIR(){
         return false;
+    }
+
+    public int getSIRdimension(){
+        throw new NotImplementedException();
+    }
+
+    public void adjustBirthRates(Double[] birthSIR){
+        for (int i = 0; i < totalIntervals; i++) {
+            birth[i] = birthSIR[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0];
+        }
     }
 }
