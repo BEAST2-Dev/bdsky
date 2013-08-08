@@ -637,13 +637,16 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      */
     public int index(double t) {
 
+        if (t==times[totalIntervals - 1])
+            return totalIntervals - 1;
+
         int epoch = Arrays.binarySearch(times, t);
 
         if (epoch < 0) {
             epoch = -epoch - 1;
         }
 
-        return Math.min(epoch, totalIntervals - 1); //Math.max((epoch - 1), 0);
+        return epoch; //Math.min(epoch, totalIntervals - 1); //Math.max((epoch - 1), 0);
     }
 
 
@@ -742,7 +745,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 temp = Math.log(psi[index]) - Math.log(g(index, times[index], y));
                 logP += temp;
                 if (printTempResults) System.out.println("2nd PI = " + temp);
-                if (Double.isInfinite(logP))
+                if (psi[index]==0 || Double.isInfinite(logP))
                     return logP;
 
             }
