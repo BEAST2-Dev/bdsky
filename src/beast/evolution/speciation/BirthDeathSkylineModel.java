@@ -247,7 +247,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             rho = new Double[totalIntervals];
             Arrays.fill(rho, 0.);
         }
-        isRhoTip = new boolean[m_tree.get().getLeafNodeCount()];
+        isRhoTip = new boolean[treeInput.get().getLeafNodeCount()];
 
         printTempResults = false;
     }
