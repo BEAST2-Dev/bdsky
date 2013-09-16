@@ -639,7 +639,7 @@ public class BirthDeathSkylineTest extends TestCase {
 
     void printNodeState(Node node){
 
-        System.out.println("Node " + node.getNr() + " has colour " + node.m_sMetaData + "\t" + Integer.parseInt(node.m_sMetaData.split("=")[1].replaceAll("'","").replaceAll("\"","")));
+        System.out.println("Node " + node.getNr() + " has colour " + node.metaDataString + "\t" + Integer.parseInt(node.metaDataString.split("=")[1].replaceAll("'","").replaceAll("\"","")));
         if (node.getLeft()!=null)
             printNodeState(node.getLeft());
         if (node.getRight()!=null)
