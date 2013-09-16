@@ -10,7 +10,7 @@ import beast.core.*;
  */
 
 @Description("Multiply each element of a vector with the given scalar")
-public class ElementwiseMultiplication extends Plugin{
+public class ElementwiseMultiplication extends BEASTObject{
 
     public Input<RealParameter> vector =
                 new Input<RealParameter>("vector", "vector to be multiplied by the scalar", Input.Validate.REQUIRED);
