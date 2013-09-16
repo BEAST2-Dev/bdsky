@@ -159,10 +159,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        if (m_tree.get().getRoot().getHeight() >= origin.get().getValue()) {
-                throw new RuntimeException("Error: origin ("+origin.get().getValue()+") must be larger than tree height ("+m_tree.get().getRoot().getHeight() +").");
-        }
-
         birth = null;
         death = null;
         psi = null;
@@ -288,7 +284,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
 
             if (reverse && intervalTimes.getValue(intervalTimes.getDimension()-1) != 0.0) {
-                throw new RuntimeException("Last time in backward interval times parameter should always be zero, because it will be replaced by (treeHeight+origRoot)");
+                throw new RuntimeException("Last time in backward interval times parameter should always be zero");
             }
 
             if (numChanges > 0 && intervalTimes.getDimension() != numChanges + 1) {
