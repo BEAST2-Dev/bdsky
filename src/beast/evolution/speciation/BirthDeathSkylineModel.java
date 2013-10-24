@@ -633,7 +633,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      */
     public int index(double t) {
 
-        if (t==times[totalIntervals - 1])
+        if (t>=times[totalIntervals - 1])
             return totalIntervals - 1;
 
         int epoch = Arrays.binarySearch(times, t);
