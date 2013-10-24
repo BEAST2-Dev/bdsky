@@ -6,6 +6,7 @@ import beast.evolution.alignment.Taxon;
 import beast.core.parameter.*;
 import beast.core.Input;
 import beast.core.Description;
+import beast.evolution.tree.TreeInterface;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
@@ -311,7 +312,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     * Counts the number of tips at each of the contemporaneous sampling times ("rho" sampling time)
     * @return negative infinity if tips are found at a time when rho is zero, zero otherwise.
     */
-    private double computeN(Tree tree) {
+    private double computeN(TreeInterface tree) {
 
         isRhoTip = new boolean[tree.getLeafNodeCount()];
 
@@ -405,7 +406,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     }
 
-    protected Double updateRatesAndTimes(Tree tree) {
+    protected Double updateRatesAndTimes(TreeInterface tree) {
 
         collectTimes();
 
@@ -467,7 +468,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      */
 
     /*    calculate and store Ai, Bi and p0        */
-    public Double preCalculation(Tree tree) {
+    public Double preCalculation(TreeInterface tree) {
 
         if (tree.getRoot().getHeight() >= origin.get().getValue()) {
             return Double.NEGATIVE_INFINITY;
@@ -651,7 +652,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      * @param tree the tree
      * @return the number of lineages that exist at the given time in the given tree.
      */
-    public int lineageCountAtTime(double time, Tree tree) {
+    public int lineageCountAtTime(double time, TreeInterface tree) {
 
         int count = 1;
         int tipCount = tree.getLeafNodeCount();
@@ -686,7 +687,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     }
 
     @Override
-    public double calculateTreeLogLikelihood(Tree tree) {
+    public double calculateTreeLogLikelihood(TreeInterface tree) {
 
         int nTips = tree.getLeafNodeCount();
 
