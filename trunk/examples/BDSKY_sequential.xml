@@ -25,9 +25,7 @@
         </sequence>
     </data>
    
-	<tree spec="beast.evolution.tree.Tree" id="tree">
-		<initial spec="beast.util.ClusterTree" clusterType="upgma" taxa="@alignment"/>
-	</tree>
+	<tree id="tree" spec="beast.util.ClusterTree" clusterType="upgma" taxa="@alignment"/>
 
 	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="10">
 		<parameter name="origin" id="origin" value ="100" lower="0." upper="1000."/>  	
