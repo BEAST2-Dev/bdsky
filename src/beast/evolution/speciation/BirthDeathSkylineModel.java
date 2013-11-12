@@ -288,7 +288,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 throw new RuntimeException("Last time in backward interval times parameter should always be zero");
             }
 
-            if (numChanges > 0 && intervalTimes.getDimension() != numChanges + 1) {
+            if ((!isBDSIR() ) && numChanges > 0 && intervalTimes.getDimension() != numChanges + 1) {
                 throw new RuntimeException("The time interval parameter should be numChanges + 1 long (" + (numChanges + 1) +").");
             }
 
