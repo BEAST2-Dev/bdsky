@@ -356,10 +356,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             birthChanges = getSIRdimension()-1;
 //            deathChanges = birthChanges;
 //            samplingChanges = birthChanges;
+
         }
 
         getChangeTimes(birthRateChangeTimes,
-                birthRateChangeTimesInput.get() != null ? birthRateChangeTimesInput.get() :intervalTimes.get(),
+                birthRateChangeTimesInput.get() != null && !isSeasonalBDSIR() ? birthRateChangeTimesInput.get() :intervalTimes.get(),
                 birthChanges, birthRateTimesRelative, reverseTimeArrays.get().getValue(0));
 
         getChangeTimes(deathRateChangeTimes,
@@ -796,11 +797,16 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return false;
     }
 
+    public Boolean isSeasonalBDSIR(){
+        return false;
+    }
+
     public int getSIRdimension(){
         throw new NotImplementedException();
     }
 
     public void adjustBirthRates(Double[] birthSIR){
+
         for (int i = 0; i < totalIntervals; i++) {
             birth[i] = birthSIR[birthChanges>0 ? index(times[i], birthRateChangeTimes) : 0];
         }
