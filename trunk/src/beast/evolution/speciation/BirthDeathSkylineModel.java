@@ -1,6 +1,7 @@
 package beast.evolution.speciation;
 
 
+import beast.core.Citation;
 import beast.evolution.tree.Tree;
 import beast.evolution.alignment.Taxon;
 import beast.core.parameter.*;
@@ -18,7 +19,11 @@ import java.util.*;
  *         maths: Tanja Stadler
  */
 
-@Description("Adaptation of Tanja Stadler's BirthDeathSamplingModel, to allow for birth and death rates to change at times t_i")
+@Description("Adaptation of Tanja Stadler's BirthDeathSamplingModel, " +
+        "to allow for birth and death rates to change at times t_i")
+@Citation("Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013). “Birth-death skyline" +
+        "plot reveals temporal changes of epidemic spread in HIV and hepatitis C virus (HCV).” Proc" +
+        "Natl Acad Sci U S A, 110(1): 228–33.")
 public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     // the interval times for the birth rate
