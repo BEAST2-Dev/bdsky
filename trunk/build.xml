@@ -77,7 +77,9 @@
 		       fork="true"
 		       memoryinitialsize="256m"
 		       memorymaximumsize="256m"
-			   includeAntRuntime='false'>
+			   includeAntRuntime='false'
+			   source="1.6"
+		       target="1.6">
 			<include name="beast/**/**" />
 			<!-- compile JUnit test classes -->
 			<include name="test/beast/**" />
