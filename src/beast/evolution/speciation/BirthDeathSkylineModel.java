@@ -710,12 +710,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         // the first factor for origin
         if (!conditionOnSurvival.get())
-            temp = Math.log(g(index, times[index], x0));  // NOT conditioned on at least one sampled individual
+            temp = Math.log(g(index, Math.max(0.,times[index]), x0));  // NOT conditioned on at least one sampled individual
         else {
-            temp = p0(index, times[index], x0);
+            temp = p0(index, Math.max(0.,times[index]), x0);
             if (temp == 1)
                 return Double.NEGATIVE_INFINITY;
-            temp = Math.log(g(index, times[index], x0) / (1 - temp));   // DEFAULT: conditioned on at least one sampled individual
+            temp = Math.log(g(index, Math.max(0.,times[index]), x0) / (1 - temp));   // DEFAULT: conditioned on at least one sampled individual
         }
 
         logP = temp;
