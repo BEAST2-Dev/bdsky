@@ -49,7 +49,6 @@
 	<branchRateModel id="StrictClock" spec="beast.evolution.branchratemodel.StrictClockModel">
 		<parameter dimension="1" id="clock.rate" name="clock.rate" value="0.1" lower="0." upper="100."/> 
 	</branchRateModel>
-   <Sum spec="beast.core.util.Sum" id="R0_sum" arg="@R0"/> 
 
    
     <distribution id="posterior" spec="util.CompoundDistribution">
@@ -63,9 +62,12 @@
 			<distribution id="samplingProportion_prior" spec="beast.math.distributions.Prior" x="@samplingProportion">
 				<distr spec="beast.math.distributions.Beta" alpha="2." beta="3." offset="0."/>
 			</distribution>
-			<distribution id='delta_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@becomeUninfectiousRate"/>
-            <distribution id='R0_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@R0"/>
-
+			<distribution  id='R0_Prior' x="@R0" spec='beast.math.distributions.Prior'>
+				<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0" S="1.25"/>	
+			</distribution>
+			<distribution  id='becomeUninfectiousRate_Prior' x="@becomeUninfectiousRate" spec='beast.math.distributions.Prior'>
+				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100."/>	
+			</distribution>
     	</distribution>
         <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">      
 			<distribution data="@alignment" id="treeLikelihood" spec="TreeLikelihood" tree="@tree" siteModel="@SiteModel" branchRateModel="@StrictClock"/>           
@@ -160,7 +162,6 @@
 			<log idref="proportionInvariant"/>
 
 			<log idref='R0'/>
-			<log idref="R0_sum"/>
 			<log idref="becomeUninfectiousRate"/>
 			<log idref='samplingProportion'/>
 
@@ -174,26 +175,6 @@
 			<log arg="@posterior" id="ESS.0" spec="util.ESS"/>
 			<log idref="BDlikelihood"/>
 			<log idref="jointTreeLikelihood"/>
-			<log idref="TreeHeight"/>
-			<log idref="origin"/>
-			
-			<log idref="gammaShape"/>
-			<log idref="freqParameter"/>
-			<log idref="rateAC"/>
-			<log idref="rateAG"/>
-			<log idref="rateAT"/>
-			<log idref="rateCG"/>
-			<log idref="rateCT"/>
-			<log idref="rateGT"/>
-			<log idref="proportionInvariant"/>
-
-			<log idref='R0'/>
-			<log idref="R0_sum"/>
-			<log idref="becomeUninfectiousRate"/>
-			<log idref='samplingProportion'/>
-			<log idref="birth"/>
-			<log idref="death"/>
-			<log idref="sampling"/>
 		</logger>
 		
 		<logger fileName="BDSKY_sequential_$(seed).trees" id="treelog" logEvery="10000" mode="tree">

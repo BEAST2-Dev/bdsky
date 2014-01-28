@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
+<!-- Model: Birth-death skyline model (with contemporaneous sampling) -->
+<!-- Source: Stadler T, Kühnert D, Bonhoeffer S, Drummond AJ (2013) Birth-death skyline plot reveals temporal changes of epidemic spread in HIV and HCV. PNAS 110: 228–233. -->
+<!-- BEAST version: Runs on BEAST 2.1.0 - see beast2.org for downloads -->
+
+
+<beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
 
 
     <!-- The sequence alignment                                                  -->
@@ -48,7 +53,6 @@
 	<branchRateModel id="StrictClock" spec="beast.evolution.branchratemodel.StrictClockModel">
 		<parameter dimension="1" id="clock.rate" name="clock.rate" value="0.1" lower="0." upper="100."/> 
 	</branchRateModel>
-   <Sum spec="beast.core.util.Sum" id="R0_sum" arg="@R0"/> 
 
    
     <distribution id="posterior" spec="util.CompoundDistribution">
@@ -63,8 +67,12 @@
 			<distribution  id='origin_Prior' x="@origin" spec='beast.math.distributions.Prior'>
 				<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>	
 			</distribution>
-			<distribution id='delta_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@becomeUninfectiousRate"/>
-            <distribution id='R0_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@R0"/>
+			<distribution  id='R0_Prior' x="@R0" spec='beast.math.distributions.Prior'>
+				<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0" S="1.25"/>	
+			</distribution>
+			<distribution  id='becomeUninfectiousRate_Prior' x="@becomeUninfectiousRate" spec='beast.math.distributions.Prior'>
+				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100."/>	
+			</distribution>
 
     	</distribution>
         <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">      
@@ -160,7 +168,6 @@
 			<log idref="proportionInvariant"/>
 
 			<log idref='R0'/>
-			<log idref="R0_sum"/>
 			<log idref="becomeUninfectiousRate"/>
 			<log idref="birth"/>
 			<log idref="death"/>
@@ -172,26 +179,6 @@
 			<log arg="@posterior" id="ESS.0" spec="util.ESS"/>
 			<log idref="BDlikelihood"/>
 			<log idref="jointTreeLikelihood"/>
-			<log idref="TreeHeight"/>
-			<log idref="origin"/>
-			<log idref='rho'/>
-			
-			<log idref="gammaShape"/>
-			<log idref="freqParameter"/>
-			<log idref="rateAC"/>
-			<log idref="rateAG"/>
-			<log idref="rateAT"/>
-			<log idref="rateCG"/>
-			<log idref="rateCT"/>
-			<log idref="rateGT"/>
-			<log idref="proportionInvariant"/>
-
-			<log idref='R0'/>
-			<log idref="R0_sum"/>
-			<log idref="becomeUninfectiousRate"/>
-			<log idref="birth"/>
-			<log idref="death"/>
-			<log idref="sampling"/>
 		</logger>
 		
 		<logger fileName="BDSKY_sequential_$(seed).trees" id="treelog" logEvery="10000" mode="tree">
