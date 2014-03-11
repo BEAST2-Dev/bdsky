@@ -39,9 +39,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<RealParameter> samplingRateChangeTimesInput =
             new Input<RealParameter>("samplingRateChangeTimes", "The times t_i specifying when sampling rate or sampling proportion changes occur", (RealParameter) null);
 
-    public Input<Integer> intervalNumber =
-            new Input<Integer>("intervalNumber", "The number of intervals in which rates can change", 1);
-
     public Input<RealParameter> intervalTimes =
             new Input<RealParameter>("intervalTimes", "The time t_i for all parameters if they are the same", (RealParameter) null);
 
@@ -54,19 +51,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> samplingRateChangeTimesRelativeInput =
             new Input<Boolean>("samplingRateTimesRelative", "True if sampling rate times specified relative to tree height? Default false", false);
 
-    BooleanParameter bp = new BooleanParameter();
 
-    {
-        try {
-            bp.initByName("value", "false false false false");
-        } catch (Exception e) { //ignore
-        }
-    }
-
-    public Input<BooleanParameter> reverseTimeArrays =
+    public Input<BooleanParameter> reverseTimeArraysInput =
             new Input<BooleanParameter>("reverseTimeArrays", "True if the time arrays are given in backwards time (from the present back to root). Order: 1) birth 2) death 3) sampling 4) rho. Default false." +
-                    "Careful, rate array must still be given in FORWARD time (root to tips). If rhosamplingTimes given, they should be backwards and this should be true.",
-                    bp);
+                    "Careful, rate array must still be given in FORWARD time (root to tips). If rhosamplingTimes given, they should be backwards and this should be true.");
 
     // the times for rho sampling
     public Input<RealParameter> rhoSamplingTimes =
@@ -160,6 +148,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Boolean birthRateTimesRelative = false;
     Boolean deathRateTimesRelative = false;
     Boolean samplingRateTimesRelative = false;
+    Boolean[] reverseTimeArrays;
 
     public Boolean printTempResults;
 
@@ -174,6 +163,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
+        if (treeInput.get().getRoot().getHeight() >= origin.get().getValue())
+            throw new RuntimeException("Origin parameter must be larger than tree height. Please change initial origin value!");
+
         birth = null;
         death = null;
         psi = null;
@@ -187,6 +179,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         birthRateTimesRelative = birthRateChangeTimesRelativeInput.get();
         deathRateTimesRelative = deathRateChangeTimesRelativeInput.get();
         samplingRateTimesRelative = samplingRateChangeTimesRelativeInput.get();
+
+        if (reverseTimeArraysInput.get()!= null )
+            reverseTimeArrays = reverseTimeArraysInput.get().getValues();
+        else
+            reverseTimeArrays = new Boolean[]{false, false, false, false};
 
         contempData = contemp.get();
         rhoSamplingCount = 0;
@@ -253,7 +250,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 RealParameter rhoSampling = rhoSamplingTimes.get();
                 if (rhoSampling != null) {
                     for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                        rho[index(reverseTimeArrays.get().getValue(3) ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
+                        rho[index(reverseTimeArrays[3] ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
                                 = m_rho.get().getValue(constantRho ? 0 : i);
                     }
                     rhoSamplingCount = rho.length;
@@ -367,7 +364,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         timesSet.clear();
 
-        if (isBDSIR() && intervalNumber.get() != null) {
+        if (isBDSIR()) {
             birthChanges = getSIRdimension() - 1;
 //            deathChanges = birthChanges;
 //            samplingChanges = birthChanges;
@@ -376,15 +373,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         getChangeTimes(birthRateChangeTimes,
                 birthRateChangeTimesInput.get() != null && !isSeasonalBDSIR() ? birthRateChangeTimesInput.get() : intervalTimes.get(),
-                birthChanges, birthRateTimesRelative, reverseTimeArrays.get().getValue(0));
+                birthChanges, birthRateTimesRelative, reverseTimeArrays[0]);
 
         getChangeTimes(deathRateChangeTimes,
                 deathRateChangeTimesInput.get() != null ? deathRateChangeTimesInput.get() : intervalTimes.get(),
-                deathChanges, deathRateTimesRelative, reverseTimeArrays.get().getValue(1));
+                deathChanges, deathRateTimesRelative, reverseTimeArrays[1]);
 
         getChangeTimes(samplingRateChangeTimes,
                 samplingRateChangeTimesInput.get() != null ? samplingRateChangeTimesInput.get() : intervalTimes.get(),
-                samplingChanges, samplingRateTimesRelative, reverseTimeArrays.get().getValue(2));
+                samplingChanges, samplingRateTimesRelative, reverseTimeArrays[2]);
 
         //eventsSet.clear();
         for (Double time : birthRateChangeTimes) {
@@ -409,7 +406,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             for (int i = 0; i < dim; i++) {
                 //eventsSet.add(new BDSEvent(BDSEvent.Type.rhoSampling, rhoSampling.getValue(i)));
-                timesSet.add(reverseTimeArrays.get().getValue(3) ? (maxTime - rhoSampling.getValue(dim - i - 1)) : rhoSampling.getValue(i));
+                timesSet.add(reverseTimeArrays[3] ? (maxTime - rhoSampling.getValue(dim - i - 1)) : rhoSampling.getValue(i));
             }
         }
 
@@ -467,7 +464,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 0; i < totalIntervals; i++) {
 
                 for (int j = 0; i < rhos.length; i++) {
-                    if (times[i].equals(reverseTimeArrays.get().getValue(3) ? (origin.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension() - j - 1)) : rhoSampling.getValue(j)))
+                    if (times[i].equals(reverseTimeArrays[3] ? (origin.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension() - j - 1)) : rhoSampling.getValue(j)))
                         rho[i] = rhos[j];
                 }
             }
@@ -509,7 +506,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 RealParameter rhoSampling = rhoSamplingTimes.get();
 
                 for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                    rho[index(reverseTimeArrays.get().getValue(3) ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
+                    rho[index(reverseTimeArrays[3] ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
                             = m_rho.get().getValue(constantRho ? 0 : i);
 
                 }
