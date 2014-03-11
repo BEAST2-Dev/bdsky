@@ -27,7 +27,7 @@
    
 	<tree id="tree" spec="beast.util.ClusterTree" clusterType="upgma" taxa="@alignment"/>
 
-	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="10">
+	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree">
 		<parameter name="origin" id="origin" value ="100" lower="0." upper="1000."/>  	
 		
 		<!-- dimension of R0, becomeUninfectiousRate and samplingProportion must be either equal to intervalNumber, or 1 (i.e. rate is constant over time) -->

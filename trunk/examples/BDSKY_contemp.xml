@@ -32,7 +32,7 @@
    
 	<tree spec="beast.util.ClusterTree" clusterType="upgma" taxa="@alignment" id="tree"/>
 
-	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" intervalNumber="10" contemp="true">
+	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true">
 		<parameter name="origin" id="origin" value ="100" lower="0." upper="1000."/>  	
 		<parameter name="R0" id="R0" value="2" lower="0." dimension ="10" upper="10"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="1" lower="0." upper="10." dimension ="10"/>
