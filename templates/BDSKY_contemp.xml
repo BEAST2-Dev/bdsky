@@ -27,13 +27,12 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes'>
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
-	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporary.t:$(n)" tree="@Tree.t:$(n)" intervalNumber="10">
+	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporary.t:$(n)" tree="@Tree.t:$(n)">
 		<parameter name="origin" id="origin.t:$(n)" value ="1000" lower="0." upper="1000."/>  	
 		<parameter name="R0" id="R0.t:$(n)" value="2" lower="0." dimension ="10" upper="10"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="10." dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion.t:$(n)" value="0."/> 
 		<parameter name="rho" id="rho.t:$(n)" value="0.01" lower="0." upper="1."/> 
-	    <reverseTimeArrays spec='parameter.BooleanParameter' value='false false false false'/>
 	</BirthDeathSkylineModel>
 
 	<distribution  id='origRootPrior.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
