@@ -120,6 +120,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
      * The number of change points in the sampling rate
      */
     int samplingChanges;
+    int rhoChanges;
 
     /**
      * The number of times rho-sampling occurs
@@ -135,6 +136,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     protected List<Double> birthRateChangeTimes = new ArrayList<Double>();
     protected List<Double> deathRateChangeTimes = new ArrayList<Double>();
     protected List<Double> samplingRateChangeTimes = new ArrayList<Double>();
+    protected List<Double> rhoSamplingChangeTimes = new ArrayList<Double>();
 
     Boolean contempData;
     //List<Interval> intervals = new ArrayList<Interval>();
@@ -218,6 +220,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             samplingChanges = samplingRate.get().getDimension() - 1;
         }
 
+        if (m_rho.get()!=null) rhoChanges = m_rho.get().getDimension() - 1;
+
         collectTimes();
 
         if (m_rho.get() != null) {
@@ -238,26 +242,27 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     throw new RuntimeException("when contemp=true, rho must have dimension 1");
 
                 else {
-                    rho = new Double[totalIntervals];
+                    rho = new Double[totalIntervals+1];
                     Arrays.fill(rho, 0.);
-                    rho[totalIntervals - 1] = m_rho.get().getValue();
+                    rho[0] = 0.;
+                    rho[totalIntervals] = m_rho.get().getValue();
                     rhoSamplingCount = 1;
                 }
             } else {
 
-                rho = new Double[totalIntervals];
-
-                RealParameter rhoSampling = rhoSamplingTimes.get();
-                if (rhoSampling != null) {
-                    for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                        rho[index(reverseTimeArrays[3] ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
-                                = m_rho.get().getValue(constantRho ? 0 : i);
-                    }
-                    rhoSamplingCount = rho.length;
-                }
+//                rho = new Double[totalIntervals+1];
+//
+//                RealParameter rhoSampling = rhoSamplingTimes.get();
+//                if (rhoSampling != null) {
+//                    for (int i = 0; i < rhoSampling.getDimension(); i++) {
+//                        rho[index(reverseTimeArrays[3] ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
+//                                = m_rho.get().getValue(constantRho ? 0 : i);
+//                    }
+//                    rhoSamplingCount = rho.length;
+//                }
             }
         } else {
-            rho = new Double[totalIntervals];
+            rho = new Double[totalIntervals+1];
             Arrays.fill(rho, 0.);
         }
         isRhoTip = new boolean[treeInput.get().getLeafNodeCount()];
@@ -311,7 +316,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 1; i < dim; i++) {
                 end = reverse ? (maxTime - intervalTimes.getValue(dim - i - 1)) : intervalTimes.getValue(i);
                 if (relative) end *= maxTime;
-                changeTimes.add(end);
+                if (end != maxTime) changeTimes.add(end);
                 start = end;
             }
             end = maxTime;
@@ -344,10 +349,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 0; i < tipCount; i++) {
 
                 if (Math.abs((times[totalIntervals - 1] - times[k]) - dates[i]) < 1e-10) {
-                    if (rho[k] == 0 && psi[k] == 0) {
+                    if (rho[k+1] == 0 && psi[k] == 0) {
                         return Double.NEGATIVE_INFINITY;
                     }
-                    if (rho[k] > 0) {
+                    if (rho[k+1] > 0) {
                         N[k] += 1;
                         isRhoTip[i] = true;
                     }
@@ -383,6 +388,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 samplingRateChangeTimesInput.get() != null ? samplingRateChangeTimesInput.get() : intervalTimes.get(),
                 samplingChanges, samplingRateTimesRelative, reverseTimeArrays[2]);
 
+        getChangeTimes(rhoSamplingChangeTimes,
+                rhoSamplingTimes.get()!=null ? rhoSamplingTimes.get() : intervalTimes.get(),
+                rhoChanges, false, reverseTimeArrays[3]);
+
         //eventsSet.clear();
         for (Double time : birthRateChangeTimes) {
             //eventsSet.add(new BDSEvent(BDSEvent.Type.birth,time));
@@ -398,17 +407,23 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             timesSet.add(time);
         }
 
-        RealParameter rhoSampling = rhoSamplingTimes.get();
-        if (rhoSampling != null) {
 
-            double maxTime = origin.get().getValue();
-            int dim = rhoSampling.getDimension();
-
-            for (int i = 0; i < dim; i++) {
-                //eventsSet.add(new BDSEvent(BDSEvent.Type.rhoSampling, rhoSampling.getValue(i)));
-                timesSet.add(reverseTimeArrays[3] ? (maxTime - rhoSampling.getValue(dim - i - 1)) : rhoSampling.getValue(i));
-            }
+        for (Double time : rhoSamplingChangeTimes) {
+            //eventsSet.add(new BDSEvent(BDSEvent.Type.sampling,time));
+            timesSet.add(time);
         }
+
+//        RealParameter rhoSampling = rhoSamplingTimes.get();
+//        if (rhoSampling != null) {
+//
+//            double maxTime = origin.get().getValue();
+//            int dim = rhoSampling.getDimension();
+//
+//            for (int i = 0; i < dim; i++) {
+//                //eventsSet.add(new BDSEvent(BDSEvent.Type.rhoSampling, rhoSampling.getValue(i)));
+//                timesSet.add(reverseTimeArrays[3] ? (maxTime - rhoSampling.getValue(dim - i - 1)) : rhoSampling.getValue(i));
+//            }
+//        }
 
         if (printTempResults) System.out.println("times = " + timesSet);
 
@@ -459,14 +474,20 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         if (m_rho.get() != null && rhoSamplingTimes.get() != null) {
 
             Double[] rhos = m_rho.get().getValues();
-            RealParameter rhoSampling = rhoSamplingTimes.get();
+//            Double[] rhoSamplingChangeTimes = rhoSamplingTimes.get().getValues();
+            rho = new Double[totalIntervals+1];
 
-            for (int i = 0; i < totalIntervals; i++) {
+            rho[0]=0.;
+            rho[totalIntervals]=rhos[rhos.length-1];
+            for (int i = 0; i < totalIntervals-1; i++) {
 
-                for (int j = 0; i < rhos.length; i++) {
-                    if (times[i].equals(reverseTimeArrays[3] ? (origin.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension() - j - 1)) : rhoSampling.getValue(j)))
-                        rho[i] = rhos[j];
-                }
+                rho[i+1]= rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])+1] : 0.;
+
+                  //rhos[index(times[i], rhoSamplingChangeTimes)];
+//                for (int j = 0; i < rhos.length; i++) {
+//                    if (times[i].equals(reverseTimeArrays[3] ? (origin.get().getValue() - rhoSampling.getValue(rhoSampling.getDimension() - j - 1)) : rhoSampling.getValue(j)))
+//                        rho[i] = rhos[j];
+//                }
             }
         }
 
@@ -496,24 +517,24 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (m_rho.get() != null) {
             if (contempData) {
-                rho = new Double[totalIntervals];
+                rho = new Double[totalIntervals+1];
                 Arrays.fill(rho, 0.);
-                rho[totalIntervals - 1] = m_rho.get().getValue();
+                rho[totalIntervals] = m_rho.get().getValue();
             } else {
-                rho = new Double[totalIntervals];
-                Arrays.fill(rho, 0.);
-
-                RealParameter rhoSampling = rhoSamplingTimes.get();
-
-                for (int i = 0; i < rhoSampling.getDimension(); i++) {
-                    rho[index(reverseTimeArrays[3] ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
-                            = m_rho.get().getValue(constantRho ? 0 : i);
-
-                }
-                rhoSamplingCount = rho.length;
+//                rho = new Double[totalIntervals];
+//                Arrays.fill(rho, 0.);
+//
+//                RealParameter rhoSampling = rhoSamplingTimes.get();
+//
+//                for (int i = 0; i < rhoSampling.getDimension(); i++) {
+//                    rho[index(reverseTimeArrays[3] ? (times[totalIntervals - 1] - rhoSampling.getValue(rhoSampling.getDimension() - i - 1)) : rhoSampling.getValue(i))]
+//                            = m_rho.get().getValue(constantRho ? 0 : i);
+//
+//                }
+//                rhoSamplingCount = rho.length;
             }
         } else {
-            rho = new Double[totalIntervals];
+            rho = new Double[totalIntervals+1];
             Arrays.fill(rho, 0.0);
         }
 
@@ -548,7 +569,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 birth[totalIntervals - 1],
                 death[totalIntervals - 1],
                 psi[totalIntervals - 1],
-                rho[totalIntervals - 1],
+                rho[totalIntervals],
                 Ai[totalIntervals - 1], 1.);  //  (p0[m-1] = 1)
 
         if (printTempResults)
@@ -561,7 +582,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
             if (printTempResults) System.out.println("p0[" + (i + 1) + "] = " + p0[i + 1]);
 
-            Bi[i] = Bi(birth[i], death[i], psi[i], rho[i], Ai[i], p0[i + 1]);
+            Bi[i] = Bi(birth[i], death[i], psi[i], rho[i+1], Ai[i], p0[i + 1]);
 
             if (printTempResults) System.out.println("Bi[" + i + "] = " + Bi[i] + " " + Math.log(Bi[i]));
         }
@@ -782,8 +803,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     return logP;
 
             }
-            if (rho[j] > 0 && N[j] > 0) {
-                temp = N[j] * Math.log(rho[j]);    // term for contemporaneous sampling
+            if (rho[j+1] > 0 && N[j] > 0) {
+                temp = N[j] * Math.log(rho[j+1]);    // term for contemporaneous sampling
                 logP += temp;
                 if (printTempResults)
                     System.out.println("3rd factor (Nj loop) = " + temp + "; interval = " + j + "; N[j] = " + N[j]);
