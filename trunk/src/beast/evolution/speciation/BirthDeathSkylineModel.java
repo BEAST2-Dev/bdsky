@@ -9,7 +9,6 @@ import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Taxon;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeInterface;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.*;
 
@@ -228,7 +227,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             constantRho = !(m_rho.get().getDimension() > 1);
 
-            if (m_rho.get().getDimension() == 1) {
+            if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get()==null || rhoSamplingTimes.get().getDimension() < 2) {
                 if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getValue() == 0.) ||
                         (samplingRate.get() != null && samplingRate.get().getDimension() == 1 && samplingRate.get().getValue() == 0.))) {
                     contempData = true;
@@ -477,11 +476,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 //            Double[] rhoSamplingChangeTimes = rhoSamplingTimes.get().getValues();
             rho = new Double[totalIntervals+1];
 
-            rho[0]=0.;
+            rho[0]= constantRho? rhos[0] : 0.;
             rho[totalIntervals]=rhos[rhos.length-1];
             for (int i = 0; i < totalIntervals-1; i++) {
 
-                rho[i+1]= rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])+1] : 0.;
+                rho[i+1]= rhoChanges>0?
+                        rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])+1] : 0.
+                        : rhos[0];
 
                   //rhos[index(times[i], rhoSamplingChangeTimes)];
 //                for (int j = 0; i < rhos.length; i++) {
@@ -841,6 +842,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     }
 
     public int getSIRdimension() {
-        throw new NotImplementedException();
+        throw new RuntimeException("This is not an SIR");
     }
 }
