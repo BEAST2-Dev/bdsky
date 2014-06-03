@@ -28,15 +28,15 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
 	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporary.t:$(n)" tree="@Tree.t:$(n)">
-		<parameter name="origin" id="origin.t:$(n)" value ="1000" lower="0." upper="1000."/>  	
-		<parameter name="R0" id="R0.t:$(n)" value="2" lower="0." dimension ="10" upper="10"/>
-		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="10." dimension ="10"/>
+		<parameter name="origin" id="origin.t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
+		<parameter name="R0" id="R0.t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="Infinity" dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion.t:$(n)" value="0."/> 
 		<parameter name="rho" id="rho.t:$(n)" value="0.01" lower="0." upper="1."/> 
 	</BirthDeathSkylineModel>
 
 	<distribution  id='origRootPrior.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
-		<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>	</distribution>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>	</distribution>
 	<distribution id="rhoPrior.t:$(n)" spec="beast.math.distributions.Prior" x="@rho.t:$(n)">
 		<distr spec="beast.math.distributions.Beta" alpha="1." beta="1." offset="0."/>
 	</distribution>
