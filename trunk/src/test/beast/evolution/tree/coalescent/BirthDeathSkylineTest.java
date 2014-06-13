@@ -27,8 +27,6 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
         Tree tree = new TreeParser("(((((t1:0.4595008531,t25:0.4595008531):0.3373053072,t23:0.3567584538):0.007310819036,t16:0.3489190732):0.331009529,((t18:0.03315384045,t14:0.03315384045):0.5063451374,(t10:0.4211543131,t15:0.4211543131):0.1183446648):0.5956275305):0.1158090878,((t19:0.9429393194,((t6:0.363527235,t11:0.4417423167):0.01881829549,((((t3:0.3071904376,(((t24:0.01065209364,t13:0.01065209364):0.06076485145,t8:0.07141694509):0.123620245,(t22:0.1616119808,t2:0.1616119808):0.03342520927):0.1121532475):0.24520579,t9:0.5523962276):0.3852615426,(((t20:0.2935970782,(t17:0.06569090089,t4:0.06569090089):0.2279061773):0.08350780408,(t21:0.05109047139,t5:0.05109047139):0.3260144109):0.2298344132,t7:0.6069392955):0.3307184747):0.01206284377,t26:0.9497206139):0.05755333197):0.03290891884):0.07263755325,t12:1.112820418):0.1381151782);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
 
         PrintStream treeString = new PrintStream("out.tree");
         tree.log(1, treeString);
@@ -449,8 +447,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -472,8 +468,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -496,8 +490,8 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
+//        TreeIntervals intervals = new TreeIntervals();
+//        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -524,8 +518,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -550,8 +542,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -580,8 +570,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
 
@@ -607,8 +595,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("(1 : 1.5, 2 : 0.5);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("2.5"));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -630,8 +616,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -659,8 +643,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
@@ -692,8 +674,6 @@ public class BirthDeathSkylineTest extends TestCase {
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-        TreeIntervals intervals = new TreeIntervals();
-        intervals.init(tree);
         bdssm.setInputValue("tree", tree);
         bdssm.setInputValue("origin", new RealParameter("6."));
         bdssm.setInputValue("conditionOnSurvival", false);
