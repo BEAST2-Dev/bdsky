@@ -697,7 +697,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         }
         for (int i = 0; i < tipCount; i++) {
-            if (tree.getNode(i).getHeight() > time) count -= 1;
+            if (tree.getNode(i).getHeight() >= time) count -= 1;
         }
         return count;
     }
