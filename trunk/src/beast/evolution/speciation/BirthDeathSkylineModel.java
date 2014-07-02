@@ -287,7 +287,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             if(intervalTimes.getValue(dim-1)==maxTime) changeTimes.add(0.); //rhoSampling
 
             double end;
-            for (int i = 1; i < dim; i++) {
+            for (int i = 0; i < dim; i++) {
                 end = reverse ? (maxTime - intervalTimes.getValue(dim - i - 1)) : intervalTimes.getValue(i);
                 if (relative) end *= maxTime;
                 if (end != maxTime) changeTimes.add(end);
