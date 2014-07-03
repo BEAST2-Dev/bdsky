@@ -212,7 +212,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             samplingChanges = samplingRate.get().getDimension() - 1;
         }
 
-        if (m_rho.get()!=null) rhoChanges = m_rho.get().getDimension() - 1;
+        if (m_rho.get()!=null) {
+            rho = m_rho.get().getValues();
+            rhoChanges = m_rho.get().getDimension() - 1;
+        }
 
         collectTimes();
 
@@ -284,10 +287,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             int dim = intervalTimes.getDimension();
 
-            if(intervalTimes.getValue(dim-1)==maxTime) changeTimes.add(0.); //rhoSampling
+//            if(intervalTimes.getValue(dim-1)==maxTime) changeTimes.add(0.); //rhoSampling
 
             double end;
-            for (int i = 0; i < dim; i++) {
+            for (int i = (reverse?0:1); i < dim; i++) {
                 end = reverse ? (maxTime - intervalTimes.getValue(dim - i - 1)) : intervalTimes.getValue(i);
                 if (relative) end *= maxTime;
                 if (end != maxTime) changeTimes.add(end);
@@ -423,17 +426,18 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        if (m_rho.get() != null && rhoSamplingTimes.get() != null) {
+        if (m_rho.get() != null && (m_rho.get().getDimension()==1 ||  rhoSamplingTimes.get() != null)) {
 
             Double[] rhos = m_rho.get().getValues();
             rho = new Double[totalIntervals];
 
-            rho[totalIntervals-1]=rhos[rhos.length-1];
-            for (int i = 0; i < totalIntervals-1; i++) {
+//            rho[totalIntervals-1]=rhos[rhos.length-1];
+            for (int i = 0; i < totalIntervals; i++) {
 
-                rho[i]= rhoChanges>0?
-                        rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
-                        : rhos[0];
+                rho[i]= rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.;
+//                rhoChanges>0?
+//                        rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
+//                        : rhos[0];
             }
         }
 
