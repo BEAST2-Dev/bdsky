@@ -1,4 +1,9 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
+<!-- Model: Birth-death skyline model (with serial/sequential sampling) -->
+<!-- Source: Stadler T, Kühnert D, Bonhoeffer S, Drummond AJ (2013) Birth-death skyline plot reveals temporal changes of epidemic spread in HIV and HCV. PNAS 110: 228–233. -->
+<!-- BEAST version: Runs on BEAST 2.1.0 - see beast2.org for downloads -->
+
+
+<beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
 
 
     <!-- The sequence alignment                                                  -->
@@ -28,11 +33,11 @@
 	<tree id="tree" spec="beast.util.ClusterTree" clusterType="upgma" taxa="@alignment"/>
 
 	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree">
-		<parameter name="origin" id="origin" value ="100" lower="0." upper="1000."/>  	
+		<parameter name="origin" id="origin" value ="100" lower="0."/>  	
 		
 		<!-- dimension of R0, becomeUninfectiousRate and samplingProportion must be either equal to intervalNumber, or 1 (i.e. rate is constant over time) -->
-		<parameter name="R0" id="R0" value="2" lower="0." dimension ="10" upper="10"/>
-		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="1." lower="0." upper="10." dimension ="10"/>
+		<parameter name="R0" id="R0" value="2" lower="0." dimension ="10"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="1." lower="0." dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion" value="0.01" lower="0." upper="1." dimension ="10"/> 
 	</BirthDeathSkylineModel>
 
@@ -59,6 +64,8 @@
 			<distribution  id='origin_Prior' x="@origin" spec='beast.math.distributions.Prior'>
 				<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>	
 			</distribution>
+
+			<!-- this prior distribution corresponds to a sampling proportion of about 40% -->
 			<distribution id="samplingProportion_prior" spec="beast.math.distributions.Prior" x="@samplingProportion">
 				<distr spec="beast.math.distributions.Beta" alpha="2." beta="3." offset="0."/>
 			</distribution>
@@ -109,7 +116,7 @@
 			<parameter dimension="1"  id="proportionInvariant" name="stateNode" value="0.1"/>	
 		</state>
 	
-		<!-- parameter weights for RealParameters equal to parameter dimension --> 
+		<!-- parameter weights for RealParameters roughly equal to parameter dimension --> 
 		<operator id='becomeUninfectiousRate_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate"/>
 		<operator id='sampling_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@samplingProportion"/>
 		<operator id='R0_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0"/>

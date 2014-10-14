@@ -21,7 +21,7 @@ import java.util.*;
 
 @Description("Adaptation of Tanja Stadler's BirthDeathSamplingModel, " +
         "to allow for birth and death rates to change at times t_i")
-@Citation("Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013). “Birth-death skyline" +
+@Citation("Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013). “Birth-death skyline " +
         "plot reveals temporal changes of epidemic spread in HIV and hepatitis C virus (HCV).” Proc" +
         "Natl Acad Sci U S A, 110(1): 228–33.")
 public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
@@ -158,7 +158,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         super.initAndValidate();
 
         if (treeInput.get().getRoot().getHeight() >= origin.get().getValue())
-            throw new RuntimeException("Origin parameter must be larger than tree height. Please change initial origin value!");
+            throw new RuntimeException("Origin parameter ("+origin.get().getValue()+" ) must be larger than tree height("+treeInput.get().getRoot().getHeight()+" ). Please change initial origin value!");
 
         birth = null;
         death = null;
@@ -434,10 +434,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 //            rho[totalIntervals-1]=rhos[rhos.length-1];
             for (int i = 0; i < totalIntervals; i++) {
 
-                rho[i]= rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.;
-//                rhoChanges>0?
-//                        rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
-//                        : rhos[0];
+                rho[i]= //rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.;
+                        rhoChanges>0?
+                                rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
+                                : rhos[0];
             }
         }
 
