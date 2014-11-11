@@ -34,9 +34,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<RealParameter> deathRateChangeTimesInput =
             new Input<RealParameter>("deathRateChangeTimes", "The times t_i specifying when death/becomeUninfectious rate changes occur", (RealParameter) null);
 
-    // the interval times for sampling rate
+    // the interval times for removal probability
     public Input<RealParameter> samplingRateChangeTimesInput =
             new Input<RealParameter>("samplingRateChangeTimes", "The times t_i specifying when sampling rate or sampling proportion changes occur", (RealParameter) null);
+
+    // the interval times for sampling rate
+    public Input<RealParameter> removalProbabilityChangeTimesInput =
+            new Input<RealParameter>("removalProbabilityChangeTimes", "The times t_i specifying when removal probability changes occur", (RealParameter) null);
 
     public Input<RealParameter> intervalTimes =
             new Input<RealParameter>("intervalTimes", "The time t_i for all parameters if they are the same", (RealParameter) null);
@@ -50,9 +54,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> samplingRateChangeTimesRelativeInput =
             new Input<Boolean>("samplingRateTimesRelative", "True if sampling rate times specified relative to tree height? Default false", false);
 
+    Input<Boolean> removalProbabilityChangeTimesRelativeInput =
+            new Input<Boolean>("removalProbabilityTimesRelative", "True if removal probability change times specified relative to tree height? Default false", false);
 
     public Input<BooleanParameter> reverseTimeArraysInput =
-            new Input<BooleanParameter>("reverseTimeArrays", "True if the time arrays are given in backwards time (from the present back to root). Order: 1) birth 2) death 3) sampling 4) rho. Default false." +
+            new Input<BooleanParameter>("reverseTimeArrays", "True if the time arrays are given in backwards time (from the present back to root). Order: 1) birth 2) death 3) sampling 4) rho 5) r. Default false." +
                     "Careful, rate array must still be given in FORWARD time (root to tips). If rhosamplingTimes given, they should be backwards and this should be true.");
 
     // the times for rho sampling
@@ -69,6 +75,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             new Input<RealParameter>("deathRate", "The deathRate vector with birthRates between times");
     public Input<RealParameter> samplingRate =
             new Input<RealParameter>("samplingRate", "The sampling rate per individual");      // psi
+    public Input<RealParameter> removalProbability =
+            new Input<RealParameter>("removalProbability", "The probability of an individual to become noninfectious immediately after the sampling", Input.Validate.REQUIRED);
 
     public Input<RealParameter> m_rho =
             new Input<RealParameter>("rho", "The proportion of lineages sampled at rho-sampling times (default 0.)");
@@ -89,7 +97,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> conditionOnSurvival =
             new Input<Boolean>("conditionOnSurvival", "condition on at least one survival? Default true.", true);
 
-
     double t_root;
     protected double[] p0;
     protected double[] Ai;
@@ -101,6 +108,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Double[] death;
     Double[] psi;
     Double[] rho;
+    Double[] r;
 
     // true if the node of the given index occurs at the time of a rho-sampling event
     boolean[] isRhoTip;
@@ -122,6 +130,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     int rhoChanges;
 
     /**
+     * The number of change point in the removal probability
+     */
+    int rChanges;
+
+    /**
      * The number of times rho-sampling occurs
      */
     int rhoSamplingCount;
@@ -136,6 +149,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     protected List<Double> deathRateChangeTimes = new ArrayList<Double>();
     protected List<Double> samplingRateChangeTimes = new ArrayList<Double>();
     protected List<Double> rhoSamplingChangeTimes = new ArrayList<Double>();
+    protected List<Double> rChangeTimes = new ArrayList<Double>();
 
     Boolean contempData;
     //List<Interval> intervals = new ArrayList<Interval>();
@@ -149,7 +163,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     Boolean birthRateTimesRelative = false;
     Boolean deathRateTimesRelative = false;
     Boolean samplingRateTimesRelative = false;
+    Boolean rTimesRelative = false;
     Boolean[] reverseTimeArrays;
+
+    public boolean SAModel;
 
     public Boolean printTempResults;
 
