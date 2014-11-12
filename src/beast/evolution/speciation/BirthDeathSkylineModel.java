@@ -734,13 +734,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             double x = times[totalIntervals - 1] - tree.getNode(nTips + i).getHeight();
             index = index(x);
-
-            temp = Math.log(birth[index] * g(index, times[index], x));
-            logP += temp;
-            if (printTempResults) System.out.println("1st pwd" +
-                    " = " + temp + "; interval = " + i);
-            if (Double.isInfinite(logP))
-                return logP;
+            if (!(tree.getNode(nTips + i)).isFake()) {
+                temp = Math.log(birth[index] * g(index, times[index], x));
+                logP += temp;
+                if (printTempResults) System.out.println("1st pwd" +
+                        " = " + temp + "; interval = " + i);
+                if (Double.isInfinite(logP))
+                    return logP;
+            }
         }
 
         // middle product term in f[T]
@@ -750,19 +751,31 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 double y = times[totalIntervals - 1] - tree.getNode(i).getHeight();
                 index = index(y);
 
-                temp = Math.log(psi[index]) - Math.log(g(index, times[index], y));
-                logP += temp;
-                if (printTempResults) System.out.println("2nd PI = " + temp);
-                if (psi[index] == 0 || Double.isInfinite(logP))
-                    return logP;
-
+                if (!(tree.getNode(i)).isDirectAncestor()) {
+                    temp = Math.log(psi[index]) - Math.log(g(index, times[index], y));
+                    logP += temp;
+                    if (printTempResults) System.out.println("2nd PI = " + temp);
+                    if (psi[index] == 0 || Double.isInfinite(logP))
+                        return logP;
+                } else {
+                    if (r[index] != 1) {
+                        logP += Math.log((1 - r[index])*psi[index]);
+                        if (Double.isInfinite(logP)) {
+                            return logP;
+                        }
+                    } else {
+                        //throw new Exception("There is a sampled ancestor in the tree while r parameter is 1");
+                        System.out.println("There is a sampled ancestor in the tree while r parameter is 1");
+                        System.exit(0);
+                    }
+                }
             }
         }
 
         // last product term in f[T], factorizing from 1 to m
         double time;
-        for (int j = 0; j < totalIntervals; j++) {
-            time = j < 1 ? 0 : times[j - 1];
+        for (int j = 0; j < totalIntervals; j++) { //if SAModel then rho-sampling is assumed to remove lineages,
+            time = j < 1 ? 0 : times[j - 1];        //that is, r probability does not apply to rho-sampled nodes.
             n[j] = ((j == 0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree));
 
             if (n[j] > 0) {
@@ -784,6 +797,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             }
         }
+
+        int internalNodeCount = tree.getLeafNodeCount() - (tree).getDirectAncestorNodeCount() - 1;
+
+        logP +=  Math.log(2)*internalNodeCount;
+
         return logP;
     }
 
