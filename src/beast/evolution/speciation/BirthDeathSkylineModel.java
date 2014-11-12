@@ -76,7 +76,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<RealParameter> samplingRate =
             new Input<RealParameter>("samplingRate", "The sampling rate per individual");      // psi
     public Input<RealParameter> removalProbability =
-            new Input<RealParameter>("removalProbability", "The probability of an individual to become noninfectious immediately after the sampling", Input.Validate.REQUIRED);
+            new Input<RealParameter>("removalProbability", "The probability of an individual to become noninfectious immediately after the sampling");
 
     public Input<RealParameter> m_rho =
             new Input<RealParameter>("rho", "The proportion of lineages sampled at rho-sampling times (default 0.)");
@@ -177,24 +177,29 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         if (treeInput.get().getRoot().getHeight() >= origin.get().getValue())
             throw new RuntimeException("Origin parameter ("+origin.get().getValue()+" ) must be larger than tree height("+treeInput.get().getRoot().getHeight()+" ). Please change initial origin value!");
 
+        if (removalProbability.get() != null) SAModel = true;
+
         birth = null;
         death = null;
         psi = null;
         rho = null;
+        r = null;
         birthRateChangeTimes.clear();
         deathRateChangeTimes.clear();
         samplingRateChangeTimes.clear();
+        if (SAModel) rChangeTimes.clear();
         totalIntervals = 0;
 
         m_forceRateChange = forceRateChange.get();
         birthRateTimesRelative = birthRateChangeTimesRelativeInput.get();
         deathRateTimesRelative = deathRateChangeTimesRelativeInput.get();
         samplingRateTimesRelative = samplingRateChangeTimesRelativeInput.get();
+        if (SAModel) rTimesRelative = removalProbabilityChangeTimesRelativeInput.get();
 
         if (reverseTimeArraysInput.get()!= null )
             reverseTimeArrays = reverseTimeArraysInput.get().getValues();
         else
-            reverseTimeArrays = new Boolean[]{false, false, false, false};
+            reverseTimeArrays = new Boolean[]{false, false, false, false, false};
 
         contempData = contemp.get();
         rhoSamplingCount = 0;
@@ -207,6 +212,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             death = deathRate.get().getValues();
             psi = samplingRate.get().getValues();
             birth = birthRate.get().getValues();
+            if (SAModel) r = removalProbability.get().getValues();
+
 
         } else if (R0.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
 
@@ -215,6 +222,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         } else {
             throw new RuntimeException("Either specify birthRate, deathRate and samplingRate OR specify R0, becomeUninfectiousRate and samplingProportion!");
         }
+
 
         if (transform) {
 
@@ -228,6 +236,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             deathChanges = deathRate.get().getDimension() - 1;
             samplingChanges = samplingRate.get().getDimension() - 1;
         }
+
+        if (SAModel) rChanges = removalProbability.get().getDimension() -1;
 
         if (m_rho.get()!=null) {
             rho = m_rho.get().getValues();
@@ -382,6 +392,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 rhoSamplingTimes.get()!=null ? rhoSamplingTimes.get() : intervalTimes.get(),
                 rhoChanges, false, reverseTimeArrays[3]);
 
+        if (SAModel) getChangeTimes(rChangeTimes,
+                removalProbabilityChangeTimesInput.get() != null ? removalProbabilityChangeTimesInput.get() : intervalTimes.get(),
+                rChanges, rTimesRelative, reverseTimeArrays[4]);
+
         for (Double time : birthRateChangeTimes) {
             timesSet.add(time);
         }
@@ -395,6 +409,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         for (Double time : rhoSamplingChangeTimes) {
             timesSet.add(time);
+        }
+
+        if (SAModel) {
+            for (Double time : rChangeTimes) {
+                timesSet.add(time);
+            }
         }
 
         if (printTempResults) System.out.println("times = " + timesSet);
@@ -423,10 +443,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             Double[] birthRates = birthRate.get().getValues();
             Double[] deathRates = deathRate.get().getValues();
             Double[] samplingRates = samplingRate.get().getValues();
+            Double[] removalProbabilities = new Double[1];
+            if (SAModel) removalProbabilities = removalProbability.get().getValues();
 
             birth = new Double[totalIntervals];
             death = new Double[totalIntervals];
             psi = new Double[totalIntervals];
+            if (SAModel) r =  new Double[totalIntervals];
 
             birth[0] = birthRates[0];
 
@@ -434,14 +457,19 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 if (!isBDSIR()) birth[i] = birthRates[index(times[i], birthRateChangeTimes)];
                 death[i] = deathRates[index(times[i], deathRateChangeTimes)];
                 psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
+                if (SAModel) r[i] = removalProbabilities[index(times[i], rChangeTimes)];
 
                 if (printTempResults) {
                     if (!isBDSIR()) System.out.println("birth[" + i + "]=" + birth[i]);
                     System.out.println("death[" + i + "]=" + death[i]);
                     System.out.println("psi[" + i + "]=" + psi[i]);
+                    if (SAModel) System.out.println("r[" + i + "]=" + r[i]);
                 }
             }
         }
+
+
+
 
         if (m_rho.get() != null && (m_rho.get().getDimension()==1 ||  rhoSamplingTimes.get() != null)) {
 
@@ -635,9 +663,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected void transformParameters() {
 
-        Double[] R = R0.get().getValues();
-        Double[] b = becomeUninfectiousRate.get().getValues();
-        Double[] p = samplingProportion.get().getValues();
+        Double[] R = R0.get().getValues(); // if SAModel: R0 = lambda/delta
+        Double[] b = becomeUninfectiousRate.get().getValues(); // delta = mu + psi*r
+        Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi*r)
+        Double[] removalProbabilities = new Double[1];
+        if (SAModel) removalProbabilities = removalProbability.get().getValues();
 
         birth = new Double[totalIntervals];
         death = new Double[totalIntervals];
@@ -646,10 +676,19 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         if (isBDSIR()) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
 
         for (int i = 0; i < totalIntervals; i++) {
-            if (!isBDSIR())
+            if (!SAModel) {
+                if (!isBDSIR()) birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
+            } else {
                 birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-            psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-            death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
+                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
+                death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
+
+
+            }
+
 
         }
     }
