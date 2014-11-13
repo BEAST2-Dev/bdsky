@@ -798,7 +798,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        int internalNodeCount = tree.getLeafNodeCount() - (tree).getDirectAncestorNodeCount() - 1;
+        int internalNodeCount = tree.getLeafNodeCount() - ((Tree)tree).getDirectAncestorNodeCount()- 1;
 
         logP +=  Math.log(2)*internalNodeCount;
 
