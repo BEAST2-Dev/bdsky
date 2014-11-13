@@ -752,7 +752,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 index = index(y);
 
                 if (!(tree.getNode(i)).isDirectAncestor()) {
-                    temp = Math.log(psi[index]) - Math.log(g(index, times[index], y));
+                    if (!SAModel) {
+                        temp = Math.log(psi[index]) - Math.log(g(index, times[index], y));
+                    } else {
+                        temp = Math.log(psi[index] * (r[index] + (1 - r[index]) * p0(index, times[index], y))) - Math.log(g(index, times[index], y));
+                    }
                     logP += temp;
                     if (printTempResults) System.out.println("2nd PI = " + temp);
                     if (psi[index] == 0 || Double.isInfinite(logP))
@@ -772,7 +776,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        // last product term in f[T], factorizing from 1 to m
+        // last product term in f[T], factorizing from 1 to m //TODO make it work with rho-sampling
         double time;
         for (int j = 0; j < totalIntervals; j++) { //if SAModel then rho-sampling is assumed to remove lineages,
             time = j < 1 ? 0 : times[j - 1];        //that is, r probability does not apply to rho-sampled nodes.
