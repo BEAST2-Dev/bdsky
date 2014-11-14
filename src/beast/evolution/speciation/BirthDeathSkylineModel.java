@@ -21,9 +21,8 @@ import java.util.*;
 
 @Description("Adaptation of Tanja Stadler's BirthDeathSamplingModel, " +
         "to allow for birth and death rates to change at times t_i")
-@Citation("Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013). “Birth-death skyline " +
-        "plot reveals temporal changes of epidemic spread in HIV and hepatitis C virus (HCV).” Proc" +
-        "Natl Acad Sci U S A, 110(1): 228–33.")
+@Citation("Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013):\n Birth-death skyline " +
+        "plot reveals temporal changes of\n epidemic spread in HIV and hepatitis C virus (HCV). PNAS 110(1): 228–33.")
 public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     // the interval times for the birth rate
@@ -62,6 +61,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Input<RealParameter> origin =
             new Input<RealParameter>("origin", "The time from origin to last sample (must be larger than tree height)", Input.Validate.REQUIRED);
+
+    public Input<Boolean> originIsRootEdge =
+            new Input<>("originIsRootEdge", "The origin is only the length of the root edge", false);
 
     public Input<RealParameter> birthRate =
             new Input<RealParameter>("birthRate", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time");
@@ -157,7 +159,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() throws Exception {
         super.initAndValidate();
 
-        if (treeInput.get().getRoot().getHeight() >= origin.get().getValue())
+        if (!originIsRootEdge.get() && treeInput.get().getRoot().getHeight() >= origin.get().getValue())
             throw new RuntimeException("Origin parameter ("+origin.get().getValue()+" ) must be larger than tree height("+treeInput.get().getRoot().getHeight()+" ). Please change initial origin value!");
 
         birth = null;
@@ -261,7 +263,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (printTempResults) System.out.println("relative = " + relative);
 
-        double maxTime = origin.get().getValue();
+        double maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() :origin.get().getValue();
 
         if (intervalTimes == null) { //equidistant
 
@@ -395,7 +397,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         t_root = tree.getRoot().getHeight();
 
-        if (m_forceRateChange && timesSet.last() > origin.get().getValue()) {
+        if (m_forceRateChange && timesSet.last() > (originIsRootEdge.get()? t_root+ origin.get().getValue() : origin.get().getValue())) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -448,7 +450,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(TreeInterface tree) {
 
-        if (tree.getRoot().getHeight() >= origin.get().getValue()) {
+        if (!originIsRootEdge.get() && tree.getRoot().getHeight() >= origin.get().getValue()) {
             return Double.NEGATIVE_INFINITY;
         }
 
