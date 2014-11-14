@@ -661,6 +661,35 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return count;
     }
 
+    /**
+     * @param time the time
+     * @param tree the tree
+     * @param k count the number of sampled ancestors at the given time
+     * @return the number of lineages that exist at the given time in the given tree.
+     */
+    public int lineageCountAtTime(double time, TreeInterface tree, int[] k) {
+
+        int count = 1;
+        k[0]=0;
+        int tipCount = tree.getLeafNodeCount();
+        for (int i = tipCount; i < tipCount + tree.getInternalNodeCount(); i++) {
+            if (tree.getNode(i).getHeight() >= time) count += 1;
+
+        }
+        for (int i = 0; i < tipCount; i++) {
+            if (tree.getNode(i).getHeight() > time) count -= 1;
+            if (Math.abs(tree.getNode(i).getHeight() - time) < 1e-10) {
+                count -= 1;
+                if (tree.getNode(i).isDirectAncestor()) {
+                    count -= 1;
+                    k[0]++;
+                }
+
+            }
+        }
+        return count;
+    }
+
     protected void transformParameters() {
 
         Double[] R = R0.get().getValues(); // if SAModel: R0 = lambda/delta
@@ -776,12 +805,16 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        // last product term in f[T], factorizing from 1 to m //TODO make it work with rho-sampling
+        // last product term in f[T], factorizing from 1 to m //
         double time;
-        for (int j = 0; j < totalIntervals; j++) { //if SAModel then rho-sampling is assumed to remove lineages,
-            time = j < 1 ? 0 : times[j - 1];        //that is, r probability does not apply to rho-sampled nodes.
-            n[j] = ((j == 0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree));
-
+        for (int j = 0; j < totalIntervals; j++) {
+            time = j < 1 ? 0 : times[j - 1];
+            int[] k = {0};
+            if (!SAModel) {
+                n[j] = ((j == 0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree));
+            } else {
+                n[j] = ((j == 0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree, k));
+            }
             if (n[j] > 0) {
                 temp = n[j] * (Math.log(g(j, times[j], time)) + Math.log(1 - rho[j-1]));
                 logP += temp;
@@ -791,6 +824,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     return logP;
 
             }
+
+            if (SAModel && j>0 && N != null) { // term for sampled leaves and two-degree nodes at time t_i
+                logP += k[0] * (Math.log(g(j, times[j], time)) + Math.log(1-r[j])) + //here g(j,..) corresponds to q_{i+1}, r[j] to r_{i+1},
+                        (N[j-1]-k[0])*(Math.log(r[j]+ (1-r[j])*p0(j, times[j], time))); //N[j-1] to N_i, k[0] to K_i,and thus N[j-1]-k[0] to M_i
+                if (Double.isInfinite(logP)) {
+                    return logP;
+                }
+            }
+
             if (rho[j] > 0 && N[j] > 0) {
                 temp = N[j] * Math.log(rho[j]);    // term for contemporaneous sampling
                 logP += temp;
@@ -802,9 +844,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        int internalNodeCount = tree.getLeafNodeCount() - ((Tree)tree).getDirectAncestorNodeCount()- 1;
-
-        logP +=  Math.log(2)*internalNodeCount;
+        if (SAModel) {
+            int internalNodeCount = tree.getLeafNodeCount() - ((Tree)tree).getDirectAncestorNodeCount()- 1;
+            logP +=  Math.log(2)*internalNodeCount;
+        }
 
         return logP;
     }
