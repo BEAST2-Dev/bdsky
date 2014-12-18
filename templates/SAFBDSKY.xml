@@ -23,20 +23,20 @@
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
-	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival'>
             <![CDATA[
     <!-- Sampled Ancestor Birth Death Skyline model-->
-    <BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="SAFBDSkyline.t:$(n)" tree="@Tree.t:$(n)">
+    <BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="SAFBDSkyline.t:$(n)" tree="@Tree.t:$(n)" conditionOnRhoSampling="true" conditionOnSurvival="false">
 		<parameter name="origin" id="originF.t:$(n)" value ="100.0" lower="0."/>
-        <parameter name="birthRate" id="birthRateF.t:$(n)" value ="1.5" lower="0."/>
-        <parameter name="deathRate" id="deathRateF.t:$(n)" value ="0.2" lower="0."/>
-        <parameter name="samplingRate" id="samplingRateF.t:$(n)" value="0.5" lower="0." upper="10"/>
-        <parameter name="rho" id="rhoF.t:$(n)" value="0.5" lower="0." upper="1."/>
+        <parameter name="birthRate" id="birthRateF.t:$(n)" value ="1.5 1.5 1.5" lower="0."/>
+        <parameter name="deathRate" id="deathRateF.t:$(n)" value ="0.2 0.2 0.2" lower="0."/>
+        <parameter name="samplingRate" id="samplingRateF.t:$(n)" value="0.5 0.5 0.5" lower="0." upper="10"/>
+        <parameter name="rho" id="rhoF.t:$(n)" value="0.0 0.5" lower="0." upper="1."/>
         <parameter name="removalProbability" id="rF.t:$(n)" value="0.0" lower="0." upper="1."/>
-        <parameter name="birthRateChangeTimes" id="birthRateChangeTimesF.t:$(n)" value="0."/>
-        <parameter name="deathRateChangeTimes" id="deathRateChangeTimesF.t:$(n)" value="0."/>
-        <parameter name="samplingRateChangeTimes" id="samplingRateChangeTimesF.t:$(n)" value="0."/>
+        <parameter name="birthRateChangeTimes" id="birthRateChangeTimesF.t:$(n)" value="2. 1. 0."/>
+        <parameter name="deathRateChangeTimes" id="deathRateChangeTimesF.t:$(n)" value="2. 1. 0."/>
+        <parameter name="samplingRateChangeTimes" id="samplingRateChangeTimesF.t:$(n)" value="1. 2. 0."/>
+        <parameter name="rhoSamplingTimes" id="rhoSamplingTimesF.t:$(n)" value="1. 0."/>
         <reverseTimeArrays spec='parameter.BooleanParameter' value='true true true true true'/>
 	</BirthDeathSkylineModel>
 
