@@ -27,42 +27,42 @@
             <![CDATA[
     <!-- Sampled Ancestor Birth Death Skyline model-->
     <BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="SABDSkyline.t:$(n)" tree="@Tree.t:$(n)" conditionOnSurvival="true">
-		<parameter name="origin" id="origin.t:$(n)" value ="100.0" lower="0."/>
-        <parameter name="birthRate" id="birthRate.t:$(n)" value ="1.5 1.5 1.5" lower="0."/>
-        <parameter name="deathRate" id="deathRate.t:$(n)" value ="0.2 0.2 0.2" lower="0."/>
-        <parameter estimate="false" name="samplingRate" id="samplingRate.t:$(n)" value="0.0 0.5" lower="0." upper="10"/>
-        <parameter name="removalProbability" id="r.t:$(n)" value="0.0 0.5" lower="0." upper="1."/>
-        <parameter name="birthRateChangeTimes" id="birthRateChangeTimes.t:$(n)" value="2. 1. 0."/>
-        <parameter name="deathRateChangeTimes" id="deathRateChangeTimes.t:$(n)" value="2. 1. 0."/>
-        <parameter name="samplingRateChangeTimes" id="samplingRateChangeTimes.t:$(n)" value="1. 0."/>
-        <parameter name="removalProbabilityChangeTimes" id="rChangeTimes.t:$(n)" value="1. 0."/>
+		<parameter name="origin" id="originSASky.t:$(n)" value ="100.0" lower="0."/>
+        <parameter name="birthRate" id="birthRateSASky.t:$(n)" value ="1.5 1.5 1.5" lower="0."/>
+        <parameter name="deathRate" id="deathRateSASky.t:$(n)" value ="0.2 0.2 0.2" lower="0."/>
+        <parameter estimate="false" name="samplingRate" id="samplingRateSASky.t:$(n)" value="0.0 0.5" lower="0." upper="10"/>
+        <parameter name="removalProbability" id="rSASky.t:$(n)" value="0.0 0.5" lower="0." upper="1."/>
+        <parameter name="birthRateChangeTimes" id="birthRateChangeTimesSASky.t:$(n)" value="2. 1. 0."/>
+        <parameter name="deathRateChangeTimes" id="deathRateChangeTimesSASky.t:$(n)" value="2. 1. 0."/>
+        <parameter name="samplingRateChangeTimes" id="samplingRateChangeTimesSASky.t:$(n)" value="1. 0."/>
+        <parameter name="removalProbabilityChangeTimes" id="rChangeTimesSASky.t:$(n)" value="1. 0."/>
         <reverseTimeArrays spec='parameter.BooleanParameter' value='true true true true true'/>
 	</BirthDeathSkylineModel>
 
 
-	<distribution  id='originPrior.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
-		<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>
+	<distribution  id='originPriorSASky.t:$(n)' x="@originSASky.t:$(n)" spec='beast.math.distributions.Prior'>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
-	<distribution id="birthRatePrior.t:$(n)" spec="beast.math.distributions.Prior" x="@birthRate.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="1." offset="0.0" meanInRealSpace="false"/>
+	<distribution id="birthRatePriorSASky.t:$(n)" spec="beast.math.distributions.Prior" x="@birthRateSASky.t:$(n)">
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
-	<distribution id="deathRatePrior.t:$(n)" spec="beast.math.distributions.Prior" x="@deathRate.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="0.5" offset="0.0" meanInRealSpace="false"/>
+	<distribution id="deathRatePriorSASky.t:$(n)" spec="beast.math.distributions.Prior" x="@deathRateSASky.t:$(n)">
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
-	<distribution id="samplingRatePrior.t:$(n)" spec="beast.math.distributions.Prior" x="@samplingRate.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="0.5" offset="0.0" meanInRealSpace="false"/>
+	<distribution id="samplingRatePriorSASky.t:$(n)" spec="beast.math.distributions.Prior" x="@samplingRateSASky.t:$(n)">
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
-	<distribution id="rPrior.t:$(n)" spec="beast.math.distributions.Prior" x="@r.t:$(n)">
-        <distr spec='beast.math.distributions.Beta' alpha = "1.0" beta = "1.0"/>
+	<distribution id="rPriorSASky.t:$(n)" spec="beast.math.distributions.Prior" x="@rSASky.t:$(n)">
+        <distr spec='beast.math.distributions.Uniform' lower="0." upper="1."/>
 	</distribution>
 
-	<operator id='originScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@origin.t:$(n)"/>
-    <operator id='birthScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@birthRate.t:$(n)"/>
-    <operator id='deathScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@deathRate.t:$(n)"/>
-	<operator id='samplingScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@samplingRate.t:$(n)"/>
-    <operator id='rScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".9" weight="1" parameter="@r.t:$(n)"/>
+	<operator id='originScalerSASky.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@originSASky.t:$(n)"/>
+    <operator id='birthScalerSASky.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@birthRateSASky.t:$(n)"/>
+    <operator id='deathScalerSASky.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@deathRateSASky.t:$(n)"/>
+	<operator id='samplingScalerSASky.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@samplingRateSASky.t:$(n)"/>
+    <operator id='rScalerSASky.t:$(n)' spec='ScaleOperator' scaleFactor=".9" weight="1" parameter="@rSASky.t:$(n)"/>
 
-    <plugin id='SACount.t:$(n)' spec='beast.evolution.tree.SampledAncestorLogger' tree='@Tree.t:$(n)'/>
+    <plugin id='SACountSASky.t:$(n)' spec='beast.evolution.tree.SampledAncestorLogger' tree='@Tree.t:$(n)'/>
 
     <!-- operators for sampled ancestor trees -->
     <operator id='LeafToSA.t:$(n)' spec='beast.evolution.operators.LeafToSampledAncestorJump' weight="10" tree="@Tree.t:$(n)"/>
@@ -76,17 +76,17 @@
 ]]>
             <connect srcID='SABDSkyline.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
 
-            <connect srcID='originPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and origin.t:$(n)/estimate=true'>prior on origin.t:$(n)</connect>
-            <connect srcID='birthRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and birthRate.t:$(n)/estimate=true'>prior on birthRate.t:$(n)</connect>
-            <connect srcID='deathRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and deathRate.t:$(n)/estimate=true'>prior on deathRate.t:$(n)</connect>
-            <connect srcID='samplingRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and samplingRate.t:$(n)/estimate=true'>prior on samplingRate.t:$(n)</connect>
-            <connect srcID='rPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and r.t:$(n)/estimate=true'>prior on r.t:$(n)</connect>
+            <connect srcID='originPriorSASky.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and originSASky.t:$(n)/estimate=true'>prior on originSASky.t:$(n)</connect>
+            <connect srcID='birthRatePriorSASky.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and birthRateSASky.t:$(n)/estimate=true'>prior on birthRateSASky.t:$(n)</connect>
+            <connect srcID='deathRatePriorSASky.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and deathRateSASky.t:$(n)/estimate=true'>prior on deathRateSASky.t:$(n)</connect>
+            <connect srcID='samplingRatePriorSASky.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and samplingRateSASky.t:$(n)/estimate=true'>prior on samplingRateSASky.t:$(n)</connect>
+            <connect srcID='rPriorSASky.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(SABDSkyline.t:$(n)) and rSASky.t:$(n)/estimate=true'>prior on rSASky.t:$(n)</connect>
 
-            <connect srcID='originScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and origin.t:$(n)/estimate=true'/>
-            <connect srcID='birthScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and birthRate.t:$(n)/estimate=true'/>
-            <connect srcID='deathScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and deathRate.t:$(n)/estimate=true'/>
-            <connect srcID='samplingScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and samplingRate.t:$(n)/estimate=true'/>
-            <connect srcID='rScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and r.t:$(n)/estimate=true'/>
+            <connect srcID='originScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and originSASky.t:$(n)/estimate=true'/>
+            <connect srcID='birthScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and birthRateSASky.t:$(n)/estimate=true'/>
+            <connect srcID='deathScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and deathRateSASky.t:$(n)/estimate=true'/>
+            <connect srcID='samplingScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and samplingRateSASky.t:$(n)/estimate=true'/>
+            <connect srcID='rScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and rSASky.t:$(n)/estimate=true'/>
 
             <connect srcID='treeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
             <connect srcID='treeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
@@ -105,13 +105,13 @@
             <connect srcID='SATreeScaler.t:$(n)' targetID='mcmc' inputName='operator' if='inposterior(SABDSkyline.t:$(n)) and Tree.t:$(n)/estimate=true'/>
 
             <connect srcID='SABDSkyline.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(SABDSkyline.t:$(n))'/>
-            <plate var='p' range='origin,birthRate,deathRate,removalProbability'>
-                <connect srcID='$(p).t:$(n)' targetID='state' inputName='stateNode' if='inposterior(SABDSkyline.t:$(n)) and $(p).t:$(n)/estimate=true'/>
-                <connect srcID='$(p).t:$(n)' targetID='tracelog' inputName='log' if='inposterior(SABDSkyline.t:$(n)) and $(p).t:$(n)/estimate=true'/>
+            <plate var='p' range='origin,birthRate,deathRate,r'>
+                <connect srcID='$(p)SASky.t:$(n)' targetID='state' inputName='stateNode' if='inposterior(SABDSkyline.t:$(n)) and $(p)SASky.t:$(n)/estimate=true'/>
+                <connect srcID='$(p)SASky.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(SABDSkyline.t:$(n)) and $(p)SASky.t:$(n)/estimate=true'/>
             </plate>
             <connect srcID='SABDSkyline.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(SABDSkyline.t:$(n))'/>
 
-            <connect srcID='SACount.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(Tree.t:$(n))'/>
+            <connect srcID='SACountSASky.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(Tree.t:$(n))'/>
         </subtemplate>
     </mergewith>
 

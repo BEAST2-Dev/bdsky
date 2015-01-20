@@ -24,6 +24,7 @@
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival'>
+
             <![CDATA[
     <!-- Sampled Ancestor Birth Death Skyline model-->
     <BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="SAFBDSkyline.t:$(n)" tree="@Tree.t:$(n)" conditionOnRhoSampling="true" conditionOnSurvival="false">
@@ -42,19 +43,18 @@
 
 
 	<distribution  id='originPriorF.t:$(n)' x="@originF.t:$(n)" spec='beast.math.distributions.Prior'>
-		<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
 	<distribution id="birthRatePriorF.t:$(n)" spec="beast.math.distributions.Prior" x="@birthRateF.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="1." offset="0.0" meanInRealSpace="false"/>
-	</distribution>
+        <distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>	</distribution>
 	<distribution id="deathRatePriorF.t:$(n)" spec="beast.math.distributions.Prior" x="@deathRateF.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="0.5" offset="0.0" meanInRealSpace="false"/>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
 	<distribution id="samplingRatePriorF.t:$(n)" spec="beast.math.distributions.Prior" x="@samplingRateF.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="0.5" offset="0.0" meanInRealSpace="false"/>
+		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
 	<distribution id="rhoPriorF.t:$(n)" spec="beast.math.distributions.Prior" x="@rhoF.t:$(n)">
-        <distr spec='beast.math.distributions.Beta' alpha = "1.0" beta = "1.0"/>
+        <distr spec='beast.math.distributions.Uniform' lower="0." upper="1."/>
 	</distribution>
 
 	<operator id='originScalerF.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="3" parameter="@originF.t:$(n)"/>
