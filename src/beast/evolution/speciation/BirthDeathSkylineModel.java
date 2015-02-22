@@ -792,6 +792,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         birth = new Double[totalIntervals];
         death = new Double[totalIntervals];
         psi = new Double[totalIntervals];
+        if (SAModel) r =  new Double[totalIntervals];
 
         if (isBDSIR()) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
 
