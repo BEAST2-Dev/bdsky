@@ -225,7 +225,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             birth = birthRate.get().getValues();
             if (SAModel) r = removalProbability.get().getValues();
 
-
         } else if (R0.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
 
             transform = true;
@@ -315,8 +314,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     private boolean rhoSamplingConditionHolds() {
 
         if (SAModel) {
-            for (int i=0; i<r.length; i++) {
-                if (r[i] != 0.0) {
+            for (int i=0; i<removalProbability.get().getDimension(); i++) {
+                if (removalProbability.get().getValue(i) != 0.0) {
                     return false;
                 }
             }
