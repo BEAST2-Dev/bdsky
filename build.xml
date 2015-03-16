@@ -193,8 +193,8 @@
 		<copy todir="${Add_on_dir}/templates">
 			<fileset file="templates/BDSKY_contemp.xml" />
 			<fileset file="templates/BDSKY_serial.xml" />
-			<fileset file="templates/SABDSKY_serial.xml" />
-			<fileset file="templates/SAFBDSKY_serial.xml" />
+			<fileset file="templates/SABDSKY.xml" />
+			<fileset file="templates/SAFBDSKY.xml" />
 		</copy>
 
 		<jar jarfile="${distBDSSM}/BDSKY.addon.zip">
