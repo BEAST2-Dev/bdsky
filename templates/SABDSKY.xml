@@ -88,14 +88,6 @@
             <connect srcID='samplingScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and samplingRateSASky.t:$(n)/estimate=true'/>
             <connect srcID='rScalerSASky.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(SABDSkyline.t:$(n)) and rSASky.t:$(n)/estimate=true'/>
 
-            <connect srcID='treeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-            <connect srcID='treeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-            <connect srcID='UniformOperator.t:$(n)'           targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-            <connect srcID='SubtreeSlide.t:$(n)'              targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-            <connect srcID='narrow.t:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-            <connect srcID='wide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-            <connect srcID='WilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(YuleModel.t:$(n))'></connect>
-
             <connect srcID='LeafToSA.t:$(n)' targetID='mcmc' inputName='operator' if='inposterior(SABDSkyline.t:$(n)) and Tree.t:$(n)/estimate=true'/>
             <connect srcID='SAWilsonBalding.t:$(n)' targetID='mcmc' inputName='operator' if='inposterior(SABDSkyline.t:$(n)) and Tree.t:$(n)/estimate=true'/>
             <connect srcID='SAWide.t:$(n)' targetID='mcmc' inputName='operator' if='inposterior(SABDSkyline.t:$(n)) and Tree.t:$(n)/estimate=true'/>
@@ -111,7 +103,7 @@
             </plate>
             <connect srcID='SABDSkyline.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(SABDSkyline.t:$(n))'/>
 
-            <connect srcID='SACountSASky.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(Tree.t:$(n))'/>
+            <connect srcID='SACountSASky.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(SABDSkyline.t:$(n)) and inposterior(Tree.t:$(n))'/>
         </subtemplate>
     </mergewith>
 
