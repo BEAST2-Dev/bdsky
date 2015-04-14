@@ -32,7 +32,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
 	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporary.t:$(n)" tree="@Tree.t:$(n)">
-		<parameter name="origin" id="origin.t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
+		<parameter name="origin" id="origin.t:$(n)" value ="100" lower="0." upper="Infinity"/>  	
 		<parameter name="R0" id="R0.t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="Infinity" dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion.t:$(n)" value="0."/> 
@@ -73,9 +73,12 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	<operator id='narrow.t:$(n)' spec='Exchange' isNarrow='true' weight="15" tree="@Tree.t:$(n)"/>
 	<operator id='wide.t:$(n)' spec='Exchange' isNarrow='false' weight="3" tree="@Tree.t:$(n)"/>
 	<operator id='WilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
+	<upDownOperator id='strictClockUpDownOperator.c:$(n)' spec='UpDownOperator' scaleFactor="0.75" weight="3">
+		<up idref="clockRate.c:$(n)"/>
+		<down idref="Tree.t:$(n)"/>
+	</upDownOperator>
 
 	<!-- BDSKY operators -->
-
 	<operator id='becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate.t:$(n)"/>
 	<operator id='rhoScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho.t:$(n)"/>
 	<operator id='RScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0.t:$(n)"/>
@@ -102,6 +105,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='narrow.t:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Narrow exchange performs local rearrangement of tree t:$(n)</connect>
             <connect srcID='wide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Wide exchange performs global rearrangement of tree t:$(n)</connect>
             <connect srcID='WilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs Wilson-Balding global rearrangement of tree t:$(n)</connect>
+            <connect srcID='strictClockUpDownOperator.c:$(n)'        targetID='mcmc' inputName='operator' if='nooperator(FixMeanMutationRatesOperator) and inlikelihood(clockRate.s:$(n)) and clockRate.s:$(n)/estimate=true'>Up-down-scales clock rate and tree s:$(n)</connect>
 
             <connect srcID='becomeUninfectiousRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'/>
             <connect srcID='rhoScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'/>
