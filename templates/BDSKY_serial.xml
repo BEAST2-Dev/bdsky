@@ -73,10 +73,6 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	<operator id='BDSKY_serialnarrow.t:$(n)' spec='Exchange' isNarrow='true' weight="15" tree="@Tree.t:$(n)"/>
 	<operator id='BDSKY_serialwide.t:$(n)' spec='Exchange' isNarrow='false' weight="3" tree="@Tree.t:$(n)"/>
 	<operator id='BDSKY_serialWilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
-	<upDownOperator id='strictClockUpDownOperator.c:$(n)' spec='UpDownOperator' scaleFactor="0.75" weight="3">
-		<up idref="clockRate.c:$(n)"/>
-		<down idref="Tree.t:$(n)"/>
-	</upDownOperator>
 
 	<!-- BDSKY operators -->
 	<operator id='becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate.t:$(n)"/>
