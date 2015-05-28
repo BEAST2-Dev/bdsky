@@ -34,7 +34,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporary.t:$(n)" tree="@Tree.t:$(n)">
 		<parameter name="origin" id="origin.t:$(n)" value ="100" lower="0." upper="Infinity"/>  	
 		<parameter name="R0" id="R0.t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
-		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="Infinity" dimension ="10"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate.t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
 		<parameter name="samplingProportion" id="samplingProportion.t:$(n)" value="0."/> 
 		<parameter name="rho" id="rho.t:$(n)" value="0.01" lower="0." upper="1."/> 
 	</BirthDeathSkylineModel>
@@ -64,8 +64,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 		<parameter idref="samplingProportion.t:$(n)"/>        
 	</RPNcalculator>
 
-	<!-- tree operators -->
-	
+	<!-- tree operators -->	
 	<operator id='BDSKY_contemptreeScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)"/>
 	<operator id='BDSKY_contemptreeRootScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)" rootOnly='true'/>
 	<operator id='BDSKY_contempUniformOperator.t:$(n)' spec='Uniform' weight="30" tree="@Tree.t:$(n)"/>
@@ -75,11 +74,11 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	<operator id='BDSKY_contempWilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
 
 	<!-- BDSKY operators -->
-	<operator id='becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate.t:$(n)"/>
+	<operator id='becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate.t:$(n)"/>
 	<operator id='rhoScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho.t:$(n)"/>
 	<operator id='RScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0.t:$(n)"/>
 
-	<operator id="updownBD.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="10">
+	<operator id="updownBD.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
 		<up idref="R0.t:$(n)"/>
 		<down idref="becomeUninfectiousRate.t:$(n)"/>
 	</operator>
@@ -90,9 +89,9 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='RandomTree.t:$(n)'                targetID='BirthDeathSkySerial.t:$(n)' inputName='init'   if='inposterior(Tree.t:$(n))'/>
 
             <connect srcID='originPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and origin.t:$(n)/estimate=true'>prior on origin.t:$(n)</connect>
-            <connect srcID='rhoPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'>prior on sampling proprtion t:$(n)</connect>
-            <connect srcID='becomeUninfectiousRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior over becomeUninfectiousRate.t:$(n)</connect>
-            <connect srcID='RPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true'>prior over R0.t:$(n)</connect>
+            <connect srcID='rhoPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'>prior on sampling proportion t:$(n)</connect>
+            <connect srcID='becomeUninfectiousRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior on becomeUninfectiousRate.t:$(n)</connect>
+            <connect srcID='RPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and R0.t:$(n)/estimate=true'>prior on R0.t:$(n)</connect>
 
             <connect srcID='BDSKY_contemptreeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
             <connect srcID='BDSKY_contemptreeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>
