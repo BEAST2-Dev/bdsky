@@ -74,16 +74,16 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	<operator id='BDSKY_serialWilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
 
 	<!-- BDSKY operators -->
-	<operator id='becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate.s.t:$(n)"/>
-	<operator id='samplingScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@samplingProportion.s.t:$(n)"/>
-	<operator id='RScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0.s.t:$(n)"/>
+	<operator id='becomeUninfectiousRateScaler.s.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate.s.t:$(n)"/>
+	<operator id='samplingScaler.s.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@samplingProportion.s.t:$(n)"/>
+	<operator id='RScaler.s.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0.s.t:$(n)"/>
 
-	<operator id="updownBD.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
+	<operator id="updownBD.s.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
 		<up idref="R0.s.t:$(n)"/>
 		<down idref="becomeUninfectiousRate.s.t:$(n)"/>
 	</operator>
 
-	<operator id='origScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin.s.t:$(n)"/>
+	<operator id='origScaler.s.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin.s.t:$(n)"/>
 ]]>
             <connect srcID='BirthDeathSkySerial.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkySerial.t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
             <connect srcID='RandomTree.t:$(n)'                targetID='BirthDeathSkySerial.t:$(n)' inputName='init'   if='inposterior(Tree.t:$(n))'/>
@@ -101,11 +101,11 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='BDSKY_serialwide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkySerial.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Wide exchange performs global rearrangement of tree t:$(n)</connect>
             <connect srcID='BDSKY_serialWilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkySerial.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs Wilson-Balding global rearrangement of tree t:$(n)</connect>
 
-            <connect srcID='becomeUninfectiousRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and becomeUninfectiousRate.s.t:$(n)/estimate=true'/>
-            <connect srcID='samplingScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and samplingProportion.s.t:$(n)/estimate=true'/>
-            <connect srcID='RScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and R0.s.t:$(n)/estimate=true'/>
-            <connect srcID='updownBD.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and R0.s.t:$(n)/estimate=true and becomeUninfectiousRate.s.t:$(n)/estimate=true'/>
-            <connect srcID='origScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and origin.s.t:$(n)/estimate=true'/>
+            <connect srcID='becomeUninfectiousRateScaler.s.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and becomeUninfectiousRate.s.t:$(n)/estimate=true'/>
+            <connect srcID='samplingScaler.s.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and samplingProportion.s.t:$(n)/estimate=true'/>
+            <connect srcID='RScaler.s.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and R0.s.t:$(n)/estimate=true'/>
+            <connect srcID='updownBD.s.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and R0.s.t:$(n)/estimate=true and becomeUninfectiousRate.s.t:$(n)/estimate=true'/>
+            <connect srcID='origScaler.s.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkySerial.t:$(n)) and origin.s.t:$(n)/estimate=true'/>
 
 
 
