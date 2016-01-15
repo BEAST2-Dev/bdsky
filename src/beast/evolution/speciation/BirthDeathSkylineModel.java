@@ -37,11 +37,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<RealParameter> deathRateChangeTimesInput =
             new Input<RealParameter>("deathRateChangeTimes", "The times t_i specifying when death/becomeUninfectious rate changes occur", (RealParameter) null);
 
-    // the interval times for removal probability
+    // the interval times for sampling rate
     public Input<RealParameter> samplingRateChangeTimesInput =
             new Input<RealParameter>("samplingRateChangeTimes", "The times t_i specifying when sampling rate or sampling proportion changes occur", (RealParameter) null);
 
-    // the interval times for sampling rate
+    // the interval times for removal probability
     public Input<RealParameter> removalProbabilityChangeTimesInput =
             new Input<RealParameter>("removalProbabilityChangeTimes", "The times t_i specifying when removal probability changes occur", (RealParameter) null);
 
@@ -89,6 +89,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> contemp =
             new Input<Boolean>("contemp", "Only contemporaneous sampling (i.e. all tips are from same sampling time, default false)", false);
 
+    public Input<Boolean> removalAffectsSamplingProportion =
+            new Input<Boolean>("removalAffectsSamplingProportion", "In R0 param, is samplingProportion = samplingRate/(r*samplingRate+deathRate)? Default=true. (Alternative: samplingProportion = samplingRate/(samplingRate+deathRate)) ", true);
 
     public Input<RealParameter> R0 =
             new Input<RealParameter>("R0", "The basic reproduction number", Input.Validate.XOR, birthRate);
@@ -662,9 +664,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return Math.sqrt((b - g - psi) * (b - g - psi) + 4 * b * psi);
     }
 
-    public double Bi(double b, double g, double psi, double r, double A, double p0) {
+    public double Bi(double b, double g, double psi, double rho, double A, double p0) {
 
-        return ((1 - 2 * p0 * (1 - r)) * b + g + psi) / A;
+        return ((1 - 2 * p0 * (1 - rho)) * b + g + psi) / A;
     }
 
     public double p0(int index, double t, double ti) {
@@ -802,10 +804,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
             } else {
                 birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
                 r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
+                if (removalAffectsSamplingProportion.get())
+                    psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                else             //todo: test this and commit:
+                    psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
+                        / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
                 death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
-
 
             }
 
@@ -815,6 +820,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     @Override
     public double calculateTreeLogLikelihood(TreeInterface tree) {
+
+        logP=0.;
+
 
         int nTips = tree.getLeafNodeCount();
 

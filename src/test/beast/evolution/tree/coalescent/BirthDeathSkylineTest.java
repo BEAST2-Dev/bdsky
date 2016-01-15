@@ -24,6 +24,29 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
     @Test
+     public void testLikelihoodCalculationSimple() throws Exception {
+
+         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+         bdssm.setInputValue("tree", tree);
+         bdssm.setInputValue("origin", new RealParameter("10."));
+        bdssm.setInputValue("conditionOnSurvival", false);
+        bdssm.setInputValue("removalProbability", "1");
+
+
+        bdssm.setInputValue("R0", new RealParameter("1.5"));
+        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
+        bdssm.setInputValue("samplingProportion", new RealParameter("0.3") );
+
+         bdssm.initAndValidate();
+         bdssm.printTempResults = false;
+
+         assertEquals(-26.105360134266082, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
+     }
+
+
+    @Test
     public void testRhoSasha() throws Exception {
 
 
