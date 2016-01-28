@@ -50,8 +50,8 @@ public class OUPrior extends Distribution {
 
         ParametricDistribution x0Prior = x0PriorInput.get();
 
-        Double[] t = timeInput.get().getValues();
-        Double[] x = xInput.get().getValues();
+        double[] t = timeInput.get().getDoubleValues();
+        double[] x = xInput.get().getDoubleValues();
 
         boolean logspace = logSpace.get();
         if (logspace) {
