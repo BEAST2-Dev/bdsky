@@ -17,12 +17,12 @@ public class OUPrior extends Distribution {
 
 
     // the trajectory to compute Ornstein-Uhlenbeck prior of
-    public Input<RealParameter> xInput =
-            new Input<RealParameter>("x", "The x_i values", (RealParameter) null);
+    public Input<Function> xInput =
+            new Input<>("x", "The x_i values", (Function) null);
 
     // the times associated with the x_i values
-    public Input<RealParameter> timeInput =
-            new Input<RealParameter>("times", "The times t_i specifying when x changes", (RealParameter) null);
+    public Input<Function> timeInput =
+            new Input<>("times", "The times t_i specifying when x changes", (Function) null);
 
     // mean
     public Input<RealParameter> meanInput =
