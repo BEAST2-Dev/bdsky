@@ -357,17 +357,17 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
         t_root = tree.getRoot().getHeight();
 
         parameterizationInput.get().populateCanonical(birth, death, psi, r, times);
-            for (int i = 0; i < totalIntervals; i++) {
-                death[i] = deathRates[index(times[i], deathRateChangeTimes)];
-                psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
-                if (SAModel) r[i] = removalProbabilities[index(times[i], rChangeTimes)];
-
-                if (printTempResults) {
-                    System.out.println("death[" + i + "]=" + death[i]);
-                    System.out.println("psi[" + i + "]=" + psi[i]);
-                    if (SAModel) System.out.println("r[" + i + "]=" + r[i]);
-                }
-            }
+//            for (int i = 0; i < totalIntervals; i++) {
+//                death[i] = deathRates[index(times[i], deathRateChangeTimes)];
+//                psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
+//                if (SAModel) r[i] = removalProbabilities[index(times[i], rChangeTimes)];
+//
+//                if (printTempResults) {
+//                    System.out.println("death[" + i + "]=" + death[i]);
+//                    System.out.println("psi[" + i + "]=" + psi[i]);
+//                    if (SAModel) System.out.println("r[" + i + "]=" + r[i]);
+//                }
+//            }
 
         if (rhoInput.get() != null && (rhoInput.get().getDimension()==1 ||  rhoSamplingTimes.get() != null)) {
 
@@ -391,7 +391,7 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(TreeInterface tree) {
 
-        if (!originIsRootEdge.get() && tree.getRoot().getHeight() >= origin.get().getValue()) {
+        if (!originIsRootEdge.get() && tree.getRoot().getHeight() >= parameterizationInput.get().origin()) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -402,11 +402,11 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
 
         if (printTempResults) System.out.println("After update rates and times");
 
-        if (m_rho.get() != null) {
+        if (rhoInput.get() != null) {
             if (contempData) {
                 rho = new Double[totalIntervals];
                 Arrays.fill(rho, 0.);
-                rho[totalIntervals-1] = m_rho.get().getValue();
+                rho[totalIntervals-1] = rhoInput.get().getValue();
             }
 
         } else {
@@ -414,7 +414,7 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
             Arrays.fill(rho, 0.0);
         }
 
-        if (m_rho.get() != null)
+        if (rhoInput.get() != null)
             if (computeN(tree) < 0)
                 return Double.NEGATIVE_INFINITY;
 

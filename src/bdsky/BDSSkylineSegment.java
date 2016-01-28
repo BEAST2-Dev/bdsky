@@ -30,7 +30,6 @@ public class BDSSkylineSegment extends SkylineSegment {
      */
     public double r() { return value[3]; };
 
-
-    public boolean hasRho();
-
+    // TODO fold rho sampling events into the Skyline
+    // public boolean hasRho();
 }
