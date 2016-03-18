@@ -23,7 +23,7 @@ public class R0Parameterization extends BDSParameterization {
                             "If 1.0 then no sampled ancestors are produced in that interval.");
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
 
         MultiSkyline multiSkyline = new MultiSkyline(
                 R0.get(),

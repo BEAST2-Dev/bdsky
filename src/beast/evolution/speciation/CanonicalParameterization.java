@@ -22,7 +22,7 @@ public class CanonicalParameterization extends BDSParameterization {
             new Input<>("removalProbability", "The probability of an individual to become noninfectious immediately after the sampling");
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
 
         MultiSkyline multiSkyline = new MultiSkyline(
                 birthRate.get(),

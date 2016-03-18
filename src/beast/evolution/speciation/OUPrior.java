@@ -41,7 +41,7 @@ public class OUPrior extends Distribution {
 
     public Input<Boolean> logSpace = new Input<>("logspace", "true if prior should be applied to log(x).", false);
 
-    public double calculateLogP() throws Exception {
+    public double calculateLogP() {
 
         double mu = meanInput.get().getValue();
         double sigma = sigmaInput.get().getValue();

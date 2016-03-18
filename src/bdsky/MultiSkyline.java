@@ -25,7 +25,7 @@ public class MultiSkyline extends CalculationNode implements Skyline {
     }
 
     @Override
-    public void initAndValidate() throws Exception {}
+    public void initAndValidate() {}
 
     @Override
     public List<SkylineSegment> getSegments() {

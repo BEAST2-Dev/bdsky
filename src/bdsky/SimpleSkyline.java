@@ -29,7 +29,7 @@ public class SimpleSkyline extends CalculationNode implements Skyline {
                     "Should be the same length as time vector", (RealParameter) null);
 
     @Override
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
 
         Double[] times = getTimes();
 
