@@ -23,7 +23,7 @@ public class ElementwiseMultiplication extends BEASTObject{
 
 
     /* Methods */
-    public void initAndValidate() throws Exception {
+    public void initAndValidate() {
         Double[] mult = new Double[vector.get().getDimension()];
         for (int i =0; i<mult.length; i++){
             mult[i] =   vector.get().getArrayValue(i) * scalar.get();
