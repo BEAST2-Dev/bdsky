@@ -158,6 +158,21 @@ public class BirthDeathSkylineTest extends TestCase {
                     bdssm.initAndValidate();
                     assertEquals(-106.06555718977357, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
                 }
+                case 3:{
+                    BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+                    bdssm.setInputValue("tree", tree);
+                    bdssm.setInputValue("origin", new RealParameter("2"));
+                    bdssm.setInputValue("conditionOnSurvival", false);
+
+                    bdssm.setInputValue("birthRate", new RealParameter("3. 2. 4. 4."));
+                    bdssm.setInputValue("deathRate", new RealParameter("2.5 1. .5 0.5"));
+                    bdssm.setInputValue("samplingRate", new RealParameter("2. 0.5 1. 2.0"));
+                    bdssm.setInputValue("rho", new RealParameter("0.05 0.01"));
+                    bdssm.setInputValue("rhoSamplingTimes","0. 1.");
+                    bdssm.setInputValue("intervalTimes", new RealParameter("0. 0.5 1. 1.1"));
+                    bdssm.initAndValidate();
+                    assertEquals(-109.6105592003162, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
+                }
             }
         }
     }
@@ -700,7 +715,7 @@ public class BirthDeathSkylineTest extends TestCase {
     public void testTreeParser() throws Exception {
 
         TreeParser tree = new TreeParser();
-        String newick = "(((1[&state='1']:1, (2[&state='0']:.5)[&state='1']:1.5)[&state='1']:2)[&state='0']:1, (3[&state='0']:1.5, (4[&state='1']:1.5)[&state='0']:1 )[&state='0']:2)[&state='0']:1;";
+        String newick = "(((1[&state='1']:1, (2[&state='0']:0.5)[&state='1']:1.5)[&state='1']:2)[&state='0']:1, (3[&state='0']:1.5, (4[&state='1']:1.5)[&state='0']:1 )[&state='0']:2)[&state='0']:1;";
         tree.initByName("adjustTipHeights",false, "singlechild", true, "newick", newick);
 
         printNodeState(tree.getRoot());
