@@ -1,4 +1,4 @@
-package beast.evolution.speciation;
+package bdsky;
 
 import beast.core.Distribution;
 import beast.core.Function;

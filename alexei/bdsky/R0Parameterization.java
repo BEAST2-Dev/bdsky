@@ -1,6 +1,5 @@
-package beast.evolution.speciation;
+package bdsky;
 
-import bdsky.*;
 import beast.core.Input;
 
 /**

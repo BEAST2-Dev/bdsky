@@ -1,4 +1,4 @@
-package beast.evolution.speciation;
+package bdsky;
 
 import bdsky.BDSSkylineSegment;
 import bdsky.MultiSkyline;

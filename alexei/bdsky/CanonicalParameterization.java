@@ -1,11 +1,6 @@
-package beast.evolution.speciation;
+package bdsky;
 
-import bdsky.BDSSkylineSegment;
-import bdsky.MultiSkyline;
-import bdsky.SimpleSkyline;
-import bdsky.SkylineSegment;
 import beast.core.Input;
-import beast.core.parameter.RealParameter;
 
 /**
  * Created by alexeid on 7/12/15.

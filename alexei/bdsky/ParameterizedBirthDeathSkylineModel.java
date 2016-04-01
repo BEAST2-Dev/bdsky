@@ -1,13 +1,12 @@
-package beast.evolution.speciation;
+package bdsky;
 
 
-import bdsky.BDSSkylineSegment;
 import beast.core.Citation;
 import beast.core.Description;
 import beast.core.Input;
-import beast.core.parameter.BooleanParameter;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Taxon;
+import beast.evolution.speciation.SpeciesTreeDistribution;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeInterface;
 

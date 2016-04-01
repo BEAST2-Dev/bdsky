@@ -1,4 +1,4 @@
-package test.beast.evolution.tree.coalescent;
+package test.beast.evolution.speciation;
 
 import beast.core.parameter.RealParameter;
 import beast.evolution.speciation.BirthDeathSkylineModel;
