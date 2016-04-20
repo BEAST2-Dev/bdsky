@@ -89,9 +89,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> contemp =
             new Input<Boolean>("contemp", "Only contemporaneous sampling (i.e. all tips are from same sampling time, default false)", false);
 
-    public Input<Boolean> removalAffectsSamplingProportion =
-            new Input<Boolean>("removalAffectsSamplingProportion", "In R0 param, is samplingProportion = samplingRate/(r*samplingRate+deathRate)? Default=true. (Alternative: samplingProportion = samplingRate/(samplingRate+deathRate)) ", true);
-
     public Input<RealParameter> R0 =
             new Input<RealParameter>("R0", "The basic reproduction number", Input.Validate.XOR, birthRate);
     public Input<RealParameter> becomeUninfectiousRate =
@@ -805,9 +802,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             } else {
                 birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
                 r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
-                if (removalAffectsSamplingProportion.get())
-                    psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-                else             //todo: test this and commit:
                     psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
                         / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
                 death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
