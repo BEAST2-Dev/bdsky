@@ -107,6 +107,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<RealParameter> samplingProportion =
             new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate", Input.Validate.XOR, samplingRate);
 
+    public Input<RealParameter> netDiversification =
+            new Input<RealParameter>("netDiversification", "Net diversification rate", Input.Validate.XOR, birthRate);
+    public Input<RealParameter> turnOver =
+            new Input<RealParameter>("turnOver", "Turn over rate", Input.Validate.XOR, deathRate);
+    // public Input<RealParameter> samplingProportion =
+    //        new Input<RealParameter>("samplingProportion", "Sampling proportion", Input.Validate.XOR, samplingRate);
 
     public Input<Boolean> forceRateChange =
             new Input<Boolean>("forceRateChange", "If there is more than one interval and we estimate the time of rate change, do we enforce it to be within the tree interval? Default true", true);
@@ -175,7 +181,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected Double[] times = new Double[]{0.};
 
-    protected Boolean transform;
+    protected Boolean transform, transform_d_r_s;
     Boolean m_forceRateChange;
 
     Boolean birthRateTimesRelative = false;
@@ -239,8 +245,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             transform = true;
 
+        } else if (netDiversification.get() != null && turnOver.get() != null && samplingProportion.get() != null) {
+
+            transform_d_r_s = true;
+
         } else {
-            throw new RuntimeException("Either specify birthRate, deathRate and samplingRate OR specify R0, becomeUninfectiousRate and samplingProportion!");
+            throw new RuntimeException("Either specify birthRate, deathRate and samplingRate " +
+                    "OR specify R0, becomeUninfectiousRate and samplingProportion " +
+                    "OR specify netDiversification, turnOver and samplingProportion!");
         }
 
 
@@ -249,6 +261,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             if (birthChanges < 1) birthChanges = R0.get().getDimension() - 1;
             samplingChanges = samplingProportion.get().getDimension() - 1;
             deathChanges = becomeUninfectiousRate.get().getDimension() - 1;
+
+        } else if (transform_d_r_s) {
+
+            if (birthChanges < 1) birthChanges = netDiversification.get().getDimension() - 1;
+            deathChanges = turnOver.get().getDimension() - 1;
+            samplingChanges = samplingProportion.get().getDimension() - 1;
 
         } else {
 
@@ -562,6 +580,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (transform)
             transformParameters();
+        else if (transform_d_r_s)
+            transformParameters_d_r_s();
         else {
 
             Double[] birthRates = birthRate.get().getValues();
@@ -591,9 +611,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 }
             }
         }
-
-
-
 
         if (m_rho.get() != null && (m_rho.get().getDimension()==1 ||  rhoSamplingTimes.get() != null)) {
 
@@ -878,6 +895,48 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
 
 
+        }
+    }
+
+    protected void transformParameters_d_r_s() {
+
+        Double[] nd = netDiversification.get().getValues();
+        Double[] to = turnOver.get().getValues();
+        Double[] sp = samplingProportion.get().getValues();
+        Double[] rp = new Double[1];
+        if (SAModel) rp = removalProbability.get().getValues();
+
+        birth = new Double[totalIntervals];
+        death = new Double[totalIntervals];
+        psi = new Double[totalIntervals];
+        if (SAModel) r =  new Double[totalIntervals];
+
+        /* if SAModel:
+            nd = lambda-mu
+            to = mu/lambda
+            sp = psi/(mu+psi)
+            rp = 0 ???
+           else
+            nd = lambda-mu-psi
+            to = (mu+psi)/lambda
+            sp = psi/(mu+psi)
+         */
+
+        // if (isBDSIR()) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
+
+        for (int i = 0; i < totalIntervals; i++) {
+            if (!SAModel) {
+                if (!isBDSIR()) birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
+            } else {
+                birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
+                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
+                        / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
+                death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
+
+            }
         }
     }
 
