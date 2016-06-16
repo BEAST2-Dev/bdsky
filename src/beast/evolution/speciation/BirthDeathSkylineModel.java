@@ -235,7 +235,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null) {
 
-            transform = false;
+            transform = transform_d_r_s = false;
             death = deathRate.get().getValues();
             psi = samplingRate.get().getValues();
             birth = birthRate.get().getValues();
@@ -911,32 +911,22 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         psi = new Double[totalIntervals];
         if (SAModel) r =  new Double[totalIntervals];
 
-        /* if SAModel:
-            nd = lambda-mu
-            to = mu/lambda
-            sp = psi/(mu+psi)
-            rp = 0 ???
-           else
-            nd = lambda-mu-psi
-            to = (mu+psi)/lambda
-            sp = psi/(mu+psi)
-         */
-
-        // if (isBDSIR()) birth[0] = R[0] * b[0]; // the rest will be done in BDSIR class
-
+        /* nd = lambda - mu - r * psi         lambda = nd / (1 - to)
+           to = (mu + r * psi) / lambda  -->  mu = lambda * to * (1 - sp) / (1 - sp + r * sp)
+           sp = psi / (mu + psi)              psi = mu * sp / (1 - sp)
+           SAModel: 0 <= rp < 1;  No SA: rp = 1
+         */  // isBDSIR()???
         for (int i = 0; i < totalIntervals; i++) {
-            if (!SAModel) {
-                if (!isBDSIR()) birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-                death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
+            birth[i] = nd[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] / (1 - to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]);
+            if (SAModel) {
+                r[i] = rp[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
+                death[i] = birth[i] * to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
+                           / (1 + r[i] / (1 / sp[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] - 1));
             } else {
-                birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
-                r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
-                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
-                        / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
-                death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
-
+                death[i] = birth[i] * to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
+                           * (1 - sp[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
             }
+            psi[i] = death[i] / (1 / sp[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]  - 1);
         }
     }
 
