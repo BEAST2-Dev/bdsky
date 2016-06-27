@@ -232,10 +232,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         rhoSamplingCount = 0;
         printTempResults = false;
 
-
+        transform = transform_d_r_s = false;
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null) {
 
-            transform = transform_d_r_s = false;
             death = deathRate.get().getValues();
             psi = samplingRate.get().getValues();
             birth = birthRate.get().getValues();
@@ -869,7 +868,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         Double[] R = R0.get().getValues(); // if SAModel: R0 = lambda/delta
         Double[] b = becomeUninfectiousRate.get().getValues(); // delta = mu + psi*r
-        Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi*r)
+        Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi)
         Double[] removalProbabilities = new Double[1];
         if (SAModel) removalProbabilities = removalProbability.get().getValues();
 
@@ -888,7 +887,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             } else {
                 birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
                 r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
-                    psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
+                psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
                         / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
                 death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
 
@@ -915,6 +914,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
            to = (mu + r * psi) / lambda  -->  mu = lambda * to * (1 - sp) / (1 - sp + r * sp)
            sp = psi / (mu + psi)              psi = mu * sp / (1 - sp)
            SAModel: 0 <= rp < 1;  No SA: rp = 1
+           Relation to transform: nd = (R0 - 1) * delta, to = 1/R0, sp = s
          */  // isBDSIR()???
         for (int i = 0; i < totalIntervals; i++) {
             birth[i] = nd[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] / (1 - to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]);
