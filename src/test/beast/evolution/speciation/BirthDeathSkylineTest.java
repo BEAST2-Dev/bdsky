@@ -24,13 +24,13 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
     @Test
-     public void testLikelihoodCalculationSimple() throws Exception {
+    public void testLikelihoodCalculationSimple() throws Exception {
 
-         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
-         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-         bdssm.setInputValue("tree", tree);
-         bdssm.setInputValue("origin", new RealParameter("10."));
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("10."));
         bdssm.setInputValue("conditionOnSurvival", false);
         bdssm.setInputValue("removalProbability", "1");
 
@@ -39,11 +39,34 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter("0.3") );
 
-         bdssm.initAndValidate();
-         bdssm.printTempResults = false;
+        bdssm.initAndValidate();
+        bdssm.printTempResults = false;
 
-         assertEquals(-26.105360134266082, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
-     }
+        assertEquals(-26.105360134266082, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
+    }
+
+
+    @Test
+    public void testLikelihoodCalculationSimple2() throws Exception {
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("10."));
+        bdssm.setInputValue("conditionOnSurvival", false);
+        bdssm.setInputValue("removalProbability", "1");
+
+
+        bdssm.setInputValue("netDiversification", new RealParameter("0.75"));
+        bdssm.setInputValue("turnOver", new RealParameter("0.6666667"));
+        bdssm.setInputValue("samplingProportion", new RealParameter("0.3") );
+
+        bdssm.initAndValidate();
+        bdssm.printTempResults = false;
+
+        assertEquals(-26.105360134266082, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
+    }
 
 
     @Test
@@ -253,6 +276,34 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+
+    @Test
+    public void testRhoA2() throws Exception{
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("6."));
+        bdssm.setInputValue("conditionOnSurvival", true);
+        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
+        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
+        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+        bdssm.setInputValue("netDiversification", new RealParameter("0.5"));
+        bdssm.setInputValue("turnOver", new RealParameter("0.75"));
+        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
+        //bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("birthRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("deathRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("samplingRateChangeTimes", new RealParameter("0."));
+
+        bdssm.setInputValue("rho", new RealParameter("0.01"));
+        bdssm.initAndValidate();
+//        System.out.println("\na) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-22.54937791357737, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+    }
+
+
 //    @Test
 //    public void testRhoB() throws Exception{
 //
@@ -330,6 +381,43 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+
+    @Test
+    public void testRhoC2() throws Exception{
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("6."));
+        bdssm.setInputValue("conditionOnSurvival", true);
+        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
+        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
+        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+        bdssm.setInputValue("netDiversification", new RealParameter("0.5"));
+        bdssm.setInputValue("turnOver", new RealParameter("0.75"));
+        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
+        //bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("birthRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("deathRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("samplingRateChangeTimes", new RealParameter("0."));
+
+        // c1)
+        bdssm.setInputValue("netDiversification", new RealParameter("0.5"));
+        bdssm.setInputValue("turnOver", new RealParameter("0.75"));
+        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
+//        bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("intervalTimes", new RealParameter("0."));
+        bdssm.setInputValue("birthRateChangeTimes", null);
+        bdssm.setInputValue("deathRateChangeTimes", null);
+        bdssm.setInputValue("samplingRateChangeTimes", null);
+        bdssm.setInputValue("rho", new RealParameter("0.1"));
+        bdssm.initAndValidate();
+//        System.out.println("\nc) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-20.74594782518312, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+    }
+
+
 //    @Test
 //    public void testRhoC3() throws Exception{
 //
@@ -391,6 +479,37 @@ public class BirthDeathSkylineTest extends TestCase {
         assertEquals(-18.574104165089775, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
 
     }
+
+
+    @Test
+    public void testRhoD2() throws Exception{
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("6."));
+        bdssm.setInputValue("conditionOnSurvival", true);
+        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
+        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
+        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+        bdssm.setInputValue("netDiversification", new RealParameter("0.5"));
+        bdssm.setInputValue("turnOver", new RealParameter("0.75"));
+        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
+        //bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("birthRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("deathRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("samplingRateChangeTimes", new RealParameter("0."));
+
+        bdssm.setInputValue("rho", null);
+//        bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("intervalTimes", new RealParameter("0."));
+        bdssm.initAndValidate();
+//        System.out.println("\nd) Likelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-18.574104165089775, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
+    }
+
+
     @Test
     public void testRhoE() throws Exception{
 
@@ -429,6 +548,44 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+
+    @Test
+    public void testRhoE2() throws Exception{
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+//        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+//        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("6."));
+        bdssm.setInputValue("conditionOnSurvival", true);
+        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
+        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
+        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
+        bdssm.setInputValue("netDiversification", new RealParameter("0.5"));
+        bdssm.setInputValue("turnOver", new RealParameter("0.75"));
+//        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
+        //bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("birthRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("deathRateChangeTimes", new RealParameter("0."));
+        bdssm.setInputValue("samplingRateChangeTimes", new RealParameter("0."));
+
+        //e) contemp tree:
+
+        Tree tree = new TreeParser("((3:4,4:4):1,(1:2,2:2):3);", false);
+        bdssm.setInputValue("tree", tree);
+
+//        bdssm.setInputValue("intervalNumber", 1);
+        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{0.}));
+        //        bdssm.setInputValue("deathRate", new RealParameter("1.5"));
+        //        bdssm.setInputValue("samplingRate", new RealParameter(new Double[]{0.}));
+        bdssm.setInputValue("rho", new RealParameter("0.01"));
+        bdssm.initAndValidate();
+
+//        System.out.println("\ne) Contemp. TreeLikelihood: " + bdssm.calculateTreeLogLikelihood(tree));
+        assertEquals(-8.130835517289412, bdssm.calculateTreeLogLikelihood(tree), 1e-5); //-8.130835517289412
+    }
+
+
     @Test
     public void testLikelihoodCalculation1() throws Exception {
 
@@ -449,6 +606,7 @@ public class BirthDeathSkylineTest extends TestCase {
 
         assertEquals(-19.0198, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
     }
+
 
     @Test
     public void testLikelihoodCalculation2() throws Exception {
@@ -471,6 +629,7 @@ public class BirthDeathSkylineTest extends TestCase {
 
         assertEquals(-19.0198, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
     }
+
 
     @Test
     public void testLikelihoodCalculation3() throws Exception {
@@ -524,6 +683,7 @@ public class BirthDeathSkylineTest extends TestCase {
         assertEquals(-33.7573, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
     }
 
+
     @Test
     public void testLikelihoodCalculation5() throws Exception {
 
@@ -552,6 +712,7 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+
     @Test
     public void testLikelihoodCalculation6() throws Exception {
 
@@ -579,6 +740,33 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
     @Test
+    public void testLikelihoodCalculation7() throws Exception {
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("6."));
+
+        //same test with epi-parametrization
+
+        bdssm.setInputValue("conditionOnSurvival", false);
+
+//        bdssm.setInputValue("intervalNumber", 3);
+        bdssm.setInputValue("intervalTimes", new RealParameter("0. 3. 4.5"));
+
+//        bdssm.setInputValue("R0", new RealParameter(new Double[]{2./3., 4./3., 8./3.}));
+//        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("4.5 1.5 1.5"));
+        bdssm.setInputValue("netDiversification", new RealParameter("-1.5 0.5 2.5"));
+        bdssm.setInputValue("turnOver", new RealParameter("1.5 0.75 0.375"));
+        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{4./9., 1./3., 2./3.}));
+        bdssm.initAndValidate();
+
+        assertEquals(-37.8056, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
+    }
+
+
+    @Test
     public void testVeronika() throws Exception {
 
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
@@ -590,6 +778,8 @@ public class BirthDeathSkylineTest extends TestCase {
 
         bdssm.setInputValue("R0", new RealParameter("7.767395"));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("0.1057396"));
+//        bdssm.setInputValue("netDiversification", new RealParameter("0.7155816"));
+//        bdssm.setInputValue("turnOver", new RealParameter("0.1287433"));
         bdssm.setInputValue("samplingProportion", new RealParameter("0.5"));
 
         bdssm.initAndValidate();
@@ -597,6 +787,7 @@ public class BirthDeathSkylineTest extends TestCase {
         assertEquals(-455.05623026907483, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
 
     }
+
 
     @Test
     public void testMini() throws Exception {
@@ -618,6 +809,7 @@ public class BirthDeathSkylineTest extends TestCase {
         assertEquals(-4.719294304452187, bdssm.calculateTreeLogLikelihood(tree), 1e-5);
 
     }
+
 
     @Test
     public void testLikelihoodCalculation4reverse() throws Exception {
@@ -645,8 +837,8 @@ public class BirthDeathSkylineTest extends TestCase {
 
         assertEquals(-33.7573, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
     }
-    @Test
 
+    @Test
     public void testLikelihoodCalculation5reverse() throws Exception {
 
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
@@ -678,6 +870,7 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+    @Test
     public void testLikelihoodCalculation5reverseAll() throws Exception {
 
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
@@ -712,6 +905,7 @@ public class BirthDeathSkylineTest extends TestCase {
     }
 
 
+    @Test
     public void testTreeParser() throws Exception {
 
         TreeParser tree = new TreeParser();
@@ -722,6 +916,8 @@ public class BirthDeathSkylineTest extends TestCase {
 
     }
 
+
+    @Test
     void printNodeState(Node node){
 
         System.out.println("Node " + node.getNr() + " has colour " + node.metaDataString + "\t" + Integer.parseInt(node.metaDataString.split("=")[1].replaceAll("'","").replaceAll("\"","")));
