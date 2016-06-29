@@ -42,13 +42,22 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>
 	</distribution>
 	<distribution id="samplingProportionPrior.s.t:$(n)" spec="beast.math.distributions.Prior" x="@samplingProportion.s.t:$(n)">
-		<distr spec="beast.math.distributions.Beta" alpha="1." beta="1." offset="0."/>
+		<distr spec="beast.math.distributions.Beta" offset="0.">
+			<parameter name="alpha" value="1." estimate="false"/> 
+			<parameter name="beta" value="1." estimate="false"/> 
+		</distr>		
 	</distribution>
 	<distribution id="becomeUninfectiousRatePrior.s.t:$(n)" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate.s.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="1." offset="0.0" meanInRealSpace="false"/>
+		<distr spec='beast.math.distributions.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
+			<parameter name="M" value="0." estimate="false"/> 
+			<parameter name="S" value="1." estimate="false"/> 
+		</distr>	
 	</distribution>
 	<distribution id="RPrior.s.t:$(n)" spec="beast.math.distributions.Prior" x="@R0.s.t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0." S="1." offset="0.0" meanInRealSpace="false"/>
+		<distr spec='beast.math.distributions.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
+			<parameter name="M" value="0." estimate="false"/> 
+			<parameter name="S" value="1." estimate="false"/> 
+		</distr>	
 	</distribution>
 
 	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="birth.t:$(n)" expression="R0.s.t:$(n) becomeUninfectiousRate.s.t:$(n) *"> <!-- s/(d+s) -->
