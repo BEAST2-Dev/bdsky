@@ -101,18 +101,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             new Input<Boolean>("contemp", "Only contemporaneous sampling (i.e. all tips are from same sampling time, default false)", false);
 
     public Input<RealParameter> R0 =
-            new Input<RealParameter>("R0", "The basic reproduction number", Input.Validate.XOR, birthRate);
+            new Input<RealParameter>("R0", "The basic reproduction number");
     public Input<RealParameter> becomeUninfectiousRate =
-            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (throuch recovery or sampling)", Input.Validate.XOR, deathRate);
+            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (throuch recovery or sampling)");
     public Input<RealParameter> samplingProportion =
-            new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate", Input.Validate.XOR, samplingRate);
+            new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate");
 
-    public Input<RealParameter> netDiversification =
-            new Input<RealParameter>("netDiversification", "Net diversification rate", Input.Validate.XOR, birthRate);
-    public Input<RealParameter> turnOver =
-            new Input<RealParameter>("turnOver", "Turn over rate", Input.Validate.XOR, deathRate);
-    // public Input<RealParameter> samplingProportion =
-    //        new Input<RealParameter>("samplingProportion", "Sampling proportion", Input.Validate.XOR, samplingRate);
+    public Input<RealParameter> netDiversification = new Input<RealParameter>("netDiversification", "Net diversification rate");
+    public Input<RealParameter> turnOver = new Input<RealParameter>("turnOver", "Turn over rate");
 
     public Input<Boolean> forceRateChange =
             new Input<Boolean>("forceRateChange", "If there is more than one interval and we estimate the time of rate change, do we enforce it to be within the tree interval? Default true", true);
