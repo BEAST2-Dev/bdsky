@@ -1,13 +1,21 @@
 package beast.evolution.speciation;
 
+import beast.core.Citation;
+import beast.core.Description;
 import beast.evolution.tree.TreeInterface;
 
 /**
- * Created by dlouis on 27/10/16.
+ * @author Chi Zhang
  */
-public class BirthDeathSkylineModelPreferentialSampling extends BirthDeathSkylineModel {
+
+@Description("Extension of the birth-death skyline model to account for diversified sampling of extant taxa.")
+@Citation("Zhang C., Stadler T., Klopfstein S., Heath T.A., Ronquist F. 2016. Total-evidence dating under the fossilized " +
+        "birth-death process. Syst. Biol. 65:228–249.  See also: Stadler T., Smrckova J. 2016. Estimating shifts in " +
+        "diversification rates based on higher-level phylogenies. Biol. Lett. 12:20160273.")
+public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel {
 
 
+    @Override
     protected Double updateRatesAndTimes(TreeInterface tree) {
 
         // Insert cut time to sampling rate change times
@@ -26,4 +34,4 @@ public class BirthDeathSkylineModelPreferentialSampling extends BirthDeathSkylin
 
 
 
-    }
+}
