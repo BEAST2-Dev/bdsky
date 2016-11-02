@@ -104,14 +104,20 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
         if (Double.isInfinite(logP))
             return Double.NEGATIVE_INFINITY;
 
-        double lambda = birth[totalIntervals - 1];
-        double mu = death[totalIntervals - 1];
-        double term = Math.log(lambda * (1 - Math.exp((mu - lambda) * x_cut)))
-                    - Math.log(lambda - mu * Math.exp((mu - lambda) * x_cut));
-        // TODO: when lambda = mu, term = log[lambda / (mu + 1/x_cut)] ?
+        final double lambda = birth[totalIntervals - 1];
+        final double mu = death[totalIntervals - 1];
+        final double term;
+        if (lambda - mu > 1e-8)
+            term = Math.log(lambda * (1 - Math.exp((mu - lambda) * x_cut)))
+                 - Math.log(lambda - mu * Math.exp((mu - lambda) * x_cut));
+        else if (mu - lambda > 1e-8)
+            term = Math.log(lambda * (Math.exp((lambda - mu) * x_cut) - 1))
+                 - Math.log(lambda * Math.exp((lambda - mu) * x_cut) - mu);
+        else  // for numerical stability
+            term = Math.log(lambda / (mu + 1/x_cut));
 
         // number of extant taxa not sampled
-        int ita_ext = (int)Math.round(numExtant/samplingProp) - numExtant;
+        final int ita_ext = (int)Math.round(numExtant/samplingProp) - numExtant;
 
         logP += ita_ext * term;
 
