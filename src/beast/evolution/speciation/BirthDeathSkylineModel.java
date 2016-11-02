@@ -117,7 +117,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> conditionOnRhoSampling =
             new Input<Boolean> ("conditionOnRhoSampling","if is true then condition on sampling at least one individual at present.", false);
 
-    double t_root;
     protected double[] p0, p0hat;
     protected double[] Ai, Aihat;
     protected double[] Bi, Bihat;
@@ -225,7 +224,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             reverseTimeArrays = new Boolean[]{false, false, false, false, false};
 
         contempData = contemp.get();
-        rhoSamplingCount = 0;
+        // rhoSamplingCount = 0;
         printTempResults = false;
 
         transform = transform_d_r_s = false;
@@ -249,7 +248,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     "OR specify R0, becomeUninfectiousRate and samplingProportion " +
                     "OR specify netDiversification, turnOver and samplingProportion!");
         }
-
 
         if (transform) {
 
@@ -280,8 +278,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         collectTimes();
 
         if (m_rho.get() != null) {
-
-            constantRho = !(m_rho.get().getDimension() > 1);
+            // constantRho = !(m_rho.get().getDimension() > 1);
 
             if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get()==null || rhoSamplingTimes.get().getDimension() < 2) {
                 if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getValue() == 0.) ||
@@ -300,7 +297,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     rho = new Double[totalIntervals];
                     Arrays.fill(rho, 0.);
                     rho[totalIntervals - 1] = m_rho.get().getValue();
-                    rhoSamplingCount = 1;
+                    // rhoSamplingCount = 1;
                 }
             }
 
@@ -326,8 +323,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             conditionOn = ConditionOn.NONE;
         }
 
-        printTempResults = false;
-        
         // sanity check for sampled ancestor analysis
         // make sure that operators are valid for such an analysis
     	boolean isSAAnalysis = false;
@@ -455,14 +450,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             double end;
             for (int i = (reverse?0:1); i < dim; i++) {
-                end = reverse ? (maxTime - sortedIntervalTimes.get(dim - i - 1)) : sortedIntervalTimes.get(i);
+                end = reverse? (relative?1.0:maxTime) - sortedIntervalTimes.get(dim - i - 1) :sortedIntervalTimes.get(i);
                 if (relative) end *= maxTime;
                 if (end != maxTime) changeTimes.add(end);
             }
             end = maxTime;
             changeTimes.add(end);
         }
-//        }
     }
 
     /*
@@ -560,14 +554,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         totalIntervals = times.length;
 
         if (printTempResults) System.out.println("total intervals = " + totalIntervals);
-
     }
 
     protected Double updateRatesAndTimes(TreeInterface tree) {
 
         collectTimes();
 
-        t_root = tree.getRoot().getHeight();
+        double t_root = tree.getRoot().getHeight();
 
         if (m_forceRateChange && timesSet.last() > (originIsRootEdge.get()? t_root+ origin.get().getValue() : origin.get().getValue())) {
             return Double.NEGATIVE_INFINITY;
