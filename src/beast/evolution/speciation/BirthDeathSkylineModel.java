@@ -230,16 +230,16 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         transform = transform_d_r_s = false;
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null) {
 
+            birth = birthRate.get().getValues();
             death = deathRate.get().getValues();
             psi = samplingRate.get().getValues();
-            birth = birthRate.get().getValues();
             if (SAModel) r = removalProbability.get().getValues();
 
         } else if (R0.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
 
             transform = true;
 
-        } else if (netDiversification.get() != null && turnOver.get() != null && samplingProportion.get() != null) {
+        } else if ((netDiversification.get() != null || birthRate.get() != null) && turnOver.get() != null && samplingProportion.get() != null) {
 
             transform_d_r_s = true;
 
@@ -257,7 +257,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         } else if (transform_d_r_s) {
 
-            if (birthChanges < 1) birthChanges = netDiversification.get().getDimension() - 1;
+            if (netDiversification.get() != null)
+                birthChanges = netDiversification.get().getDimension() - 1;
+            else
+                birthChanges = birthRate.get().getDimension() - 1;
             deathChanges = turnOver.get().getDimension() - 1;
             samplingChanges = samplingProportion.get().getDimension() - 1;
 
@@ -590,13 +593,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 death[i] = deathRates[index(times[i], deathRateChangeTimes)];
                 psi[i] = samplingRates[index(times[i], samplingRateChangeTimes)];
                 if (SAModel) r[i] = removalProbabilities[index(times[i], rChangeTimes)];
+            }
+        }
 
-                if (printTempResults) {
-                    if (!isBDSIR()) System.out.println("birth[" + i + "]=" + birth[i]);
-                    System.out.println("death[" + i + "]=" + death[i]);
-                    System.out.println("psi[" + i + "]=" + psi[i]);
-                    if (SAModel) System.out.println("r[" + i + "]=" + r[i]);
-                }
+        if (printTempResults) {
+            for (int i = 0; i < totalIntervals; i++) {
+                if (!isBDSIR()) System.out.println("birth[" + i + "]=" + birth[i]);
+                System.out.println("death[" + i + "]=" + death[i]);
+                System.out.println("psi[" + i + "]=" + psi[i]);
+                if (SAModel) System.out.println("r[" + i + "]=" + r[i]);
             }
         }
 
@@ -670,14 +675,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
 
             if (printTempResults) System.out.println("Ai[" + i + "] = " + Ai[i] + " " + Math.log(Ai[i]));
-        }
-
-        if (printTempResults) {
-            System.out.println("birth[m-1]=" + birth[totalIntervals - 1]);
-            System.out.println("death[m-1]=" + death[totalIntervals - 1]);
-            System.out.println("psi[m-1]=" + psi[totalIntervals - 1]);
-            System.out.println("rho[m-1]=" + rho[totalIntervals - 1]);
-            System.out.println("Ai[m-1]=" + Ai[totalIntervals - 1]);
         }
 
         Bi[totalIntervals - 1] = Bi(
@@ -883,20 +880,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
                         / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
                 death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i]*r[i];
-
             }
-
-
         }
     }
 
     protected void transformParameters_d_r_s() {
-
-        Double[] nd = netDiversification.get().getValues();
-        Double[] to = turnOver.get().getValues();
-        Double[] sp = samplingProportion.get().getValues();
-        Double[] rp = new Double[1];
-        if (SAModel) rp = removalProbability.get().getValues();
 
         birth = new Double[totalIntervals];
         death = new Double[totalIntervals];
@@ -904,22 +892,35 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         if (SAModel) r =  new Double[totalIntervals];
 
         /* nd = lambda - mu - r * psi         lambda = nd / (1 - to)
-           to = (mu + r * psi) / lambda  -->  mu = lambda * to * (1 - sp) / (1 - sp + r * sp)
-           sp = psi / (mu + psi)              psi = mu * sp / (1 - sp)
-           SAModel: 0 <= rp < 1;  No SA: rp = 1
-           Relation to transform: nd = (R0 - 1) * delta, to = 1/R0, sp = s
-         */  // isBDSIR()???
-        for (int i = 0; i < totalIntervals; i++) {
-            birth[i] = nd[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] / (1 - to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]);
-            if (SAModel) {
-                r[i] = rp[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
-                death[i] = birth[i] * to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
-                           / (1 + r[i] / (1 / sp[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] - 1));
-            } else {
-                death[i] = birth[i] * to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
-                           * (1 - sp[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
+           to = (mu + r * psi) / lambda  -->  psi = lambda * to * sp / (1 - sp + r * sp)
+           sp = psi / (mu + psi)              mu = lambda * to - r * psi
+           SAModel: 0 <= r < 1;  No SA: r = 1
+           Relation to transform: nd = (R0 - 1) * delta, to = 1/R0, sp = s  */
+        Double[] to = turnOver.get().getValues();
+        Double[] sp = samplingProportion.get().getValues();
+
+        if (netDiversification.get() != null) {  // netdiversification-turnover-samplingproportion parametrization
+            Double[] nd = netDiversification.get().getValues();
+            for (int i = 0; i < totalIntervals; i++) {
+                birth[i] = nd[index(times[i], birthRateChangeTimes)] / (1 - to[index(times[i], deathRateChangeTimes)]);
             }
-            psi[i] = death[i] / (1 / sp[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]  - 1);
+        } else {  // lambda-turnover-samplingproportion parametrization
+            Double[] br = birthRate.get().getValues();
+            for (int i = 0; i < totalIntervals; i++) {
+                birth[i] = br[index(times[i], birthRateChangeTimes)];
+            }
+        }
+
+        for (int i = 0; i < totalIntervals; i++) {
+            if (SAModel) {
+                Double[] rp = removalProbability.get().getValues();
+                r[i] = rp[index(times[i], rChangeTimes)];
+                psi[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] / (1 / sp[index(times[i], samplingRateChangeTimes)] - 1 + r[i]);
+                death[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] - r[i] * psi[i];
+            } else {
+                psi[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] * sp[index(times[i], samplingRateChangeTimes)];
+                death[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] - psi[i];
+            }
         }
     }
 

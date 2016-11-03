@@ -713,7 +713,7 @@ id="ef1a">
 <map name="OneOnX" >beast.math.distributions.OneOnX</map>
 
 
-<run id="mcmc" spec="MCMC" chainLength="50000000">
+<run id="mcmc" spec="MCMC" chainLength="100000000">
     <state id="state" storeEvery="5000">
         <tree id="Tree.t:hymtree" name="stateNode">
             <trait id="dateTrait.t:hymtree" spec="beast.evolution.tree.TraitSet" traitname="date-backward">
@@ -893,9 +893,10 @@ Grimmaratavites=182
         <parameter id="ucldStdev.c:hymclock" lower="0.0" name="stateNode">0.1</parameter>
         <stateNode id="rateCategories.c:hymclock" spec="parameter.IntegerParameter" dimension="224">1</stateNode>
         <parameter id="originF.t:hymtree" lower="0.0" name="stateNode">400.0</parameter>
-        <parameter id="diversifyRateF.t:hymtree" dimension="3" lower="0.0" name="stateNode">1.3 1.2 1.1</parameter>
-        <parameter id="turnoverRateF.t:hymtree" dimension="3" lower="0.0" name="stateNode" upper="1.0">0.5 0.6 0.7</parameter>
-        <parameter id="samplingRateF.t:hymtree" dimension="3" lower="0.0" name="stateNode" upper="1.0">0.5 0.4 0.3</parameter>
+        <parameter id="diversifyRateF.t:hymtree" dimension="3" lower="1e-6" name="stateNode">0.1 0.1 0.1</parameter>
+        <parameter id="turnoverRateF.t:hymtree" dimension="3" lower="0.0" name="stateNode" upper="1.0">0.5 0.5 0.5</parameter>
+        <parameter id="samplingRateF.t:hymtree" dimension="5" lower="0.0" name="stateNode" upper="1.0">0.1 0.2 0.3 0.2 0.1</parameter>
+        <parameter id="rhoF.t:hymtree" dimension="2" lower="0.0" name="stateNode" upper="1.0">0 0.001</parameter>
     </state>
 
     <init id="RandomTree.t:hymtree" spec="beast.evolution.tree.RandomTree" estimate="false" initial="@Tree.t:hymtree" taxa="@morph2">
@@ -906,12 +907,12 @@ Grimmaratavites=182
 
     <distribution id="posterior" spec="util.CompoundDistribution">
         <distribution id="prior" spec="util.CompoundDistribution">
-            <distribution id="SAFBDSkyline.t:hymtree" spec="beast.evolution.speciation.BirthDeathSkylineModel" conditionOnRhoSampling="true" conditionOnSurvival="false"
-                          netDiversification="@diversifyRateF.t:hymtree" turnOver="@turnoverRateF.t:hymtree" samplingProportion="@samplingRateF.t:hymtree" rho="0.001" origin="@originF.t:hymtree" tree="@Tree.t:hymtree">
+            <distribution id="SAFBDSkyline.t:hymtree" spec="beast.evolution.speciation.BirthDeathSkylineDiversifiedSampling" conditionOnRhoSampling="true" conditionOnSurvival="false"
+                          netDiversification="@diversifyRateF.t:hymtree" turnOver="@turnoverRateF.t:hymtree" samplingProportion="@samplingRateF.t:hymtree" rho="@rhoF.t:hymtree" origin="@originF.t:hymtree" tree="@Tree.t:hymtree">
                 <parameter id="birthRateChangeTimesF.t:hymtree" dimension="3" name="birthRateChangeTimes">0.0 100.0 201.0</parameter>
                 <parameter id="deathRateChangeTimesF.t:hymtree" dimension="3" name="deathRateChangeTimes">0.0 100.0 201.0</parameter>
-                <parameter id="samplingRateChangeTimesF.t:hymtree" dimension="3" name="samplingRateChangeTimes">0.0 100.0 201.0</parameter>
-                <parameter id="rhoSamplingTimesF.t:hymtree" dimension="1" name="rhoSamplingTimes">0.0</parameter>
+                <parameter id="samplingRateChangeTimesF.t:hymtree" dimension="5" name="samplingRateChangeTimes">0.0 100.0 145.0 201.0 252.0</parameter>
+                <parameter id="rhoSamplingTimesF.t:hymtree" dimension="2" name="rhoSamplingTimes">0.0 100.0</parameter>
                 <parameter id="rF.t:hymtree" lower="0.0" name="removalProbability" upper="1.0">0.0</parameter>
                 <reverseTimeArrays id="BooleanParameter.0" spec="parameter.BooleanParameter" dimension="5">true true true true true</reverseTimeArrays>
             </distribution>
@@ -1547,11 +1548,11 @@ filter="3::3"/>
 
     <operator id="originScalerF.t:hymtree" spec="ScaleOperator" parameter="@originF.t:hymtree" scaleFactor="0.75" weight="3.0"/>
 
-    <operator id="diversifyScalerF.t:hymtree" spec="ScaleOperator" parameter="@diversifyRateF.t:hymtree" scaleFactor="0.75" weight="10.0"/>
+    <operator id="diversifyScalerF.t:hymtree" spec="ScaleOperator" parameter="@diversifyRateF.t:hymtree" scaleFactor="0.75" weight="30.0"/>
 
-    <operator id="turnoverScalerF.t:hymtree" spec="ScaleOperator" parameter="@turnoverRateF.t:hymtree" scaleFactor="0.75" weight="10.0"/>
+    <operator id="turnoverScalerF.t:hymtree" spec="ScaleOperator" parameter="@turnoverRateF.t:hymtree" scaleFactor="0.75" weight="30.0"/>
 
-    <operator id="samplingScalerF.t:hymtree" spec="ScaleOperator" parameter="@samplingRateF.t:hymtree" scaleFactor="0.75" weight="10.0"/>
+    <operator id="samplingScalerF.t:hymtree" spec="ScaleOperator" parameter="@samplingRateF.t:hymtree" scaleFactor="0.75" weight="50.0"/>
 
     <operator id="LeafToSAF.t:hymtree" spec="LeafToSampledAncestorJump" tree="@Tree.t:hymtree" weight="10.0"/>
 
@@ -1587,7 +1588,7 @@ filter="3::3"/>
         <parameter idref="freqParameter.s:ef1a_3"/>
     </operator>
 
-    <logger id="tracelog" fileName="hym_bdsky_rnd.log" logEvery="2500" model="@posterior" sanitiseHeaders="true" sort="smart">
+    <logger id="tracelog" fileName="hym_bdsky_div.log" logEvery="2500" model="@posterior" sanitiseHeaders="true" sort="smart">
         <log idref="posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
@@ -1657,6 +1658,7 @@ filter="3::3"/>
         <log idref="diversifyRateF.t:hymtree"/>
         <log idref="turnoverRateF.t:hymtree"/>
         <log idref="samplingRateF.t:hymtree"/>
+        <log idref="rhoF.t:hymtree"/>
         <log id="SACountF.t:hymtree" spec="beast.evolution.tree.SampledAncestorLogger" tree="@Tree.t:hymtree"/>
         <log idref="Holometabola.prior"/>
         <log idref="freqParameter.s:ef1a_1,2"/>
@@ -1666,14 +1668,14 @@ filter="3::3"/>
         <log idref="freqParameter.s:ef1a_3"/>
     </logger>
 
-    <logger id="screenlog" logEvery="100000">
+    <logger id="screenlog" logEvery="10000">
         <log idref="posterior"/>
         <log id="ESS.0" spec="util.ESS" arg="@posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
     </logger>
 
-    <logger id="treelog.t:hymtree" fileName="hym_bdsky_rnd.trees" logEvery="2500" mode="tree">
+    <logger id="treelog.t:hymtree" fileName="hym_bdsky_div.trees" logEvery="2500" mode="tree">
         <log id="TreeWithMetaDataLogger.t:hymtree" spec="beast.evolution.tree.TreeWithMetaDataLogger" branchratemodel="@RelaxedClock.c:hymclock" tree="@Tree.t:hymtree"/>
     </logger>
 

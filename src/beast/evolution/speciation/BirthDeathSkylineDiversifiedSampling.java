@@ -92,6 +92,14 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
         if (printTempResults) {
             System.out.println("times = " + timesSet);
             System.out.println("total intervals = " + totalIntervals);
+            for (int i = 0; i < totalIntervals; i++) {
+                if (!isBDSIR()) System.out.println("birth[" + i + "]=" + birth[i]);
+                System.out.println("death[" + i + "]=" + death[i]);
+                System.out.println("psi[" + i + "]=" + psi[i]);
+                if (SAModel) System.out.println("r[" + i + "]=" + r[i]);
+                System.out.println("rho[" + i + "]=" + rho[i]);
+            }
+            System.out.println("samplingProp=" + samplingProp);
         }
 
         return value;
@@ -112,8 +120,8 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
             term = Math.log(lambda * (1 - Math.exp((mu - lambda) * x_cut)))
                  - Math.log(lambda - mu * Math.exp((mu - lambda) * x_cut));
         else if ((mu - lambda) * x_cut > 1e-6)
-            term = Math.log(lambda * (Math.exp((lambda - mu) * x_cut) - 1))
-                 - Math.log(lambda * Math.exp((lambda - mu) * x_cut) - mu);
+            term = Math.log(lambda * (1 - Math.exp((lambda - mu) * x_cut)))
+                 - Math.log(mu - lambda * Math.exp((lambda - mu) * x_cut));
         else  // for numerical stability
             term = Math.log(lambda / (mu + 1/x_cut));
 
