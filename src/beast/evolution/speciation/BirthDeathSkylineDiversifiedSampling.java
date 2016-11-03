@@ -101,16 +101,17 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
     public double calculateTreeLogLikelihood(TreeInterface tree) {
         logP = super.calculateTreeLogLikelihood(tree);
 
+        // if (logP == Double.POSITIVE_INFINITY) throw new RuntimeException("logP is positive infinity");
         if (Double.isInfinite(logP))
             return Double.NEGATIVE_INFINITY;
 
         final double lambda = birth[totalIntervals - 1];
         final double mu = death[totalIntervals - 1];
         final double term;
-        if (lambda - mu > 1e-8)
+        if ((lambda - mu) * x_cut > 1e-6)
             term = Math.log(lambda * (1 - Math.exp((mu - lambda) * x_cut)))
                  - Math.log(lambda - mu * Math.exp((mu - lambda) * x_cut));
-        else if (mu - lambda > 1e-8)
+        else if ((mu - lambda) * x_cut > 1e-6)
             term = Math.log(lambda * (Math.exp((lambda - mu) * x_cut) - 1))
                  - Math.log(lambda * Math.exp((lambda - mu) * x_cut) - mu);
         else  // for numerical stability

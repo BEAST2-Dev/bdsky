@@ -720,12 +720,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             if (printTempResults) System.out.println("Bi[" + i + "] = " + Bi[i] + " " + Math.log(Bi[i]));
         }
 
-        if (printTempResults) {
+        /* if (printTempResults) {
             System.out.println("g(0, x0, 0):" + g(0, times[0], 0));
             System.out.println("g(index(1),times[index(1)],1.) :" + g(index(1), times[index(1)], 1.));
             System.out.println("g(index(2),times[index(2)],2.) :" + g(index(2), times[index(2)], 2));
             System.out.println("g(index(4),times[index(4)],4.):" + g(index(4), times[index(4)], 4));
-        }
+        } */
 
         return 0.;
     }
@@ -749,10 +749,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (printTempResults)
             System.out.println("in p0: b = " + b + "; g = " + g + "; psi = " + psi + "; A = " + A + " ; B = " + B + "; ti = " + ti + "; t = " + t);
-//        return ((b + g + psi - A *((Math.exp(A*(ti - t))*(1+B)-(1-B)))/(Math.exp(A*(ti - t))*(1+B)+(1-B)) ) / (2*b));
+        // return ((b + g + psi - A *((Math.exp(A*(ti - t))*(1+B)-(1-B)))/(Math.exp(A*(ti - t))*(1+B)+(1-B)) ) / (2*b));
         // formula from manuscript slightly rearranged for numerical stability
         return ((b + g + psi - A * ((1 + B) - (1 - B) * (Math.exp(A * (t - ti)))) / ((1 + B) + Math.exp(A * (t - ti)) * (1 - B))) / (2 * b));
-
     }
 
     public double p0hat(int index, double t, double ti) {
@@ -763,9 +762,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public double g(int index, double ti, double t) {
 
-//        return (Math.exp(Ai[index]*(ti - t))) / (0.25*Math.pow((Math.exp(Ai[index]*(ti - t))*(1+Bi[index])+(1-Bi[index])),2));
+        // return (Math.exp(Ai[index]*(ti - t))) / (0.25*Math.pow((Math.exp(Ai[index]*(ti - t))*(1+Bi[index])+(1-Bi[index])),2));
         // formula from manuscript slightly rearranged for numerical stability
         return (4 * Math.exp(Ai[index] * (t - ti))) / (Math.exp(Ai[index] * (t - ti)) * (1 - Bi[index]) + (1 + Bi[index])) / (Math.exp(Ai[index] * (t - ti)) * (1 - Bi[index]) + (1 + Bi[index]));
+    }
+
+    public double log_q(int index, double ti, double t) {
+        // replacing Math.log( g(...) ) for better numerical stability
+        return Math.log(4) + Ai[index] * (t - ti) - 2 * Math.log(Math.exp(Ai[index] * (t - ti)) * (1 - Bi[index]) + (1 + Bi[index]));
     }
 
     /**
@@ -944,19 +948,19 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         switch (conditionOn) {
             case NONE:
-                temp = Math.log(g(index, times[index], x0));
+                temp = log_q(index, times[index], x0);
                 break;
             case SURVIVAL:
                 temp = p0(index, times[index], x0);
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
-                temp = Math.log(g(index, times[index], x0) / (1 - temp));
+                temp = log_q(index, times[index], x0) - Math.log(1 - temp);
                 break;
             case RHO_SAMPLING:
                 temp = p0hat(index, times[index], x0);
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
-                temp = Math.log(g(index, times[index], x0) / (1 - temp));
+                temp = log_q(index, times[index], x0) - Math.log(1 - temp);
                 break;
             default:
                 break;
@@ -974,7 +978,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             double x = times[totalIntervals - 1] - tree.getNode(nTips + i).getHeight();
             index = index(x);
             if (!(tree.getNode(nTips + i)).isFake()) {
-                temp = Math.log(birth[index] * g(index, times[index], x));
+                temp = Math.log(birth[index]) + log_q(index, times[index], x);
                 logP += temp;
                 if (printTempResults) System.out.println("1st pwd" +
                         " = " + temp + "; interval = " + i);
@@ -992,9 +996,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
                 if (!(tree.getNode(i)).isDirectAncestor()) {
                     if (!SAModel) {
-                        temp = Math.log(psi[index]) - Math.log(g(index, times[index], y));
+                        temp = Math.log(psi[index]) - log_q(index, times[index], y);
                     } else {
-                        temp = Math.log(psi[index] * (r[index] + (1 - r[index]) * p0(index, times[index], y))) - Math.log(g(index, times[index], y));
+                        temp = Math.log(psi[index] * (r[index] + (1 - r[index]) * p0(index, times[index], y))) - log_q(index, times[index], y);
                     }
                     logP += temp;
                     if (printTempResults) System.out.println("2nd PI = " + temp);
@@ -1026,7 +1030,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 n[j] = ((j == 0) ? 0 : lineageCountAtTime(times[totalIntervals - 1] - time, tree, k));
             }
             if (n[j] > 0) {
-                temp = n[j] * (Math.log(g(j, times[j], time)) + Math.log(1 - rho[j-1]));
+                temp = n[j] * (log_q(j, times[j], time) + Math.log(1 - rho[j-1]));
                 logP += temp;
                 if (printTempResults)
                     System.out.println("3rd factor (nj loop) = " + temp + "; interval = " + j + "; n[j] = " + n[j]);//+ "; Math.log(g(j, times[j], time)) = " + Math.log(g(j, times[j], time)));
@@ -1036,7 +1040,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
 
             if (SAModel && j>0 && N != null) { // term for sampled leaves and two-degree nodes at time t_i
-                logP += k[0] * (Math.log(g(j, times[j], time)) + Math.log(1-r[j])) + //here g(j,..) corresponds to q_{i+1}, r[j] to r_{i+1},
+                logP += k[0] * (log_q(j, times[j], time) + Math.log(1-r[j])) + //here g(j,..) corresponds to q_{i+1}, r[j] to r_{i+1},
                         (N[j-1]-k[0])*(Math.log(r[j]+ (1-r[j])*p0(j, times[j], time))); //N[j-1] to N_i, k[0] to K_i,and thus N[j-1]-k[0] to M_i
                 if (Double.isInfinite(logP)) {
                     return logP;
