@@ -35,8 +35,8 @@
 	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true">
 		<parameter name="origin" id="origin" value ="100" lower="0."/>  	
 
-		<!-- dimension of R0, becomeUninfectiousRate and samplingProportion must be either equal to intervalNumber, or 1 (i.e. rate is constant over time) -->
-		<parameter name="R0" id="R0" value="2" lower="0." dimension ="10"/>
+		<!-- dimension of reproductiveNumber, becomeUninfectiousRate and samplingProportion must be either equal to intervalNumber, or 1 (i.e. rate is constant over time) -->
+		<parameter name="reproductiveNumber" id="reproductiveNumber" value="2" lower="0." dimension ="10"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="1" lower="0." dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion" value="0."/>
 		<parameter name="rho" id="rho" value="1e-6" lower="0." upper="1."/>
@@ -70,7 +70,7 @@
 			<distribution  id='origin_Prior' x="@origin" spec='beast.math.distributions.Prior'>
 				<distr spec='beast.math.distributions.Uniform' lower="0." upper="1000."/>	
 			</distribution>
-			<distribution  id='R0_Prior' x="@R0" spec='beast.math.distributions.Prior'>
+			<distribution  id='reproductiveNumber_Prior' x="@reproductiveNumber" spec='beast.math.distributions.Prior'>
 				<distr spec='beast.math.distributions.LogNormalDistributionModel' M="0" S="1.25"/>	
 			</distribution>
 			<distribution  id='becomeUninfectiousRate_Prior' x="@becomeUninfectiousRate" spec='beast.math.distributions.Prior'>
@@ -83,9 +83,9 @@
     </distribution>
 
 	
-	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="birth" expression="R0 becomeUninfectiousRate *"> <!-- s/(d+s) -->
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="birth" expression="reproductiveNumber becomeUninfectiousRate *"> <!-- s/(d+s) -->
 		<parameter idref="becomeUninfectiousRate"/>
-		<parameter idref="R0"/>        
+		<parameter idref="reproductiveNumber"/>        
 	</RPNcalculator>
 	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="sampling" expression="becomeUninfectiousRate samplingProportion *"> 
 		<parameter idref="becomeUninfectiousRate"/>
@@ -104,7 +104,7 @@
 			<stateNode idref='origin'/>
 			<stateNode idref='becomeUninfectiousRate'/>
 			<stateNode idref='rho'/>
-			<stateNode idref='R0'/>
+			<stateNode idref='reproductiveNumber'/>
 
 			<stateNode idref="clock.rate"/>		
 			<stateNode idref="freqParameter"/>		
@@ -120,10 +120,10 @@
 		<!-- parameter weights for RealParameters roughly equal to parameter dimension --> 
 		<operator id='becomeUninfectiousRate_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate"/>
 		<operator id='rho_scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho"/>
-		<operator id='R0_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0"/>
+		<operator id='reproductiveNumber_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber"/>
 
 		<operator id="updown" spec="UpDownOperator" scaleFactor=".75" weight="10">
-			<up idref="R0"/>
+			<up idref="reproductiveNumber"/>
 			<down idref="becomeUninfectiousRate"/>
 		</operator>
 
@@ -170,7 +170,7 @@
 			<log idref="rateGT"/>
 			<log idref="proportionInvariant"/>
 
-			<log idref='R0'/>
+			<log idref='reproductiveNumber'/>
 			<log idref="becomeUninfectiousRate"/>
 			<log idref="birth"/>
 			<log idref="death"/>
