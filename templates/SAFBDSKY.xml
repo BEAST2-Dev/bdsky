@@ -23,6 +23,8 @@
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival'>
 
             <![CDATA[

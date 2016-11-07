@@ -231,9 +231,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         transform = transform_d_r_s = false;
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null) {
 
+            birth = birthRate.get().getValues();
             death = deathRate.get().getValues();
             psi = samplingRate.get().getValues();
-            birth = birthRate.get().getValues();
             if (SAModel) r = removalProbability.get().getValues();
 
         } else if (reproductiveNumberInput.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {

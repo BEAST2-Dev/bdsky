@@ -28,6 +28,8 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
