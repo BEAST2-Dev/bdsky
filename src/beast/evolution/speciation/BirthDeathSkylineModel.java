@@ -911,13 +911,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             }
         }
 
-        for (int i = 0; i < totalIntervals; i++) {
-            if (SAModel) {
-                Double[] rp = removalProbability.get().getValues();
+        if (SAModel) {
+            Double[] rp = removalProbability.get().getValues();
+            for (int i = 0; i < totalIntervals; i++) {
                 r[i] = rp[index(times[i], rChangeTimes)];
                 psi[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] / (1 / sp[index(times[i], samplingRateChangeTimes)] - 1 + r[i]);
                 death[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] - r[i] * psi[i];
-            } else {
+            }
+        } else {
+            for (int i = 0; i < totalIntervals; i++) {
                 psi[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] * sp[index(times[i], samplingRateChangeTimes)];
                 death[i] = birth[i] * to[index(times[i], deathRateChangeTimes)] - psi[i];
             }
