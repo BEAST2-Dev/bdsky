@@ -100,15 +100,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> contemp =
             new Input<Boolean>("contemp", "Only contemporaneous sampling (i.e. all tips are from same sampling time, default false)", false);
 
-    public Input<RealParameter> R0 =
-            new Input<RealParameter>("R0", "The basic reproduction number");
+    public Input<RealParameter> reproductiveNumberInput =
+            new Input<RealParameter>("reproductiveNumber", "The basic / effective reproduction number");
     public Input<RealParameter> becomeUninfectiousRate =
-            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (throuch recovery or sampling)");
+            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (through recovery or sampling)");
     public Input<RealParameter> samplingProportion =
             new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate");
 
-    public Input<RealParameter> netDiversification = new Input<RealParameter>("netDiversification", "Net diversification rate");
-    public Input<RealParameter> turnOver = new Input<RealParameter>("turnOver", "Turn over rate");
+    public Input<RealParameter> netDiversification = new Input<RealParameter>("netDiversification", "The net diversification rate");
+    public Input<RealParameter> turnOver = new Input<RealParameter>("turnOver", "The turn over rate");
 
     public Input<Boolean> forceRateChange =
             new Input<Boolean>("forceRateChange", "If there is more than one interval and we estimate the time of rate change, do we enforce it to be within the tree interval? Default true", true);
@@ -236,7 +236,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             birth = birthRate.get().getValues();
             if (SAModel) r = removalProbability.get().getValues();
 
-        } else if (R0.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
+        } else if (reproductiveNumberInput.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
 
             transform = true;
 
@@ -246,14 +246,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         } else {
             throw new RuntimeException("Either specify birthRate, deathRate and samplingRate " +
-                    "OR specify R0, becomeUninfectiousRate and samplingProportion " +
+                    "OR specify reproductiveNumber, becomeUninfectiousRate and samplingProportion " +
                     "OR specify netDiversification, turnOver and samplingProportion!");
         }
 
 
         if (transform) {
 
-            if (birthChanges < 1) birthChanges = R0.get().getDimension() - 1;
+            if (birthChanges < 1) birthChanges = reproductiveNumberInput.get().getDimension() - 1;
             samplingChanges = samplingProportion.get().getDimension() - 1;
             deathChanges = becomeUninfectiousRate.get().getDimension() - 1;
 
@@ -862,7 +862,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected void transformParameters() {
 
-        Double[] R = R0.get().getValues(); // if SAModel: R0 = lambda/delta
+        Double[] R = reproductiveNumberInput.get().getValues(); // if SAModel: reproductiveNumber = lambda/delta
         Double[] b = becomeUninfectiousRate.get().getValues(); // delta = mu + psi*r
         Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi)
         Double[] removalProbabilities = new Double[1];
@@ -910,7 +910,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
            to = (mu + r * psi) / lambda  -->  mu = lambda * to * (1 - sp) / (1 - sp + r * sp)
            sp = psi / (mu + psi)              psi = mu * sp / (1 - sp)
            SAModel: 0 <= rp < 1;  No SA: rp = 1
-           Relation to transform: nd = (R0 - 1) * delta, to = 1/R0, sp = s
+           Relation to transform: nd = (reproductiveNumber - 1) * delta, to = 1/reproductiveNumber, sp = s
          */  // isBDSIR()???
         for (int i = 0; i < totalIntervals; i++) {
             birth[i] = nd[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] / (1 - to[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]);
