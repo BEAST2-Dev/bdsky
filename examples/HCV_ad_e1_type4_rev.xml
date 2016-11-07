@@ -74,7 +74,7 @@
 
 		<parameter name="intervalTimes" id="intervalTimes" value="0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9"/>
 		<parameter name="origin" id="orig_root" value ="1" lower="0." upper="1000."/>
-		<parameter name="R0" id="R0" value="2" lower="0." dimension ="10" upper="10"/>
+		<parameter name="reproductiveNumber" id="reproductiveNumber" value="2" lower="0." dimension ="10" upper="10"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="1" lower="0." upper="1." dimension ="10"/>
 		<parameter name="samplingProportion" id="samplingProportion" value="0."/>
 		<parameter name="rho" id="rho" value="1e-6" lower="0." upper="1."/>
@@ -93,7 +93,7 @@
 	<branchRateModel id="StrictClock" spec="beast.evolution.branchratemodel.StrictClockModel">
 		<parameter dimension="1" id="clock.rate" name="clock.rate" value="0.79e-3" lower="0." upper="1."/> <!-- 0.79 × 10−3 substitutions/site/year (Pybus et al. 2001). This rate was estimated for the E1 gene of HCV, which is the genome region used in this study.-->
 	</branchRateModel>
-   <Sum spec="beast.core.util.Sum" id="R0_sum" arg="@R0"/> 
+   <Sum spec="beast.core.util.Sum" id="reproductiveNumber_sum" arg="@reproductiveNumber"/> 
 
    
     <distribution id="posterior" spec="util.CompoundDistribution">
@@ -101,7 +101,7 @@
 			<distribution id="BDlikelihood" spec="util.CompoundDistribution">
 				<distribution idref="birthDeath"/>		
 			</distribution>
-			<distribution id="R0_prior" spec="beast.math.distributions.Prior" x="@R0">
+			<distribution id="reproductiveNumber_prior" spec="beast.math.distributions.Prior" x="@reproductiveNumber">
 				<distr spec="beast.math.distributions.LogNormalDistributionModel" M=".5" S="1." meanInRealSpace="false" offset="0."/>
 			</distribution>
 			<distribution id="becomeUninf_prior" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate">
@@ -115,7 +115,7 @@
 			</distribution>
 			<!--
 			<distribution id='delta_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@becomeUninfectiousRate"/>
-            <distribution id='R0_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@R0"/>
+            <distribution id='reproductiveNumber_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@reproductiveNumber"/>
 			-->
     	</distribution>
         <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">      
@@ -124,9 +124,9 @@
     </distribution>
 
 	
-	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="birth" expression="R0 becomeUninfectiousRate *"> <!-- s/(d+s) -->
+	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="birth" expression="reproductiveNumber becomeUninfectiousRate *"> <!-- s/(d+s) -->
 		<parameter idref="becomeUninfectiousRate"/>
-		<parameter idref="R0"/>        
+		<parameter idref="reproductiveNumber"/>        
 	</RPNcalculator>
 	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="sampling" expression="becomeUninfectiousRate samplingProportion *"> 
 		<parameter idref="becomeUninfectiousRate"/>
@@ -145,7 +145,7 @@
 			<stateNode idref='orig_root'/>
 			<stateNode idref='becomeUninfectiousRate'/>
 			<stateNode idref='rho'/>
-			<stateNode idref='R0'/>
+			<stateNode idref='reproductiveNumber'/>
 
 			<stateNode idref="freqParameter"/>		
 			<stateNode idref="gammaShape"/>
@@ -159,10 +159,10 @@
 	
 		<operator id='becomeUninfectiousRate_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate"/>
 		<operator id='rho_scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho"/>
-		<operator id='R0_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@R0"/>
+		<operator id='reproductiveNumber_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber"/>
 
 		<operator id="updown" spec="UpDownOperator" scaleFactor=".75" weight="10">
-			<up idref="R0"/>
+			<up idref="reproductiveNumber"/>
 			<down idref="becomeUninfectiousRate"/>
 		</operator>
 
@@ -203,8 +203,8 @@
 			<log idref="rateGT"/>
 			<log idref="proportionInvariant"/>
 
-			<log idref='R0'/>
-			<log idref="R0_sum"/>
+			<log idref='reproductiveNumber'/>
+			<log idref="reproductiveNumber_sum"/>
 			<log idref="becomeUninfectiousRate"/>
 			<log idref="birth"/>
 			<log idref="death"/>
@@ -230,8 +230,8 @@
 			<log idref="rateGT"/>
 			<log idref="proportionInvariant"/>
 
-			<log idref='R0'/>
-			<log idref="R0_sum"/>
+			<log idref='reproductiveNumber'/>
+			<log idref="reproductiveNumber_sum"/>
 			<log idref="becomeUninfectiousRate"/>
 			<log idref="birth"/>
 			<log idref="death"/>

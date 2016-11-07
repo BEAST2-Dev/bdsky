@@ -18,11 +18,13 @@
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
-	beast.evolution.speciation.BirthDeathSkylineModel.R0,
+	beast.evolution.speciation.BirthDeathSkylineModel.reproductiveNumber,
 	beast.evolution.speciation.BirthDeathSkylineModel.becomeUninfectiousRate,
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
 	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.rho,
+	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
             <![CDATA[
     <!-- Sampled Ancestor Birth Death Skyline model-->

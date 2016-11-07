@@ -34,8 +34,7 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("conditionOnSurvival", false);
         bdssm.setInputValue("removalProbability", "1");
 
-
-        bdssm.setInputValue("R0", new RealParameter("1.5"));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter("1.5"));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter("0.3") );
 
@@ -82,7 +81,7 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("removalProbability", "0.9");
 
 
-        bdssm.setInputValue("R0", new RealParameter("1.5"));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter("1.5"));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter("0.3") );
 
@@ -281,7 +280,7 @@ public class BirthDeathSkylineTest extends TestCase {
         //        bdssm.setInputValue("birthRate", new RealParameter("2."));
         //        bdssm.setInputValue("deathRate", new RealParameter("1."));
         //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
         //bdssm.setInputValue("intervalNumber", 1);
@@ -339,7 +338,7 @@ public class BirthDeathSkylineTest extends TestCase {
 //        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
 //        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
 //        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-//        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+//        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
 //        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
 //        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
 //        //bdssm.setInputValue("intervalNumber", 1);
@@ -350,7 +349,7 @@ public class BirthDeathSkylineTest extends TestCase {
 //        // b)
 //        bdssm.setInputValue("intervalNumber", 3);
 //
-//        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3., 4./3., 4./3.}));
+//        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3., 4./3., 4./3.}));
 //        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter(new Double[]{1.5,1.5,1.5}));
 //        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3., 1./3., 1./3.}));
 //
@@ -380,7 +379,7 @@ public class BirthDeathSkylineTest extends TestCase {
         //        bdssm.setInputValue("birthRate", new RealParameter("2."));
         //        bdssm.setInputValue("deathRate", new RealParameter("1."));
         //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
         //bdssm.setInputValue("intervalNumber", 1);
@@ -389,7 +388,7 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("samplingRateChangeTimes", new RealParameter("0."));
 
         // c1)
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter(new Double[]{1.5}));
         bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
 //        bdssm.setInputValue("intervalNumber", 1);
@@ -453,7 +452,7 @@ public class BirthDeathSkylineTest extends TestCase {
 //        //        bdssm.setInputValue("birthRate", new RealParameter("2."));
 //        //        bdssm.setInputValue("deathRate", new RealParameter("1."));
 //        //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-//        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+//        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
 //        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
 //        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
 //        //bdssm.setInputValue("intervalNumber", 1);
@@ -484,7 +483,7 @@ public class BirthDeathSkylineTest extends TestCase {
         //        bdssm.setInputValue("birthRate", new RealParameter("2."));
         //        bdssm.setInputValue("deathRate", new RealParameter("1."));
         //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
         //bdssm.setInputValue("intervalNumber", 1);
@@ -545,7 +544,7 @@ public class BirthDeathSkylineTest extends TestCase {
         //        bdssm.setInputValue("birthRate", new RealParameter("2."));
         //        bdssm.setInputValue("deathRate", new RealParameter("1."));
         //        bdssm.setInputValue("samplingRate", new RealParameter("0.5"));
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{4./3.}));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{4./3.}));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
 //        bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{1./3.}));
         //bdssm.setInputValue("intervalNumber", 1);
@@ -752,7 +751,7 @@ public class BirthDeathSkylineTest extends TestCase {
 //        bdssm.setInputValue("intervalNumber", 3);
         bdssm.setInputValue("intervalTimes", new RealParameter("0. 3. 4.5"));
 
-        bdssm.setInputValue("R0", new RealParameter(new Double[]{2./3., 4./3., 8./3.}));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{2./3., 4./3., 8./3.}));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("4.5 1.5 1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter(new Double[]{4./9., 1./3., 2./3.}));
         bdssm.initAndValidate();
@@ -778,7 +777,7 @@ public class BirthDeathSkylineTest extends TestCase {
 //        bdssm.setInputValue("intervalNumber", 3);
         bdssm.setInputValue("intervalTimes", new RealParameter("0. 3. 4.5"));
 
-//        bdssm.setInputValue("R0", new RealParameter(new Double[]{2./3., 4./3., 8./3.}));
+//        bdssm.setInputValue("reproductiveNumber", new RealParameter(new Double[]{2./3., 4./3., 8./3.}));
 //        bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("4.5 1.5 1.5"));
         bdssm.setInputValue("netDiversification", new RealParameter("-1.5 0.5 2.5"));
         bdssm.setInputValue("turnOver", new RealParameter("1.5 0.75 0.375"));
@@ -799,7 +798,7 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("origin", new RealParameter(new Double[]{0.7862+tree.getRoot().getHeight()}));
         bdssm.setInputValue("conditionOnSurvival", false);
 
-        bdssm.setInputValue("R0", new RealParameter("7.767395"));
+        bdssm.setInputValue("reproductiveNumber", new RealParameter("7.767395"));
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("0.1057396"));
 //        bdssm.setInputValue("netDiversification", new RealParameter("0.7155816"));
 //        bdssm.setInputValue("turnOver", new RealParameter("0.1287433"));
