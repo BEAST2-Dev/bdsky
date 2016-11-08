@@ -1079,11 +1079,22 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         return true;
     }
 
-    @Override
-    public boolean canHandleTipDates() {
-        return (m_rho.get() == null);
-    }
+//    @Override
+//    public boolean canHandleTipDates() {
+//        boolean samplingThroughTime = false;
+//        RealParameter samplingParameter = samplingRate.get() != null ? samplingRate.get():samplingProportion.get();
+//        for (int i=0; i<samplingParameter.getDimension(); i++) {
+//            if (samplingParameter.getArrayValue(i) != 0) {
+//                samplingThroughTime = true;
+//                break;
+//            }
+//        }
+//        return samplingThroughTime;
+//    }
 
+    public boolean canHandleTipDates() {
+        return !contempData;
+    }
 
     public Boolean isBDSIR() {
         return false;
