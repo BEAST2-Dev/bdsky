@@ -1,6 +1,7 @@
 package test.beast.evolution.speciation;
 
 import beast.core.parameter.RealParameter;
+import beast.evolution.speciation.BirthDeathSkylineDiversifiedSampling;
 import beast.evolution.speciation.BirthDeathSkylineModel;
 import beast.evolution.tree.Tree;
 import beast.util.TreeParser;
@@ -135,5 +136,29 @@ public class SABirthDeathSkylineModel  extends TestCase {
         assertEquals(-8.80702177958906, model.calculateTreeLogLikelihood(tree2), 1e-14);
     }
 
+    @Test
+    public void testLikelihoodCalculationDiversifiedSampling() throws Exception {
+
+        Tree tree = new TreeParser("(f4:12.78,((((f2:5.06,(t5:11.81,t1:11.81):1.25):3.89,t3:16.95):4.88,((f3:1.92,t2:10.92):9.08,f5:0.00):1.83):1.15,(t4:5.00,f1:0.00):17.98):4.80):2.22");
+
+        BirthDeathSkylineDiversifiedSampling model = new BirthDeathSkylineDiversifiedSampling();
+        model.setInputValue("tree", tree);
+        model.setInputValue("origin", new RealParameter("30."));
+        model.setInputValue("netDiversification", new RealParameter("1.3 1.2"));
+        model.setInputValue("turnOver", new RealParameter("0.5"));
+        model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3"));
+        model.setInputValue("rho", new RealParameter("0.0 0.5"));
+        model.setInputValue("removalProbability", new RealParameter("0.0"));
+        model.setInputValue("reverseTimeArrays", "true true true true true");
+        model.setInputValue("birthRateChangeTimes", new RealParameter("0.0 14."));
+        model.setInputValue("deathRateChangeTimes", new RealParameter("0.0"));
+        model.setInputValue("samplingRateChangeTimes", new RealParameter("0.0 10. 18."));
+        model.setInputValue("rhoSamplingTimes", new RealParameter("0.0 10."));
+        model.setInputValue("conditionOnSurvival", false);
+        model.setInputValue("conditionOnRhoSampling", true);
+        model.initAndValidate();
+
+        assertEquals(-322.22735881, model.calculateTreeLogLikelihood(tree), 1e-8);
+    }
 }
 
