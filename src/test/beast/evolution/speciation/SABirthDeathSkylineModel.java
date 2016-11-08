@@ -144,7 +144,7 @@ public class SABirthDeathSkylineModel  extends TestCase {
         BirthDeathSkylineDiversifiedSampling model = new BirthDeathSkylineDiversifiedSampling();
         model.setInputValue("tree", tree);
         model.setInputValue("origin", new RealParameter("30."));
-        model.setInputValue("netDiversification", new RealParameter("1.3 1.2"));
+        model.setInputValue("netDiversification", new RealParameter("0.3 0.2"));
         model.setInputValue("turnOver", new RealParameter("0.5"));
         model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3"));
         model.setInputValue("rho", new RealParameter("0.0 0.5"));
@@ -158,7 +158,41 @@ public class SABirthDeathSkylineModel  extends TestCase {
         model.setInputValue("conditionOnRhoSampling", true);
         model.initAndValidate();
 
-        assertEquals(-322.22735881, model.calculateTreeLogLikelihood(tree), 1e-8);
+        assertEquals(-82.7118384656, model.calculateTreeLogLikelihood(tree), 1e-8);
+    }
+
+    @Test
+    public void testLikelihoodCalculationRandomSampling() throws Exception {
+
+        Tree tree = new TreeParser("(f4:12.78,((((f2:5.06,(t5:11.81,t1:11.81):1.25):3.89,t3:16.95):4.88,((f3:1.92,t2:10.92):9.08,f5:0.00):1.83):1.15,(t4:5.00,f1:0.00):17.98):4.80):2.22");
+
+        BirthDeathSkylineModel model = new BirthDeathSkylineModel();
+        model.setInputValue("tree", tree);
+        model.setInputValue("origin", new RealParameter("30."));
+        model.setInputValue("netDiversification", new RealParameter("0.3 0.2"));
+        model.setInputValue("turnOver", new RealParameter("0.5"));
+        model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3"));
+        model.setInputValue("rho", new RealParameter("0.0 0.5"));
+        model.setInputValue("removalProbability", new RealParameter("0.0"));
+        model.setInputValue("reverseTimeArrays", "true true true true true");
+        model.setInputValue("birthRateChangeTimes", new RealParameter("0.0 14."));
+        model.setInputValue("deathRateChangeTimes", new RealParameter("0.0"));
+        model.setInputValue("samplingRateChangeTimes", new RealParameter("0.0 10. 18."));
+        model.setInputValue("rhoSamplingTimes", new RealParameter("0.0 10."));
+        model.setInputValue("conditionOnSurvival", false);
+        model.setInputValue("conditionOnRhoSampling", true);
+        model.initAndValidate();
+
+        assertEquals(-83.1206219504, model.calculateTreeLogLikelihood(tree), 1e-8);
+
+        // mimic diversified sampling
+        model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3 0.0"));
+        model.setInputValue("rho", new RealParameter("0.0 1.0"));
+        model.setInputValue("samplingRateChangeTimes", new RealParameter("0.0 4.75 10. 18."));
+        model.initAndValidate();
+
+        // by adding the correction term, should equal to
+        assertEquals(-82.7118384656, model.calculateTreeLogLikelihood(tree)-1.370385599, 1e-8);
     }
 }
 
