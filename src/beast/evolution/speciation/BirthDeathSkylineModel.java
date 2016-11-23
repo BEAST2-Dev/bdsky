@@ -81,10 +81,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
 
     public Input<RealParameter> origin =
-            new Input<RealParameter>("origin", "The time from origin to last sample (must be larger than tree height)", Input.Validate.REQUIRED);
+            new Input<RealParameter>("origin", "The time from origin to last sample (must be larger than tree height)", (RealParameter) null);
 
     public Input<Boolean> originIsRootEdge =
             new Input<>("originIsRootEdge", "The origin is only the length of the root edge", false);
+
+    public Input<Boolean> conditionOnRootInput = new Input<Boolean>("conditionOnRoot", "the tree " +
+            "likelihood is conditioned on the root height otherwise on the time of origin", false);
 
     public Input<RealParameter> birthRate =
             new Input<RealParameter>("birthRate", "BirthRate = BirthRateVector * birthRateScalar, birthrate can change over time");
@@ -196,7 +199,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() {
         super.initAndValidate();
 
-        if (!originIsRootEdge.get() && treeInput.get().getRoot().getHeight() >= origin.get().getValue())
+        if (origin.get() != null && (!originIsRootEdge.get() && treeInput.get().getRoot().getHeight() >= origin.get().getValue()))
             throw new RuntimeException("Origin parameter ("+origin.get().getValue()+" ) must be larger than tree height("+treeInput.get().getRoot().getHeight()+" ). Please change initial origin value!");
 
         if (removalProbability.get() != null) SAModel = true;
@@ -417,7 +420,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (printTempResults) System.out.println("relative = " + relative);
 
-        double maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() :origin.get().getValue();
+        double maxTime;
+
+        if (origin.get() != null) {
+            maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() :origin.get().getValue();
+        } else {
+            maxTime = treeInput.get().getRoot().getHeight();
+        }
 
         if (intervalTimes == null) { //equidistant
 
@@ -565,7 +574,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         double t_root = tree.getRoot().getHeight();
 
-        if (m_forceRateChange && timesSet.last() > (originIsRootEdge.get()? t_root+ origin.get().getValue() : origin.get().getValue())) {
+        if (origin.get() != null && (m_forceRateChange && timesSet.last() > (originIsRootEdge.get()? t_root+ origin.get().getValue() : origin.get().getValue()))) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -627,7 +636,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(TreeInterface tree) {
 
-        if (!originIsRootEdge.get() && tree.getRoot().getHeight() >= origin.get().getValue()) {
+        if (origin.get() != null && (!originIsRootEdge.get() && tree.getRoot().getHeight() >= origin.get().getValue())) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -957,13 +966,23 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 temp = p0(index, times[index], x0);
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
-                temp = log_q(index, times[index], x0) - Math.log(1 - temp);
+                if (conditionOnRootInput.get()) {
+                    temp = log_q(index, times[index], x0) - Math.log(1 - temp)- Math.log(1 - temp) - Math.log(birth[index]);
+                } else {
+                    temp = log_q(index, times[index], x0) - Math.log(1 - temp);
+                }
+
                 break;
             case RHO_SAMPLING:
                 temp = p0hat(index, times[index], x0);
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
-                temp = log_q(index, times[index], x0) - Math.log(1 - temp);
+                if (conditionOnRootInput.get()) {
+                    temp = log_q(index, times[index], x0) - Math.log(1 - temp) - Math.log(1 - temp);
+                } else {
+                    temp = log_q(index, times[index], x0) - Math.log(1 - temp);
+                }
+
                 break;
             default:
                 break;
