@@ -199,8 +199,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public void initAndValidate() {
         super.initAndValidate();
 
+        if (!conditionOnRootInput.get() && origin.get() == null)
+            throw new RuntimeException("Origin parameter is not set when conditioning on the origin!");
+        if (conditionOnRootInput.get() && origin.get() != null)
+            throw new RuntimeException("Origin parameter should not be set when conditioning on the root!");
         if (origin.get() != null && (!originIsRootEdge.get() && treeInput.get().getRoot().getHeight() >= origin.get().getValue()))
-            throw new RuntimeException("Origin parameter ("+origin.get().getValue()+" ) must be larger than tree height("+treeInput.get().getRoot().getHeight()+" ). Please change initial origin value!");
+            throw new RuntimeException("Origin parameter ("+origin.get().getValue()+") must be larger than " +
+                    "tree height("+treeInput.get().getRoot().getHeight()+"). Please change initial origin value!");
 
         if (removalProbability.get() != null) SAModel = true;
 
@@ -938,7 +943,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     @Override
     public double calculateTreeLogLikelihood(TreeInterface tree) {
 
-        logP=0.;
+        logP = 0.;
 
 
         int nTips = tree.getLeafNodeCount();
@@ -950,13 +955,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         // number of lineages at each time ti
         int[] n = new int[totalIntervals];
 
-        double x0 = 0;
         int index = 0;
-
         if (times[index] < 0.)
             index = index(0.);
 
-        double temp=0;
+        double x0 = 0.;
+        double temp = 0.;
 
         switch (conditionOn) {
             case NONE:
@@ -967,22 +971,20 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
                 if (conditionOnRootInput.get()) {
-                    temp = log_q(index, times[index], x0) - Math.log(1 - temp)- Math.log(1 - temp) - Math.log(birth[index]);
+                    temp = log_q(index, times[index], x0) - 2 * Math.log(1 - temp) - Math.log(birth[index]);
                 } else {
                     temp = log_q(index, times[index], x0) - Math.log(1 - temp);
                 }
-
                 break;
             case RHO_SAMPLING:
                 temp = p0hat(index, times[index], x0);
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
                 if (conditionOnRootInput.get()) {
-                    temp = log_q(index, times[index], x0) - Math.log(1 - temp) - Math.log(1 - temp);
+                    temp = log_q(index, times[index], x0) - 2 * Math.log(1 - temp);
                 } else {
                     temp = log_q(index, times[index], x0) - Math.log(1 - temp);
                 }
-
                 break;
             default:
                 break;

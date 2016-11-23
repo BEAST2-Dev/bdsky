@@ -143,10 +143,9 @@ public class SABirthDeathSkylineModel  extends TestCase {
 
         BirthDeathSkylineDiversifiedSampling model = new BirthDeathSkylineDiversifiedSampling();
         model.setInputValue("tree", tree);
-        model.setInputValue("origin", new RealParameter("30."));
         model.setInputValue("netDiversification", new RealParameter("0.3 0.2"));
         model.setInputValue("turnOver", new RealParameter("0.5"));
-        model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3"));
+        model.setInputValue("samplingProportion", new RealParameter("0.2 0.3 0.4"));
         model.setInputValue("rho", new RealParameter("0.0 0.5"));
         model.setInputValue("removalProbability", new RealParameter("0.0"));
         model.setInputValue("reverseTimeArrays", "true true true true true");
@@ -154,11 +153,16 @@ public class SABirthDeathSkylineModel  extends TestCase {
         model.setInputValue("deathRateChangeTimes", new RealParameter("0.0"));
         model.setInputValue("samplingRateChangeTimes", new RealParameter("0.0 10. 18."));
         model.setInputValue("rhoSamplingTimes", new RealParameter("0.0 10."));
-        model.setInputValue("conditionOnSurvival", false);
-        model.setInputValue("conditionOnRhoSampling", true);
+        model.setInputValue("conditionOnSurvival", true);  // conditionOnRhoSampling is false
+        model.setInputValue("conditionOnRoot", true);
         model.initAndValidate();
 
-        assertEquals(-82.7118384656, model.calculateTreeLogLikelihood(tree), 1e-8);
+        assertEquals(-69.62623542386, model.calculateTreeLogLikelihood(tree), 1e-8);
+
+        model.setInputValue("origin", new RealParameter("30."));
+        model.setInputValue("conditionOnRoot", false);  // condition on origin
+
+        assertEquals(-71.73431504021, model.calculateTreeLogLikelihood(tree), 1e-8);
     }
 
     @Test
@@ -168,10 +172,10 @@ public class SABirthDeathSkylineModel  extends TestCase {
 
         BirthDeathSkylineModel model = new BirthDeathSkylineModel();
         model.setInputValue("tree", tree);
-        model.setInputValue("origin", new RealParameter("30."));
+        // model.setInputValue("origin", new RealParameter("30."));
         model.setInputValue("netDiversification", new RealParameter("0.3 0.2"));
         model.setInputValue("turnOver", new RealParameter("0.5"));
-        model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3"));
+        model.setInputValue("samplingProportion", new RealParameter("0.2 0.3 0.4"));
         model.setInputValue("rho", new RealParameter("0.0 0.5"));
         model.setInputValue("removalProbability", new RealParameter("0.0"));
         model.setInputValue("reverseTimeArrays", "true true true true true");
@@ -179,20 +183,20 @@ public class SABirthDeathSkylineModel  extends TestCase {
         model.setInputValue("deathRateChangeTimes", new RealParameter("0.0"));
         model.setInputValue("samplingRateChangeTimes", new RealParameter("0.0 10. 18."));
         model.setInputValue("rhoSamplingTimes", new RealParameter("0.0 10."));
-        model.setInputValue("conditionOnSurvival", false);
-        model.setInputValue("conditionOnRhoSampling", true);
+        model.setInputValue("conditionOnSurvival", true);  // conditionOnRhoSampling is false
+        model.setInputValue("conditionOnRoot", true);
         model.initAndValidate();
 
-        assertEquals(-83.1206219504, model.calculateTreeLogLikelihood(tree), 1e-8);
+        assertEquals(-72.18435989275, model.calculateTreeLogLikelihood(tree), 1e-8);
 
         // mimic diversified sampling
-        model.setInputValue("samplingProportion", new RealParameter("0.5 0.4 0.3 0.0"));
+        model.setInputValue("samplingProportion", new RealParameter("0.2 0.3 0.4 0.0"));
         model.setInputValue("rho", new RealParameter("0.0 1.0"));
         model.setInputValue("samplingRateChangeTimes", new RealParameter("0.0 4.75 10. 18."));
         model.initAndValidate();
 
         // by adding the correction term, should equal to
-        assertEquals(-82.7118384656, model.calculateTreeLogLikelihood(tree)-1.370385599, 1e-8);
+        assertEquals(-69.62623542386, model.calculateTreeLogLikelihood(tree)-1.37038559905, 1e-8);
     }
 }
 

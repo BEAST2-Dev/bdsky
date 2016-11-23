@@ -39,8 +39,12 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
             }
         }
         /* further more, we assume no rate shifting between x_cut and the present (for convenience) */
-        double maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue()
-                                                :origin.get().getValue();
+        double maxTime;
+        if (origin.get() == null)
+            maxTime = treeInput.get().getRoot().getHeight();
+        else
+            maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() :origin.get().getValue();
+
         if (totalIntervals > 1 && minTime > maxTime - times[totalIntervals - 2])
             minTime = maxTime - times[totalIntervals - 2];
 
