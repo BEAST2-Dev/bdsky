@@ -24,6 +24,48 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
     @Test
+    public void testYule() throws Exception {
+
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+
+        Tree tree1 = new TreeParser("((A:1.0,B:1.0):1.0,C:2.0);",false);
+        bdssm.setInputValue("tree", tree1);
+
+        bdssm.setInputValue("birthRate", new RealParameter("10."));
+        bdssm.setInputValue("deathRate", new RealParameter("0."));
+        bdssm.setInputValue("samplingRate", new RealParameter("0."));
+        bdssm.setInputValue("rho", new RealParameter("1."));
+        bdssm.setInputValue("origin", new RealParameter("10."));
+        bdssm.setInputValue("origin", new RealParameter("10."));
+
+        bdssm.setInputValue("conditionOnSurvival", false);
+
+        bdssm.initAndValidate();
+
+        double logP1 = bdssm.calculateTreeLogLikelihood(tree1);
+
+
+
+        Tree tree = new TreeParser("((A:1.0,B:1.0):2.0,C:3.0);",false);
+        bdssm.setInputValue("tree", tree);
+
+        bdssm.setInputValue("birthRate", new RealParameter("10."));
+        bdssm.setInputValue("deathRate", new RealParameter("0."));
+        bdssm.setInputValue("samplingRate", new RealParameter("0."));
+        bdssm.setInputValue("rho", new RealParameter("1."));
+        bdssm.setInputValue("origin", new RealParameter("10."));
+
+        bdssm.setInputValue("conditionOnSurvival", false);
+
+        bdssm.initAndValidate();
+
+        double logP2 = bdssm.calculateTreeLogLikelihood(tree);
+
+        assertEquals(logP1-logP2,10.0);
+
+    }
+
+    @Test
     public void testLikelihoodCalculationSimple() throws Exception {
 
         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
