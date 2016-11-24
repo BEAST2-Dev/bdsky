@@ -583,6 +583,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             return Double.NEGATIVE_INFINITY;
         }
 
+        if (conditionOnRootInput.get() && (m_forceRateChange && timesSet.last() > t_root)) {
+            return Double.NEGATIVE_INFINITY;
+        }
+
         if (transform)
             transformParameters();
         else if (transform_d_r_s)
