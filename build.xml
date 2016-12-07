@@ -31,6 +31,7 @@
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
 		<fileset dir="${libBeast2}" includes="fest.jar"/>
 		<fileset dir="${libBeast2}" includes="jam.jar"/>
+		<fileset dir="${libBeast2}" includes="antlr-runtime-4.5.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastlabsclasspath}"/>
         <!--pathelement path="${beastclassicclasspath}"/-->
