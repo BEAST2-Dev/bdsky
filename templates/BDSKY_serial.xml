@@ -102,7 +102,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='originPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkySerial.t:$(n)) and origin.t:$(n)/estimate=true'>prior on origin.t:$(n)</connect>
             <connect srcID='samplingProportionPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkySerial.t:$(n)) and samplingProportion.t:$(n)/estimate=true'>prior on sampling proportion t:$(n)</connect>
             <connect srcID='becomeUninfectiousRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkySerial.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior on becomeUninfectiousRate.t:$(n)</connect>
-            <connect srcID='RPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkySerial.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'>prior on reproductiveNumber.t:$(n)</connect>
+            <connect srcID='reproductiveNumberPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkySerial.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'>prior on reproductiveNumber.t:$(n)</connect>
 
             <connect srcID='BDSKY_serialtreeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkySerial.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
             <connect srcID='BDSKY_serialtreeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkySerial.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>
