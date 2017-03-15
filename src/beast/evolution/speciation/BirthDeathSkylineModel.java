@@ -522,13 +522,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         for (int i = 0; i < tipCount; i++) {
             dates[i] = tree.getNode(i).getHeight();
         }
-
+        double maxdate = tree.getRoot().getHeight();
+        
         for (int k = 0; k < totalIntervals; k++) {
 
 
             for (int i = 0; i < tipCount; i++) {
 
-                if (Math.abs((times[totalIntervals - 1] - times[k]) - dates[i]) < 1e-10) {
+                if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-10) {
                     if (rho[k] == 0 && psi[k] == 0) {
                         return Double.NEGATIVE_INFINITY;
                     }
