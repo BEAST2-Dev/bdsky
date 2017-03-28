@@ -22,6 +22,180 @@ import java.io.PrintStream;
 
 public class BirthDeathSkylineTest extends TestCase {
 
+    @Test
+    public void testmultiRho2tipsNoDeath() throws Exception {
+
+        Tree tree = new TreeParser("(3[&type=0]: 4, 4[&type=0]: 4) ;", false);
+
+        BirthDeathSkylineModel bdm = new BirthDeathSkylineModel();
+
+        bdm.setInputValue("tree", tree);
+
+        bdm.setInputValue("birthRate", new RealParameter("2.25"));
+        bdm.setInputValue("deathRate", new RealParameter("0."));
+        bdm.setInputValue("samplingRate", new RealParameter("0."));
+//        bdm.setInputValue("rho", new RealParameter("0. 1."));
+        bdm.setInputValue("rhoSamplingTimes", new RealParameter("0. 2.5"));
+        bdm.setInputValue("reverseTimeArrays", "false false false true");
+        bdm.setInputValue("origin", "5.");
+
+        bdm.setInputValue("rho", new RealParameter("0.2 1."));
+
+//        bdm.setInputValue("conditionOnSurvival", false);
+//        bdm.initAndValidate();
+//        assertEquals(-19.88536, bdm.calculateLogP(), 1e-4);   // this result is from R: LikBirthDeathMultiRho(2.25,0.,c(1,0.2),c(4.,5.),c(0.,0.),survival=0,root=0)
+
+        bdm.setInputValue("rho", new RealParameter("0.2 0.6"));
+        bdm.initAndValidate();
+        assertEquals(-18.865767180278915, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        tree = new TreeParser("(3[&type=0]: 1.5, 4[&type=0]: 4) ;",false);
+        bdm.setInputValue("tree", tree);
+
+//        bdm.initAndValidate();
+//        assertEquals(-15.646651247531981, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.setInputValue("rho", new RealParameter("0.2 0.6"));
+        bdm.initAndValidate();
+        assertEquals(-15.133091119955177, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.setInputValue("deathRate", "1.5");
+        bdm.setInputValue("rho", new RealParameter("0.2 0.6"));
+        bdm.initAndValidate();
+        assertEquals(-8.637410990319223, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+    }
+
+    @Test
+    public void testmultiRho2tips() throws Exception {
+
+        Tree tree = new TreeParser("(3[&type=0]: 4, 4[&type=0]: 4) ;",false);
+
+        BirthDeathSkylineModel bdm =  new BirthDeathSkylineModel();
+
+        bdm.setInputValue("tree", tree);
+
+        bdm.setInputValue("reproductiveNumber", new RealParameter("1.5"));
+        bdm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
+        bdm.setInputValue("samplingProportion", new RealParameter("0.") );
+        bdm.setInputValue("rho", new RealParameter("0. 1.") );
+        bdm.setInputValue("rhoSamplingTimes", new RealParameter("0. 2.5") );
+        bdm.setInputValue("reverseTimeArrays", "false false false true");
+        bdm.setInputValue("origin", "5.");
+
+        bdm.setInputValue("conditionOnSurvival", true);
+        bdm.initAndValidate();
+        assertEquals(-9.151595, bdm.calculateLogP(), 1e-4);   // this result is from R: LikConstant(2.25,1.5,1,c(4.0,5.0),root=0,survival=1)
+
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.initAndValidate();
+        assertEquals(-10.2344, bdm.calculateLogP(), 1e-4);   // this result is from R: LikConstant(2.25,1.5,1,c(4.0,5.0),root=0,survival=0)
+
+        bdm.setInputValue("rho", new RealParameter("0.2 1.") );
+
+        bdm.setInputValue("conditionOnSurvival", true);
+        bdm.initAndValidate();
+        assertEquals(-10.569863754307026, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.initAndValidate();
+        assertEquals(-11.616647517280333, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+
+        tree = new TreeParser("(3[&type=0]: 1.5, 4[&type=0]: 4) ;",false);
+        bdm.setInputValue("tree", tree);
+
+        bdm.setInputValue("conditionOnSurvival", true);
+        bdm.initAndValidate();
+        assertEquals(-8.099631076932816, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.initAndValidate();
+        assertEquals(-9.146414839906122, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+
+    }
+
+    @Test
+    public void testmultiRho() throws Exception {
+
+        Tree tree = new TreeParser("((3[&type=0]: 1.5, 4[&type=0]: 1.5)[&type=0]: 1 , (1[&type=0]: 2, 2[&type=0]: 2)[&type=0]: 3)[&type=0];",false);
+
+        BirthDeathSkylineModel bdm =  new BirthDeathSkylineModel();
+
+        bdm.setInputValue("tree", tree);
+
+        bdm.setInputValue("reproductiveNumber", new RealParameter("1.5"));
+        bdm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
+        bdm.setInputValue("samplingProportion", new RealParameter("0.") );
+        bdm.setInputValue("rho", new RealParameter("1. 1.") );
+        bdm.setInputValue("rhoSamplingTimes", new RealParameter("0. 2.5") );
+        bdm.setInputValue("reverseTimeArrays", "false false false true");
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.setInputValue("origin", "10.");
+
+        bdm.initAndValidate();
+
+        assertEquals(Double.NEGATIVE_INFINITY, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        bdm.setInputValue("rho", new RealParameter("0.5 1.") );
+        bdm.initAndValidate();
+        assertEquals(-19.29773458054159, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+//
+        bdm.setInputValue("rho", new RealParameter("0.01 0.01") );
+        bdm.initAndValidate();
+        assertEquals(-14.676660714677519, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+        bdm.setInputValue("conditionOnSurvival", true);
+
+        //        bdm.setInputValue("rho", new RealParameter("0.5 1.") );
+        //        bdm.initAndValidate();
+        //        assertEquals(-14.37075396578577, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+        //
+
+//        bdm.setInputValue("rho", new RealParameter("0.") );
+//        bdm.setInputValue("samplingProportion", new RealParameter("0.1") );
+//        bdm.initAndValidate();
+//        assertEquals(-13.738804989064041, bdm.calculateLogP(), 1e-4);   // this result is from BEAST, not double checked in R
+
+
+    }
+    @Test
+    public void testSingleRho() throws Exception {
+        BirthDeathSkylineModel bdm =  new BirthDeathSkylineModel();
+
+        Tree tree = new TreeParser("((1: 4.5, 2: 4.5):1,3:5.5);",false);
+        bdm.setInputValue("tree", tree);
+
+        bdm.setInputValue("reproductiveNumber", new RealParameter("1.5"));
+        bdm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
+        bdm.setInputValue("samplingProportion", new RealParameter("0.") );
+        bdm.setInputValue("conditionOnSurvival", false);
+        bdm.setInputValue("origin", "10");
+//        bdm.setInputValue("origin", "1e-100");
+        // bdm.setInputValue("originIsRootEdge", true);
+        bdm.setInputValue("rho", new RealParameter("0.01") );
+        bdm.initAndValidate();
+        assertEquals(-8.520565, bdm.calculateLogP(), 1e-4);   // this result is from R: LikConstant(2.25,1.5,0.01,c(4.5,5.5,10),root=0,survival=0)
+
+        bdm.setInputValue("origin", "1e-100");
+        bdm.setInputValue("originIsRootEdge", true);
+        bdm.initAndValidate();
+        assertEquals(-5.950979, bdm.calculateLogP(), 1e-4);   // this result is from R: LikConstant(2.25,1.5,0.01,c(4.5,5.5,5.5+1e-100),root=0,survival=0)
+
+        bdm.setInputValue("conditionOnSurvival", true);
+        bdm.initAndValidate();
+        assertEquals(-4.431935, bdm.calculateLogP(), 1e-4);   // this result is from R: LikConstant(2.25,1.5,0.01,c(4.5,5.5,5.5+1e-100),root=0,survival=1)
+
+        bdm.setInputValue("conditionOnSurvival", true);
+        bdm.setInputValue("origin", "10");
+        bdm.setInputValue("originIsRootEdge", false);
+        bdm.initAndValidate();
+        assertEquals(-7.404227, bdm.calculateLogP(), 1e-4);   // this result is from R: LikConstant(2.25,1.5,0.01,c(4.5,5.5,5.5+1e-100),root=0,survival=1)
+
+    }
 
     @Test
     public void testYule() throws Exception {
@@ -112,13 +286,13 @@ public class BirthDeathSkylineTest extends TestCase {
 
 
     @Test
-     public void testLikelihoodCalculationSimpleForBDMM() throws Exception {
+    public void testLikelihoodCalculationSimpleForBDMM() throws Exception {
 
-         BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
+        BirthDeathSkylineModel bdssm =  new BirthDeathSkylineModel();
 
-         Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
-         bdssm.setInputValue("tree", tree);
-         bdssm.setInputValue("origin", new RealParameter("10."));
+        Tree tree = new TreeParser("((3 : 1.5, 4 : 0.5) : 1 , (1 : 2, 2 : 1) : 3);",false);
+        bdssm.setInputValue("tree", tree);
+        bdssm.setInputValue("origin", new RealParameter("10."));
         bdssm.setInputValue("conditionOnSurvival", true);
         bdssm.setInputValue("removalProbability", "0.9");
 
@@ -127,11 +301,11 @@ public class BirthDeathSkylineTest extends TestCase {
         bdssm.setInputValue("becomeUninfectiousRate", new RealParameter("1.5"));
         bdssm.setInputValue("samplingProportion", new RealParameter("0.3") );
 
-         bdssm.initAndValidate();
-         bdssm.printTempResults = false;
+        bdssm.initAndValidate();
+        bdssm.printTempResults = false;
 
-         assertEquals(-25.991511346557598, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
-     }
+        assertEquals(-25.991511346557598, bdssm.calculateTreeLogLikelihood(tree), 1e-4);
+    }
 
     @Test
     public void testRhoSasha() throws Exception {
