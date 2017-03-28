@@ -9,6 +9,7 @@ import beast.core.MCMC;
 import beast.core.Operator;
 import beast.core.StateNode;
 import beast.core.parameter.BooleanParameter;
+import beast.core.parameter.IntegerParameter;
 import beast.core.parameter.RealParameter;
 import beast.core.util.Log;
 import beast.evolution.alignment.Taxon;
@@ -17,6 +18,7 @@ import beast.evolution.operators.ScaleOperator;
 import beast.evolution.operators.SubtreeSlide;
 import beast.evolution.operators.TipDatesRandomWalker;
 import beast.evolution.operators.WilsonBalding;
+import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeInterface;
 import beast.math.distributions.Uniform;
@@ -119,11 +121,19 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             new Input<Boolean>("conditionOnSurvival", "if is true then condition on sampling at least one individual (psi-sampling).", true);
     public Input<Boolean> conditionOnRhoSampling =
             new Input<Boolean> ("conditionOnRhoSampling","if is true then condition on sampling at least one individual at present.", false);
+    public Input<Taxon> taxonInput = new Input<Taxon>("taxon", "a name of the taxon for which to calculate the prior probability of" +
+            "being sampled ancestor under the model", (Taxon) null);
+
+    public final Input<IntegerParameter> SATaxonInput = new Input<IntegerParameter>("SAtaxon", "A binary parameter which is equal to zero " +
+            "if the taxon is not a sampled ancestor (that is, it does not have sampled descendants) and to one " +
+            "if it is a sampled ancestor (that is, it has sampled descendants)", (IntegerParameter)null);
 
     protected double[] p0, p0hat;
     protected double[] Ai, Aihat;
     protected double[] Bi, Bihat;
     protected int[] N;   // number of leaves sampled at each time t_i
+    protected String taxonName;
+    protected double taxonAge;
 
     // these four arrays are totalIntervals in length
     protected Double[] birth;
@@ -377,6 +387,25 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         		}
         	}
         }
+
+        if (taxonInput.get() != null) {
+            if (SATaxonInput == null) {
+                throw new IllegalArgumentException("If the taxon input is specified SAInput also has to be specified");
+            }
+            if (conditionOnRootInput.get()) {
+                throw new RuntimeException("Calculate the prior probability of a taxon is not implemented under the model" +
+                        "with conditionOnTheRoot option!");
+            }
+            taxonName = taxonInput.get().getID();
+            TreeInterface tree = treeInput.get();
+            taxonAge = 0.0;
+            for (int i=0; i<tree.getLeafNodeCount(); i++) {
+                Node node=tree.getNode(i);
+                if (taxonName.equals(node.getID())) {
+                    taxonAge = node.getHeight();
+                }
+            }
+        }
     }
 
     private List<Operator> getOperators(BEASTInterface o) {
@@ -493,13 +522,14 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         for (int i = 0; i < tipCount; i++) {
             dates[i] = tree.getNode(i).getHeight();
         }
-
+        double maxdate = tree.getRoot().getHeight();
+        
         for (int k = 0; k < totalIntervals; k++) {
 
 
             for (int i = 0; i < tipCount; i++) {
 
-                if (Math.abs((times[totalIntervals - 1] - times[k]) - dates[i]) < 1e-10) {
+                if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-10) {
                     if (rho[k] == 0 && psi[k] == 0) {
                         return Double.NEGATIVE_INFINITY;
                     }
@@ -645,7 +675,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     /*    calculate and store Ai, Bi and p0        */
     public Double preCalculation(TreeInterface tree) {
 
-        if (origin.get() != null && (!originIsRootEdge.get() && tree.getRoot().getHeight() >= origin.get().getValue())) {
+        if (origin.get() != null && (!originIsRootEdge.get() && tree.getRoot().getHeight() >= origin.get().getValue()) &&  taxonInput.get() == null ) {
             return Double.NEGATIVE_INFINITY;
         }
 
@@ -949,7 +979,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         logP = 0.;
 
-
         int nTips = tree.getLeafNodeCount();
 
         if (preCalculation(tree) < 0) {
@@ -997,6 +1026,21 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         logP = temp;
         if (Double.isInfinite(logP))
             return logP;
+
+        if (taxonInput.get() != null) {
+            if (taxonAge > origin.get().getValue()) {
+                return Double.NEGATIVE_INFINITY;
+            }
+            double x = times[totalIntervals - 1] - taxonAge;
+            index = index(x);
+            if (SATaxonInput.get().getValue() == 0) {
+                logP += Math.log(p0(index, times[index], x));
+            } else {
+                logP += Math.log(1-p0(index, times[index], x));
+            }
+
+            return logP;
+        }
 
         if (printTempResults) System.out.println("first factor for origin = " + temp);
 
