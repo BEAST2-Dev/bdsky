@@ -346,46 +346,46 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         // sanity check for sampled ancestor analysis
         // make sure that operators are valid for such an analysis
-    	boolean isSAAnalysis = false;
-    	if (removalProbability.get() != null && removalProbability.get().getValue() >= 1.0 && removalProbability.get().isEstimatedInput.get()) {
-    		// default parameters have estimated=true by default.
-    		// check there is an operator on this parameter
-    		for (BEASTInterface o : removalProbability.get().getOutputs()) {
-    			if (o instanceof Operator) {
-    				isSAAnalysis = true;
-    			}
-    		}
-    	}
+        boolean isSAAnalysis = false;
+        if (removalProbability.get() != null && removalProbability.get().getValue() >= 1.0 && removalProbability.get().isEstimatedInput.get()) {
+            // default parameters have estimated=true by default.
+            // check there is an operator on this parameter
+            for (BEASTInterface o : removalProbability.get().getOutputs()) {
+                if (o instanceof Operator) {
+                    isSAAnalysis = true;
+                }
+            }
+        }
         if (removalProbability.get() != null && removalProbability.get().getValue() < 1.0 || isSAAnalysis) {
-        	// this is a sampled ancestor analysis
-        	// check that there are no invalid operators in this analysis
-        	List<Operator> operators = getOperators(this);
-        	if (operators != null) {
-        		for (Operator op : operators) {
-        			boolean isOK = true;
-        			if (op.getClass().isAssignableFrom(TipDatesRandomWalker.class) || 
-        					op.getClass().isAssignableFrom(SubtreeSlide.class) || 
-        					op.getClass().isAssignableFrom(WilsonBalding.class) || 
-        					op.getClass().isAssignableFrom(Uniform.class) || 
-        					op.getClass().isAssignableFrom(Exchange.class)) {
-        				isOK = false;
-        			} else if (op.getClass().isAssignableFrom(ScaleOperator.class)) {
-        				// scale operators on Trees shouldbe replaced with SAScaleOperator
-        				for (StateNode o : op.listStateNodes()) {
-        					if (o instanceof Tree) {
-        						isOK = false;
-        					}
-        				}
-        			}        		 	
-        			if (!isOK) {
-        				Log.err.println("ERROR: " + op.getClass().getSimpleName() + 
-        						" is not a valid operator for a sampled ancestor analysis.\n" + 
-        						"Either remove the operator (id=" + op.getID() + ") or fix the " +
-        					    "removal probability to 1.0 so this is not a sampled ancestor " +
-        					    "analysis any more. The current analysis is not valid.");
-        			}
-        		}
-        	}
+            // this is a sampled ancestor analysis
+            // check that there are no invalid operators in this analysis
+            List<Operator> operators = getOperators(this);
+            if (operators != null) {
+                for (Operator op : operators) {
+                    boolean isOK = true;
+                    if (op.getClass().isAssignableFrom(TipDatesRandomWalker.class) ||
+                            op.getClass().isAssignableFrom(SubtreeSlide.class) ||
+                            op.getClass().isAssignableFrom(WilsonBalding.class) ||
+                            op.getClass().isAssignableFrom(Uniform.class) ||
+                            op.getClass().isAssignableFrom(Exchange.class)) {
+                        isOK = false;
+                    } else if (op.getClass().isAssignableFrom(ScaleOperator.class)) {
+                        // scale operators on Trees shouldbe replaced with SAScaleOperator
+                        for (StateNode o : op.listStateNodes()) {
+                            if (o instanceof Tree) {
+                                isOK = false;
+                            }
+                        }
+                    }
+                    if (!isOK) {
+                        Log.err.println("ERROR: " + op.getClass().getSimpleName() +
+                                " is not a valid operator for a sampled ancestor analysis.\n" +
+                                "Either remove the operator (id=" + op.getID() + ") or fix the " +
+                                "removal probability to 1.0 so this is not a sampled ancestor " +
+                                "analysis any more. The current analysis is not valid.");
+                    }
+                }
+            }
         }
 
         if (taxonInput.get() != null) {
@@ -409,18 +409,18 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     }
 
     private List<Operator> getOperators(BEASTInterface o) {
-    	for (BEASTInterface out : o.getOutputs()) {		
-    		if (out instanceof MCMC) {
-    			return ((MCMC)out).operatorsInput.get();
-    		} else {
-    			List<Operator> list = getOperators(out);
-    			if (list != null) {
-    				return list;
-    			}
-    		}
-    	}
-		return null;
-	}
+        for (BEASTInterface out : o.getOutputs()) {
+            if (out instanceof MCMC) {
+                return ((MCMC)out).operatorsInput.get();
+            } else {
+                List<Operator> list = getOperators(out);
+                if (list != null) {
+                    return list;
+                }
+            }
+        }
+        return null;
+    }
 
     /**
      * checks if r is zero, all elements of rho except the last one are
@@ -523,7 +523,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             dates[i] = tree.getNode(i).getHeight();
         }
         double maxdate = tree.getRoot().getHeight();
-        
+
         for (int k = 0; k < totalIntervals; k++) {
 
 
@@ -569,6 +569,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         getChangeTimes(rhoSamplingChangeTimes,
                 rhoSamplingTimes.get()!=null ? rhoSamplingTimes.get() : intervalTimes.get(),
                 rhoChanges, false, reverseTimeArrays[3]);
+        if (rhoSamplingTimes.get()!=null && rhoSamplingChangeTimes.size() > rhoSamplingTimes.get().getDimension()) rhoSamplingChangeTimes.remove(rhoSamplingChangeTimes.size()-1);
 
         if (SAModel) getChangeTimes(rChangeTimes,
                 removalProbabilityChangeTimesInput.get() != null ? removalProbabilityChangeTimesInput.get() : intervalTimes.get(),
@@ -662,9 +663,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             for (int i = 0; i < totalIntervals; i++) {
 
                 rho[i]= //rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.;
-                        rhoChanges>0?
-                                rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
-                                : rhos[0];
+//                        rhoChanges>0?
+                        rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
+//                                : rhos[0]
+                ;
             }
         }
 
@@ -726,7 +728,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         }
 
         Bi[totalIntervals - 1] = Bi(
-        birth[totalIntervals - 1],
+                birth[totalIntervals - 1],
                 death[totalIntervals - 1],
                 psi[totalIntervals - 1],
                 rho[totalIntervals - 1],
