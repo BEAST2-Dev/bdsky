@@ -17,10 +17,12 @@ public class MultiSkyline extends CalculationNode implements Skyline {
     public Input<List<SimpleSkyline>> skylineInput = new Input<>("skyline", "the simple skylines making up this multiple skyline", new ArrayList<>());
 
     public MultiSkyline(SimpleSkyline... skyline) {
-        try {
-            initByName("skyline", Arrays.asList(skyline));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (skyline.length > 0) {
+            try {
+                initByName("skyline", Arrays.asList(skyline));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

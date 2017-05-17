@@ -1,9 +1,5 @@
 package bdsky;
 
-import bdsky.BDSSkylineSegment;
-import bdsky.MultiSkyline;
-import bdsky.Skyline;
-import bdsky.SkylineSegment;
 import beast.core.CalculationNode;
 import beast.core.Input;
 import beast.core.parameter.RealParameter;
