@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * A multivariate skyline interface
+ *
+ * @author Alexei Drummond
  */
 public interface Skyline {
 
@@ -39,7 +41,7 @@ public interface Skyline {
     }
 
     /**
-     * @return the start times of the segments in index order.
+     * @return the absolute start times of the segments in index order.
      */
     default Double[] getTimes() {
 

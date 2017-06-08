@@ -24,6 +24,8 @@ public class R0Parameterization extends BDSParameterization {
     @Override
     public void initAndValidate() {
 
+        // Need to add defaults, not all inputs are required
+
         MultiSkyline multiSkyline = new MultiSkyline(
                 R0.get(),
                 becomeUninfectiousRate.get(),

@@ -116,7 +116,7 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
     Boolean deathRateTimesRelative = false;
     Boolean samplingRateTimesRelative = false;
     Boolean rTimesRelative = false;
-    Boolean[] reverseTimeArrays;
+    //Boolean[] reverseTimeArrays;
 
     public boolean SAModel;
 
@@ -242,8 +242,7 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
     /**
      * @return a list of intervals
      */
-    public void getChangeTimes(List<Double> changeTimes, RealParameter intervalTimes, int numChanges, boolean relative,
-                               boolean reverse) {
+    public void getChangeTimes(List<Double> changeTimes, RealParameter intervalTimes, int numChanges, boolean relative, boolean reverse) {
         changeTimes.clear();
 
         if (printTempResults) System.out.println("relative = " + relative);
@@ -338,7 +337,7 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
             timesSet.add(seg.start());
         }
 
-        getChangeTimes(rhoSamplingChangeTimes, rhoSamplingTimes.get(), rhoChanges, false, reverseTimeArrays[3]);
+        getChangeTimes(rhoSamplingChangeTimes, rhoSamplingTimes.get(), rhoChanges, false, false);
 
         if (printTempResults) System.out.println("times = " + timesSet);
 
@@ -354,6 +353,13 @@ public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution
         collectTimes();
 
         t_root = tree.getRoot().getHeight();
+
+        int size = ((BDSParameterization)parameterizationInput.get()).size();
+
+        if (birth == null || birth.length != size) birth = new Double[size];
+        if (death == null || death.length != size) death = new Double[size];
+        if (psi == null || psi.length != size) psi = new Double[size];
+        if (r == null || r.length != size) r = new Double[size];
 
         parameterizationInput.get().populateCanonical(birth, death, psi, r, times);
 //            for (int i = 0; i < totalIntervals; i++) {

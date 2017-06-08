@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 /**
  * A piecewise constant segment of a skyline.
+ *
+ * TODO next and prev are never set or used
+ * (should be set by SimpleSkyline.getSegments() and MultiSkyline.getSegments())
  */
 public class SkylineSegment {
 
