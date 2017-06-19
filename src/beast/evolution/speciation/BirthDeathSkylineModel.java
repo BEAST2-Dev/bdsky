@@ -137,13 +137,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     // these four arrays are totalIntervals in length
     protected Double[] birth;
-    Double[] death;
-    Double[] psi;
-    Double[] rho;
-    Double[] r;
+    protected Double[] death;
+    protected Double[] psi;
+    protected Double[] rho;
+    protected Double[] r;
 
     // true if the node of the given index occurs at the time of a rho-sampling event
-    boolean[] isRhoTip;
+    protected boolean[] isRhoTip;
 
     /**
      * The number of change points in the birth rate
@@ -200,7 +200,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public boolean SAModel;
 
-    enum ConditionOn {NONE, SURVIVAL, RHO_SAMPLING};
+    protected enum ConditionOn {NONE, SURVIVAL, RHO_SAMPLING};
     protected ConditionOn conditionOn=ConditionOn.SURVIVAL;
 
     public Boolean printTempResults;
@@ -409,18 +409,18 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     }
 
     private List<Operator> getOperators(BEASTInterface o) {
-        for (BEASTInterface out : o.getOutputs()) {
-            if (out instanceof MCMC) {
-                return ((MCMC)out).operatorsInput.get();
-            } else {
-                List<Operator> list = getOperators(out);
-                if (list != null) {
-                    return list;
-                }
-            }
-        }
-        return null;
-    }
+    	for (BEASTInterface out : o.getOutputs()) {
+    		if (out instanceof MCMC) {
+    			return ((MCMC)out).operatorsInput.get();
+    		} else {
+    			List<Operator> list = getOperators(out);
+    			if (list != null) {
+    				return list;
+    			}
+    		}
+    	}
+		return null;
+	}
 
     /**
      * checks if r is zero, all elements of rho except the last one are
@@ -509,7 +509,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     * Counts the number of tips at each of the contemporaneous sampling times ("rho" sampling time)
     * @return negative infinity if tips are found at a time when rho is zero, zero otherwise.
     */
-    private double computeN(TreeInterface tree) {
+    protected double computeN(TreeInterface tree) {
 
         isRhoTip = new boolean[tree.getLeafNodeCount()];
 
