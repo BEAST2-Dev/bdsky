@@ -41,21 +41,21 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
         <reverseTimeArrays spec='parameter.BooleanParameter' value='false false false true false'/>
 	</BirthDeathSkylineModel>
 
-	<distribution  id='originPrior.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
+	<distribution  id='originPriorMultiRho.t:$(n)' x="@origin.t:$(n)" spec='beast.math.distributions.Prior'>
 		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>	</distribution>
-	<distribution id="rhoPrior.t:$(n)" spec="beast.math.distributions.Prior" x="@rho.t:$(n)">
+	<distribution id="rhoPriorMultiRho.t:$(n)" spec="beast.math.distributions.Prior" x="@rho.t:$(n)">
 		<distr spec="beast.math.distributions.Beta" offset="0.">
 			<parameter name="alpha" value="1." estimate="false"/> 
 			<parameter name="beta" value="1." estimate="false"/> 
 		</distr>	
 	</distribution>
-	<distribution id="becomeUninfectiousRatePrior.t:$(n)" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate.t:$(n)">
+	<distribution id="becomeUninfectiousRatePriorMultiRho.t:$(n)" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate.t:$(n)">
 		<distr spec='beast.math.distributions.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
 			<parameter name="M" value="0." estimate="false"/> 
 			<parameter name="S" value="1." estimate="false"/> 
 		</distr>	
 	</distribution>
-	<distribution id="reproductiveNumberPrior.t:$(n)" spec="beast.math.distributions.Prior" x="@reproductiveNumber.t:$(n)">
+	<distribution id="reproductiveNumberPriorMultiRho.t:$(n)" spec="beast.math.distributions.Prior" x="@reproductiveNumber.t:$(n)">
 		<distr spec='beast.math.distributions.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
 			<parameter name="M" value="0." estimate="false"/> 
 			<parameter name="S" value="1." estimate="false"/> 
@@ -99,10 +99,10 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='BirthDeathSkyMultiRho.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
             <connect srcID='RandomTree.t:$(n)'                targetID='BirthDeathSkySerial.t:$(n)' inputName='init'   if='inposterior(Tree.t:$(n))'/>
 
-            <connect srcID='originPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and origin.t:$(n)/estimate=true'>prior on origin.t:$(n)</connect>
-            <connect srcID='rhoPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and rho.t:$(n)/estimate=true'>prior on sampling proportion t:$(n)</connect>
-            <connect srcID='becomeUninfectiousRatePrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior on becomeUninfectiousRate.t:$(n)</connect>
-            <connect srcID='reproductiveNumberPrior.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'>prior on reproductiveNumber.t:$(n)</connect>
+            <connect srcID='originPriorMultiRho.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and origin.t:$(n)/estimate=true'>prior on origin.t:$(n)</connect>
+            <connect srcID='rhoPriorMultiRho.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and rho.t:$(n)/estimate=true'>prior on sampling proportion t:$(n)</connect>
+            <connect srcID='becomeUninfectiousRatePriorMultiRho.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior on becomeUninfectiousRate.t:$(n)</connect>
+            <connect srcID='reproductiveNumberPriorMultiRho.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'>prior on reproductiveNumber.t:$(n)</connect>
 
             <connect srcID='BDSKY_contemptreeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
             <connect srcID='BDSKY_contemptreeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyMultiRho.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>

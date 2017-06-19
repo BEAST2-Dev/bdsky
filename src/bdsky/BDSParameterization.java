@@ -1,9 +1,5 @@
 package bdsky;
 
-import bdsky.BDSSkylineSegment;
-import bdsky.MultiSkyline;
-import bdsky.Skyline;
-import bdsky.SkylineSegment;
 import beast.core.CalculationNode;
 import beast.core.Input;
 import beast.core.parameter.RealParameter;
@@ -47,6 +43,7 @@ public abstract class BDSParameterization extends CalculationNode {
 
     public final void populateCanonical(Double[] birth, Double[] death, Double[] psi, Double[] r, Double[] times) {
         int size = size();
+
         if (birth.length != size || death.length != size || psi.length != size || r.length != size) {
             throw new RuntimeException("array size unexpected!");
         }

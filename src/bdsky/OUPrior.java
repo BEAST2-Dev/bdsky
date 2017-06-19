@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
+ * Implementation of the Ornstein-Uhlenbeck probability density for use as a prior on a sequence of (x_i,t_i) pairs.
+ *
  * @author Alexei Drummond.
  */
 public class OUPrior extends Distribution {

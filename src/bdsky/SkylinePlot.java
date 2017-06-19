@@ -4,10 +4,8 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
-import java.util.Random;
 import javax.swing.JFrame;
 
-import beast.core.BEASTObject;
 import beast.core.parameter.RealParameter;
 import info.monitorenter.gui.chart.Chart2D;
 import info.monitorenter.gui.chart.ITrace2D;

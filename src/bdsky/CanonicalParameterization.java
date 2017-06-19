@@ -19,6 +19,8 @@ public class CanonicalParameterization extends BDSParameterization {
     @Override
     public void initAndValidate() {
 
+        // Need to add defaults, not all inputs are required
+
         MultiSkyline multiSkyline = new MultiSkyline(
                 birthRate.get(),
                 deathRate.get(),
