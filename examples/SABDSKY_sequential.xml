@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
+
+
+    <data dataType="nucleotide" id="alignment" name="alignment">
+        <sequence id="seq_seq_00-124388" taxon="00-124388" totalcount="4" value="CCTCAGATCACTCTTTGGCAACGACCCATCGTCACAGTAAAGATAGGGGGGCAGTTAAAAGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAGAAGACATGACTTTGCCAGGAAAATGGAAACCAAAAATAATAGGGGGAATTGGAGGTTTTATCAAAGTAAGACAGTATGATCAGATACCTGTAGAAATCTGTGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAACTTGGTTGCACTTTAAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAACAATGGCCATTGACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAAATGGAGAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAGTATTTGCTATAAAGAAGAAAAACAGTGATAGATGGAGAAAATTAGTAGATTTCAGGGAACTTAATAAGAGAACTCAAGACTTCTGGGAAGTTCAATTAGGGATACCACATCCCGCAGGGTTAAAAAAGAAAAAATCAGTAACAGTACTGGATGTGGGTGATGCATATTTTTCAATTCCCTTAGATGAAGACTTCAGGAAGTATACTGCATTTACCATCCCTAGTACAAACAATGAGACACCAGGGATTAGATATCAGTACAATGTGCTTCCACAGGGATGGAAAGGATCACCAGCAATATTCCAAAGTAGCATGACAAAAATCTTAGAGCCTTTTAGAAAACAAAATCCAGACATAGTTATCTGTCAATACATGGATGATTTGTATGTAGCATCTGACTTAGAAATAGGGCAGCATAGAACAAAAATAGAGGAACTGAGACAATATCTGCTGAAGTGGGGACTTTTCACACCAGACC"/>
+        <sequence id="seq_seq_00-101559" taxon="00-101559" totalcount="4" value="CCTCAGATCACTCTTTGGCAACGACCCCTCGTCACAATAAAGATAGGGGGGCAGCTAAAGGAAGCTCTATTAGATACAGGAGCAGATGACACAGTATTAGAAGAAATGAATTTGCCAGGAAGGTGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATCAAAGTAAGACAGTATGATCAGATACCAATAGAAATCTGTGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAAATTGGTTGCACTTTGAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAACAATGGCCATTGACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAAATGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAGTATTTGCTATAAAGAAAAAAGATAGTACTAAATGGAGAAAATTAGTAGATTTCAGAGAACTTAATAAGAGAACTCAAGACTTCTGGGAAGTGCAATTAGGAATACCACATCCCGCAGGGTTAAAACAGAAAAAATCAGTAACAGTACTGGATGTGGGTGATGCATATTTTTCGGTTCCCTTAGATAAAGAATTCAGAAAGTATACTGCATTTACCATACCTAGTATAAACAATGAGACACCAGGAGTTAGATATCAATACAATGTGCTTCCACAGGGATGGAAAGGATCACCAGCAATATTCCAAGCTAGCATGACCAAAATCTTAGATCCTTTTAGAAAACAAAATCCAGACATAGTTATCTATCAATACATGGATGATTTATATGTAGGATCTGATTTAGAGATAGGACAGCATAGAACAAAGATAGAGGAACTGAGACAGCATCTGTTAAACTGGGGATTTACCACACCAGACA"/>
+        <sequence id="seq_seq_00-121645" taxon="00-121645" totalcount="4" value="CCTCAAATCACTCTTTGGCAACGACCCCTCGTCTCAATAAAGGTAGAGGGGCAACTAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAGAAGACATGACTCTGCCAGGAAGATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATCAAAGTAAAACAGTATGATCAAATACAAGTAGAAATCTGTGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGATTGGTTGCACTTTAAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAACAATGGCCATTAACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAGATGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAGTATTTGCCATAAAGAAGAAAGATAGTACTAAATGGAGAAAATTAGTAGATTTCAGAGAACTTAATAAGAGGACTCAAGACTTCTGGGAAGTACAATTAGGAATACCACATCCCGCGGGGTTAAAAAAGAACAAATCAGTAACAGTACTGGATGTGGGCGATGCATATTTTTCAGTTCCCTTAGATAAAGATTTCAGAAAGTTTACTGCATTTACCATACCTAGTACAAACAATGAGACACCAGGGATTAGATATCAGTACAATGTGCTCCCACAGGGATGGAAAGGATCACCAGCAATATTTCAAAGTAGCATGACCAAAATCTTAGAGCCTTTTAGAAGACAAAATCCAGATATAGTTATCTATCAATACGTGGATGATTTGTATGTAGGATCTGACTTAGAAATAGGGCAGCATAGAACAAAAATAGAGGAACTGAGACAGCATCTGTTGAAATGGGGGTTTACCACACCAGACA"/>
+        <sequence id="seq_seq_02-104730" taxon="02-104730" totalcount="4" value="CCTCAGATCACTCTTTGGCAACGACCCCTCGTCACAATAAAGATAGGAGGGCAGCTAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAGAAGAAATGACTTTGCCAGGAAAATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATCAAAGTAAGACAATATGATCAGATACCCATAGAAATCTGTGGACATAAAGCTATAGGTACAGTGTTAATAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGATTGGTTGCACTTTAAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAACAATGGCCATTGACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAAATGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAGTATTTGCCATAAAGAAAAAAGATAGTAATAAATGGAGAAAATTAGTAGATTTCAGGGAACTTAATAAGAAGACTCAAGACTTCTGGGAAGTTCAATTAGGAATACCACATCCCGCAGGGTTAAAAAAGAAAAAGTCAGTAACAGTACTAGATGTGGGCGATGCATATTTTTCAGTTCCCTTAGATAAAGACTTCAGGAAGTATACTGCATTTACCATACCTAGTATAAACAATGAGACACCAGGGATAAGATATCAGTACAATGTGCTTCCACAGGGATGGAAAGGATCACCAGCAATATTCCAATGTAGCATGACCAAAATCTTAGATCCTTTTAGAAAACAAAATCCAAACATAGTTATCTATCAATACATGGATGATTTATATGTAGGATCTGACTTAGAAATAGAGCAGCATAGAACAAAAGTAGAGGAACTGAGACAGCATCTGTTAAAATGGGGATTTACCACACCAGACA"/>
+        <sequence id="seq_seq_03-105365" taxon="03-105365" totalcount="4" value="CCTCAAATCACTCTTTGGCAACGACCCCTCGTCTCAATAAAGGTAGAGGGGCAACTAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAGAAGACATGAATTTGCCAGGAAGATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATCAAAGTAAAACAGTATGATCAAATACAAGTAGAAATCTGTGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGATTGGTTGCACTTTAAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAACAATGGCCATTAACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAGTTGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAGTATTTGCCATAAAGAAGAAAAATAGTACTAAATGGAGAAAATTAGTAGATTTCAGAGAACTTAATAAGAGGACTCAAGACTTCTGGGAAGTACAATTAGGAATACCACATCCCGCAGGGTTAAAAAAGAAAAAATCAGTAACAGTACTGGATGTGGGCGATGCATATTTTTCAGTTCCCTTAGATAAAGATTTCAGGAAGTATACTGCATTTACCATACCTAGTACAAACAATGAGACACCAGGGATTAGATATCAGTACAATGTGCTCCCACAGGGATGGAAAGGATCACCAGCAATATTCCAAAGTAGCATGACCAAAATCTTAGAGCCTTTTAGAAGACAAAATCCAGATATAGTTATCTATCAATACGTGGATGATTTGTATGTAGCATCTGACTTAGAAATAGGACAGCATAGAACAAAAATAGAGGAACTGAGACAACATCTGTGGAAATGGGGGTTTTACACACCAGACA"/>
+        <sequence id="seq_seq_03117546br" taxon="03117546br" totalcount="4" value="CCTCAAATCACTCTTTGGCAACGACCCCTTGTCACAATAAAGATAGGGGGGCAGCTAAAGGAAGCTCTATTAGATACAGGAGCAGATGATACAGTATTAGAAGAAATGAATTTGCCAGGAAGATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATCAAAGTAAGACAGTATGATCAGGTATCCATAGAAATCTGTGGACATAAAGCTATAGGTACAGTGTTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGCTTGGTTGCACTTTAAACTTTCCTATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAACAATGGCCATTGACAGAAGAAAAAATAAAGGCATTAGTAGAAATTTGTACAGAAATGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAACCCATACAATACCCCAGTATTTGCCATAAAGAAAAAAGACAGTACTAAATGGAGAAAATTAGTAGATTTCAGAGAACTTAATAAGAGAACTCAAGACTTCTGGGAAGTTCAATTAGGAATACCACATCCCTCAGGGTTAAAAAAGAAAAAATCAGTAACAGTACTGGATGTGGGTGATGCATACTTTTCAGTTCCCTTAGATAAAGAATTTAGGAAGTATACTGCATTTACCATACCTAGTATAAACAATGAGACACCAGGGATTAGATATCAGTACAATGTGCTTCCACAGGGATGGAAAGGATCACCAGCAATCTTCCAAAGTAGCATGACAAAAATCTTAGAGCCTTTTAGAAAACAGAATCCAGACGTAGTTATCTATCAATACATGGATGATTTGTATGTAGGATCTGACTTAGAAATAGGACAGCATAGAACAAAAATAGAAGAATTAAGACAACATCTGTTAAGGTGGGGATTTACCACACCAGACA"/>
+        <sequence id="seq_seq_00103979br" taxon="00103979br" totalcount="4" value="CCTCAAATCACTCTTTGGCAACGACCCGTTGTCACAATAAAGGTAGGAGGGCAGCTAAAGGAAGCTCTATTAGATACAGGAGCAGATGACACAGTATTAGAAGAAATGAATTTGCCAGGTAGATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATTAAAGTGAAACAGTATGATCAGATACTCATAGAAATCTGTGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGCTTGGTTGCACCTTAAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAGCAATGGCCATTGACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAAATGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAATATTTGCCATAAAGAAAAAAGACAGTACTAAATGGAGAAAATTAGTAGATTTCAGAGAACTTAATAAGAGAACACAAGACTTCTGGGAAGTTCAATTAGGAATACCACATCCTGCAGGTTTAAAAAAGAAAAAATCAGTAACAGTACTGGATGTGGGTGATGCATATTTTTCAGTTCCCTTAGATAAAGAATTCAGGAAGTATACTGCATTCACCATACCTAGTACAAACAATGAGACACCAGGGGTTAGATATCAGTACAATGTGCTTCCACAGGGATGGAAAGGATCACCAGCAATATTTCAATGTAGCATGACAAAAATCTTAGAGCCCTTTAGAAAACAAAATCCAGACATAGTTATCTATCAATACATGGATGATTTATATGTAGGATCTGACTTAGAAATAGGACAGCATAGAACAAAGATAGAGGAACTGAGAAAGCATCTATTAAGGTGGGGATTTACCACACCAGACA"/>
+        <sequence id="seq_seq_00-117505" taxon="00-117505" totalcount="4" value="CCTCAAATCACTCTTTGGCAACGACCCGTTGTCACAATAAAGGTAGGAGGGCAGCTAAAGGAAGCTCTATTAGATACAGGAGCAGATGACACAGTATTAGAAGAAATGAATTTGCCAGGTAGATGGAAACCAAAAATGATAGGGGGAATTGGAGGTTTTATTAAAGTGAAACAGTATGATCAGATACTCATAGAAATCTGTGGACATAAAGCTATAGGTACAGTATTAGTAGGACCTACACCTGTCAACATAATTGGAAGAAATCTGTTGACTCAGCTTGGTTGCACCTTAAATTTTCCCATTAGTCCTATTGAAACTGTACCAGTAAAATTAAAGCCAGGAATGGATGGCCCAAAAGTTAAGCAATGGCCATTGACAGAAGAAAAAATAAAAGCATTAGTAGAAATTTGTACAGAAATGGAAAAGGAAGGGAAAATTTCAAAAATTGGGCCTGAAAATCCATACAATACTCCAATATTTGCCATAAAGAAAAAAGACAGTACTAAATGGAGAAAATTAGTAGATTTCAGAGAACTTAATAAGAGAACACAAGACTTCTGGGAAGTTCAATTAGGAATACCACATCCTGCAGGTTTAAAAAAGAAAAAATCAGTAACAGTACTGGATGTGGGTGATGCATATTTTTCAGTTCCCTTAGATAAAGAATTCAGGAAGTATACTGCATTCACCATACCTAGTACAAACAATGAGACACCAGGGGTTAGATATCAGTACAATGTGCTTCCACAGGGATGGAAAGGATCACCAGCAATATTTCAATGTAGCATGACAAAAATCTTAGAGCCCTTTAGAAAACAAAATCCAGACATAGTTATCTATCAATACATGGATGATTTATATGTAGGATCTGACTTAGAAATAGGACAGCATAGAACAAAGATAGAGGAACTGAGAAAGCATCTATTAAGGTGGGGATTTACCACACCAGACA"/>
+    </data>
+
+    <tree id="Tree">
+        <trait id="tipDates" spec='beast.evolution.tree.TraitSet' traitname='date-forward' units='year' value='
+        00-124388 = 1999.9589,
+		00-101559 = 2000.0548,
+		00103979br = 2000.1425,
+		00-117505 = 2000.6438,
+		00-121645 = 2000.8,
+		02-104730 = 2002.1041,
+		03-105365 = 2003.1342,
+		03117546br = 2003.5'>
+            <taxa id="TaxonSet" spec='beast.evolution.alignment.TaxonSet' alignment='@alignment'/>
+        </trait>
+        <taxonset idref="TaxonSet"/>
+    </tree>        
+
+    
+    <init id="RandomTree" spec="beast.evolution.tree.RandomTree" estimate="false" initial="@Tree" taxa="@alignment">
+        <populationModel id="ConstantPopulation0" spec="ConstantPopulation">
+            <parameter id="randomPopSize." name="popSize">0.1</parameter>
+        </populationModel>
+    </init>
+
+    <BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@Tree">
+        <parameter name="origin" id="origin" value ="100" lower="0."/>
+        <parameter name="reproductiveNumber" id="reproductiveNumber" value="2" lower="0." dimension ="1"/>
+        <parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate" value="0.4" lower="0." dimension ="1"/>
+        <parameter name="samplingProportion" id="samplingProportion" value="0. 0.4" lower="0." upper="1." dimension ="2"/>
+        <parameter name="removalProbability" id="removalProbability" value="0.5" lower="0." upper="1." dimension ="1"/>
+        <!-- no sampling before 1999.9: -->
+        <parameter name="samplingRateChangeTimes" id="samplingRateChangeTimes" value="33.6 0."/>
+        <reverseTimeArrays spec="BooleanParameter" id="reverseTimeArrays" value="false false true false false"/>
+    </BirthDeathSkylineModel>
+
+
+    <siteModel gammaCategoryCount="4" id="SiteModel" spec="SiteModel">
+        <parameter dimension="1"  id="mutationRate" name="mutationRate" value="1.0"/>
+        <parameter dimension="1" id="gammaShape" name="shape" value="0.5" lower="0.0" upper="1000.0"/>
+        <substModel id="gtr" rateAC="@rateAC" rateGT="@rateGT" rateAT="@rateAT" rateCG="@rateCG" rateCT="@rateCT" spec="GTR">
+            <parameter dimension="1"  id="rateAG" lower="0.0" name="rateAG" value="1.0"/>
+            <frequencies estimate="true" id="freqs" spec="Frequencies">
+                <parameter name='frequencies' id='freqParameter' value='0.25' dimension='4' lower="0." upper="1."/>
+            </frequencies>
+        </substModel>
+    </siteModel>
+    <branchRateModel id="StrictClock" spec="beast.evolution.branchratemodel.StrictClockModel">
+        <parameter dimension="1" id="clock.rate" name="clock.rate" value="2.48e-3" lower="0." upper="1."/>
+    </branchRateModel>
+
+    <!-- likelihood and priors: -->
+    <distribution id="posterior" spec="util.CompoundDistribution">
+        <distribution id="prior" spec="util.CompoundDistribution">
+            <distribution id="hky.frequencies.prior" spec="beast.math.distributions.Prior" x="@freqParameter">
+                <distr id="Uniform " lower="0.0" upper="1.0" spec="beast.math.distributions.Uniform" />
+            </distribution>
+            <distribution id="reproductiveNumber_prior" spec="beast.math.distributions.Prior" x="@reproductiveNumber">
+                <distr spec="beast.math.distributions.LogNormalDistributionModel" M="0.5" S="1." offset="0."/>
+            </distribution>
+            <distribution id="becomeUninf_prior" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate">
+                <distr spec="beast.math.distributions.LogNormalDistributionModel" M="-1." S="1." offset="0."/>
+            </distribution>
+            <distribution id="samplingProportion_prior" spec="beast.math.distributions.Prior" x="@samplingProportion">
+                <distr spec="beast.math.distributions.Uniform" lower="0." upper="1." offset="0."/>
+            </distribution>
+            <distribution id="removalProbability_prior" spec="beast.math.distributions.Prior" x="@removalProbability">
+                <distr spec="beast.math.distributions.Beta" alpha="5.0" beta="2.0"/>
+            </distribution>
+            <distribution  id='origin_Prior' x="@origin" spec='beast.math.distributions.Prior'>
+                <distr spec="beast.math.distributions.LogNormalDistributionModel" M="30.0" S="0.5" meanInRealSpace="true" offset="0."/>
+            </distribution>
+            <distribution id="BDlikelihood" spec="util.CompoundDistribution">
+                <distribution idref="birthDeath"/>
+            </distribution>
+        </distribution>
+        <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">
+            <distribution data="@alignment" id="treeLikelihood" spec="TreeLikelihood" tree="@Tree" siteModel="@SiteModel" branchRateModel="@StrictClock"/>
+        </distribution>
+    </distribution>
+
+    <run chainLength="5000000" id="mcmc" spec="MCMC" storeEvery="1000" distribution="@posterior">
+
+        <state id="state" storeEvery="100000">
+            <stateNode idref="Tree"/>
+            <stateNode idref="origin"/>
+            <stateNode idref="reproductiveNumber"/>
+            <stateNode idref="becomeUninfectiousRate"/>
+            <stateNode idref="samplingProportion"/>
+            <stateNode idref="removalProbability"/>
+
+            <stateNode idref="clock.rate"/>
+            <stateNode idref="freqParameter"/>
+            <stateNode idref="gammaShape"/>
+            <parameter dimension="1"  id="rateAC" lower="0.0" upper="100.0" name="stateNode" value="1.0"/>
+            <parameter dimension="1"  id="rateGT" lower="0.0" upper="100.0" name="stateNode" value="1.0"/>
+            <parameter dimension="1"  id="rateAT" lower="0.0" upper="100.0" name="stateNode" value="1.0"/>
+            <parameter dimension="1"  id="rateCG" lower="0.0" upper="100.0" name="stateNode" value="1.0"/>
+            <parameter dimension="1"  id="rateCT" lower="0.0" upper="100.0" name="stateNode" value="1.0"/>
+        </state>
+
+        <operator id='becomeUninfectiousRate_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@becomeUninfectiousRate"/>
+        <operator id='sampling_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@samplingProportion"/>
+        <operator id='reproductiveNumber_scaler' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber"/>
+
+        <operator id="updown" spec="UpDownOperator" scaleFactor=".75" weight="10">
+            <up idref="reproductiveNumber"/>
+            <down idref="becomeUninfectiousRate"/>
+        </operator>
+
+        <operator id='orig_scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin"/>
+
+        <operator id="tree_updown" spec="UpDownOperator" scaleFactor=".75" weight="10">
+            <up idref="Tree"/>
+            <down idref="clock.rate"/>
+        </operator>
+        
+        <operator id='clock.rate_Scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@clock.rate" />
+        <operator id='removalProbabilityOperator' spec='ScaleOperator' scaleFactor=".9" weight="1" parameter="@removalProbability"/>
+
+        <operator id="LeafToSA" spec="LeafToSampledAncestorJump" tree="@Tree" weight="10.0"/>
+        <operator id="SAWilsonBalding" spec="SAWilsonBalding" tree="@Tree" weight="10.0"/>
+        <operator id="SAWide" spec="SAExchange" isNarrow="false" tree="@Tree" weight="10.0"/>
+        <operator id="SANarrow" spec="SAExchange" tree="@Tree" weight="10.0"/>
+        <operator id="SAUniformOperator" spec="SAUniform" tree="@Tree" weight="10.0"/>
+        <operator id="SATreeRootScaler" spec="SAScaleOperator" rootOnly="true" scaleFactor="0.95" tree="@Tree" weight="1.0"/>
+        <operator id="SATreeScaler" spec="SAScaleOperator" scaleFactor="0.95" tree="@Tree" weight="3.0"/>
+
+        <operator spec='ScaleOperator' scaleFactor=".75" weight=".2" parameter="@rateAC"/>
+        <operator spec='ScaleOperator' scaleFactor=".75" weight=".2" parameter="@rateAT"/>
+        <operator spec='ScaleOperator' scaleFactor=".75" weight=".2" parameter="@rateCG"/>
+        <operator spec='ScaleOperator' scaleFactor=".75" weight=".2" parameter="@rateCT"/>
+        <operator spec='ScaleOperator' scaleFactor=".75" weight=".2" parameter="@rateGT"/>
+        <operator id='gammaShapeScaler' spec='ScaleOperator' scaleFactor=".75" weight=".3" parameter="@gammaShape"/>
+        <operator autoOptimize="true" delta="0.2" id="FrequenciesExchanger" integer="false" spec="DeltaExchangeOperator" weight="1" parameter="@freqParameter"/>
+
+
+        <logger fileName="SABDSKY_sequential.log" id="tracelog" logEvery="1000" mode="autodetect" model="@posterior">
+            <distribution idref="posterior" name="log"/>
+            <log idref="BDlikelihood"/>
+            <log idref="jointTreeLikelihood"/>
+            <log id="treeHeight" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree"/>
+            <log id="SACount" spec="beast.evolution.tree.SampledAncestorLogger" tree="@Tree"/>
+            <log idref="origin"/>
+            <log idref="reproductiveNumber"/>
+            <log idref="becomeUninfectiousRate"/>
+            <log idref="samplingProportion"/>
+            <log idref="removalProbability"/>
+
+            <log idref="gammaShape"/>
+            <log idref="freqParameter"/>
+            <log idref="rateAC"/>
+            <log idref="rateAG"/>
+            <log idref="rateAT"/>
+            <log idref="rateCG"/>
+            <log idref="rateCT"/>
+            <log idref="rateGT"/>
+        </logger>
+
+        <logger id="screenlog" logEvery="10000" mode="autodetect">
+            <distribution idref="posterior" name="log"/>
+            <log arg="@posterior" id="ESS.0" spec="util.ESS"/>
+            <log idref="BDlikelihood"/>
+            <log idref="jointTreeLikelihood"/>
+        </logger>
+
+        <logger fileName="SABDSKY_sequential.trees" id="treelog" logEvery="1000" mode="tree">
+            <log spec='beast.evolution.tree.TreeWithMetaDataLogger' tree='@Tree'>
+                <metadata idref="posterior"/>
+                <branchratemodel idref="StrictClock"/>
+            </log>
+        </logger>
+    </run>
+
+</beast>
