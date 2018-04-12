@@ -8,9 +8,9 @@
 	</description>
 
 	<!-- set global properties for this build -->
-	<property name="srcBDSSM" location="src" />
-	<property name="buildBDSSM" location="build" />
-	<property name="libBDSSM" location="lib" />
+	<property name="srcBDSSM" location="../bdsky/src" />
+	<property name="buildBDSSM" location="../bdsky/build" />
+	<property name="libBDSSM" location="../bdsky/lib" />
 	<property name="release_dir" value="release" />
 	<property name="distBDSSM" location="${buildBDSSM}/dist" />
 	<property name="beast2path" location="../beast2" />
@@ -31,7 +31,10 @@
 		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
 		<fileset dir="${libBeast2}" includes="fest.jar"/>
 		<fileset dir="${libBeast2}" includes="jam.jar"/>
-		<fileset dir="${libBeast2}" includes="antlr-runtime-4.5.jar"/>
+		<fileset dir="${libBeast2}" includes="colt.jar"/>
+		<fileset dir="${libBeast2}" includes="beagle.jar"/>
+		<fileset dir="${libBeast2}" includes="antlr-runtime-4.7.jar"/>
+		<fileset dir="${libBDSSM}" includes="jchart2d-3.2.2.jar"/>
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastlabsclasspath}"/>
         <!--pathelement path="${beastclassicclasspath}"/-->
@@ -84,6 +87,7 @@
 			<include name="beast/**/**" />
 			<!-- compile JUnit test classes -->
 			<include name="test/beast/**" />
+			<include name="test/bdsky/**" />
 		</javac>
 		<echo message="Successfully compiled." />
 	</target>
