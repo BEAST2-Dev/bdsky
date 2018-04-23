@@ -1,6 +1,6 @@
 # bdsky - Birth Death Serial Skyline Model for BEAST2
 
-[![Build Status](https://travis-ci.org/BEAST2-Dev/bdsky.svg?branch=master)](https://travis-ci.org/BEAST2-Dev/bdsky)
+<!--[![Build Status](https://travis-ci.org/BEAST2-Dev/bdsky.svg?branch=master)](https://travis-ci.org/BEAST2-Dev/bdsky)-->
 
 ## Citation
 
