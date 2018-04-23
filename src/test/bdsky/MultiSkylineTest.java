@@ -2,7 +2,6 @@ package test.bdsky;
 
 import bdsky.MultiSkyline;
 import bdsky.SimpleSkyline;
-import bdsky.SkylineSegment;
 import beast.core.parameter.RealParameter;
 import org.junit.Test;
 
@@ -31,8 +30,8 @@ public class MultiSkylineTest {
         simpleSkylines.add(skyline);
         simpleSkylines.add(skyline2);
 
-        MultiSkyline multiSkyline = new MultiSkyline();
-        multiSkyline.skylineInput.setValue(simpleSkylines,multiSkyline);
+        MultiSkyline multiSkyline = new MultiSkyline(simpleSkylines.toArray(new SimpleSkyline[0]));
+//        multiSkyline.skylineInput.setValue(simpleSkylines,multiSkyline);
         multiSkyline.initAndValidate();
 
         assertEquals(2, multiSkyline.getDimension());
