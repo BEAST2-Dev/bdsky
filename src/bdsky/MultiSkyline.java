@@ -3,10 +3,7 @@ package bdsky;
 import beast.core.CalculationNode;
 import beast.core.Input;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * A multiskyline made up of simple skylines.
@@ -17,10 +14,14 @@ public class MultiSkyline extends CalculationNode implements Skyline {
     public Input<List<SimpleSkyline>> skylineInput = new Input<>("skyline", "the simple skylines making up this multiple skyline", new ArrayList<>());
 
     public MultiSkyline(SimpleSkyline... skyline) {
-        try {
-            initByName("skyline", Arrays.asList(skyline));
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (skyline.length > 0) {
+            try {
+                initByName("skyline", Arrays.asList(skyline));
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new IllegalArgumentException("The multiple skyline cannot be the empty list of simple skylines !");
         }
     }
 

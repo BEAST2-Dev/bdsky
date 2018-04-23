@@ -32,7 +32,7 @@ public class MultiSkylineTest {
 
         MultiSkyline multiSkyline = new MultiSkyline(simpleSkylines.toArray(new SimpleSkyline[0]));
 //        multiSkyline.skylineInput.setValue(simpleSkylines,multiSkyline);
-        multiSkyline.initAndValidate();
+//        multiSkyline.initAndValidate();
 
         assertEquals(2, multiSkyline.getDimension());
 
