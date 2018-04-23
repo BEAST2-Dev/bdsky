@@ -8,4 +8,4 @@ WORKDIR /root
 
 ADD . ./
 
-ENTRYPOINT ant build_all_BDSSM
+ENTRYPOINT ant test
