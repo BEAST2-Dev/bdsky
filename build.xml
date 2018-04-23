@@ -237,6 +237,8 @@
 	<property name="build-lib" location="build-lib"/>
 	<property name="build-test" location="build-test"/>
 	<property name="test-reports" location="test-reports"/>
+	<property name="dist" location="dist"/>
+	<property name="pack" location="${dist}/package"/>
 
 	<!-- Prepare for compilation -->
 	<target name="init">
@@ -376,6 +378,14 @@
 	</target>
 
 
+	<!-- Revert to pristine state. -->
+	<target name="clean">
+		<delete dir="${build}" />
+		<delete dir="${build-lib}" />
+		<delete dir="${dist}" />
+		<delete dir="${build-test}" />
+		<delete dir="${test-reports}" />
+	</target>
 
 
 </project>
