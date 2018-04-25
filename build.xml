@@ -19,6 +19,7 @@
 	<property name="beast2classpath" location="${beast2path}/build" />
     <property name="beastlabsclasspath" location="../BEASTLabs/build" />
     <!--property name="beastclassicclasspath" location="../beast-classic/build" /-->
+	<!--property name="sampledancestorclasspath" location="../sampled-ancestors/build"/-->
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
 
     <import file="${beast2path}/build.xml" />
@@ -38,6 +39,7 @@
         <pathelement path="${beast2classpath}"/>
         <pathelement path="${beastlabsclasspath}"/>
         <!--pathelement path="${beastclassicclasspath}"/-->
+		<!--pathelement path="${sampledancestorclasspath}"/-->
 	</path>
 
 	<!-- start -->
