@@ -10,9 +10,14 @@ import beast.evolution.tree.TreeInterface;
  */
 
 @Description("Extension of the birth-death skyline model to account for diversified sampling of extant taxa.")
-@Citation("Zhang C., Stadler T., Klopfstein S., Heath T.A., Ronquist F. 2016. Total-evidence dating under the fossilized " +
-        "birth-death process. Syst. Biol. 65:228–249.\nSee also: Stadler T., Smrckova J. 2016. Estimating shifts in " +
-        "diversification rates based on higher-level phylogenies. Biol. Lett. 12:20160273.")
+@Citation(value = "Zhang, C., Stadler, T., Klopfstein, S., Heath, T. A., & Ronquist, F. (2015). \n" +
+        "Total-evidence dating under the fossilized birth–death process. \n" +
+        "Systematic biology, 65(2), 228-249.",
+        year = 2015, firstAuthorSurname = "Zhang", DOI="10.1093/sysbio/syv080")
+@Citation(value = "Stadler, T., & Smrckova, J. (2016). \n" +
+        "Estimating shifts in diversification rates based on higher-level phylogenies. \n" +
+        "Biology letters, 12(10), 20160273.",
+        year = 2016, firstAuthorSurname = "Stadler", DOI="10.1098/rsbl.2016.0273")
 public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel {
 
     private double samplingProp;  // extant sampling proportion

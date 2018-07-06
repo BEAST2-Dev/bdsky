@@ -21,11 +21,12 @@ import java.util.*;
  */
 
 @Description("BirthDeathSkylineModel with generalized parameterizations")
-@Citation("Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013):\n Birth-death skyline " +
+@Citation(value = "Stadler, T., Kuehnert, D., Bonhoeffer, S., and Drummond, A. J. (2013):\n Birth-death skyline " +
         "plot reveals temporal changes of\n epidemic spread in HIV and hepatitis C virus (HCV). PNAS 110(1): 228–33.\n" +
         "If sampled ancestors are used then please also cite: Gavryushkina A, Welch D, Stadler T, Drummond AJ (2014) \n" +
         "Bayesian inference of sampled ancestor trees for epidemiology and fossil calibration. \n" +
-        "PLoS Comput Biol 10(12): e1003919. doi:10.1371/journal.pcbi.1003919")
+        "PLoS Comput Biol 10(12): e1003919. doi:10.1371/journal.pcbi.1003919",
+        year = 2013, firstAuthorSurname = "Stadler", DOI="10.1073/pnas.1207965110")
 public class ParameterizedBirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Input<BDSParameterization> parameterizationInput = new Input<>("parameterization", "The parameterization to use.", Input.Validate.REQUIRED);
