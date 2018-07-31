@@ -129,6 +129,7 @@
         <operator id='clock.rate_Scaler' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@clock.rate" />
         <operator id='removalProbabilityOperator' spec='ScaleOperator' scaleFactor=".9" weight="1" parameter="@removalProbability"/>
 
+        <!--these operators are in SA package-->
         <operator id="LeafToSA" spec="LeafToSampledAncestorJump" tree="@Tree" weight="10.0"/>
         <operator id="SAWilsonBalding" spec="SAWilsonBalding" tree="@Tree" weight="10.0"/>
         <operator id="SAWide" spec="SAExchange" isNarrow="false" tree="@Tree" weight="10.0"/>

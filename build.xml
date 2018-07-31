@@ -17,7 +17,7 @@
 	<property name="libBeast2" location="${beast2path}/lib" />
 	<property name="srcBeast2" location="${beast2path}/src" />
 	<property name="beast2classpath" location="${beast2path}/build" />
-    <property name="beastlabsclasspath" location="../BEASTLabs/build" />
+    <!--<property name="beastlabsclasspath" location="../BEASTLabs/build" />-->
     <!--property name="beastclassicclasspath" location="../beast-classic/build" /-->
 	<!--property name="sampledancestorclasspath" location="../sampled-ancestors/build"/-->
 	<property name="Add_on_dir" value="${release_dir}/add-on" />
@@ -37,7 +37,7 @@
 		<fileset dir="${libBeast2}" includes="antlr-runtime-4.7.jar"/>
 		<fileset dir="${libBDSSM}" includes="jchart2d-3.2.2.jar"/>
         <pathelement path="${beast2classpath}"/>
-        <pathelement path="${beastlabsclasspath}"/>
+        <!--<pathelement path="${beastlabsclasspath}"/>-->
         <!--pathelement path="${beastclassicclasspath}"/-->
 		<!--pathelement path="${sampledancestorclasspath}"/-->
 	</path>
@@ -87,6 +87,7 @@
 			   source="1.8"
 		       target="1.8">
 			<include name="beast/**/**" />
+			<include name="bdsky/**/**" />
 			<!-- compile JUnit test classes -->
 			<include name="test/beast/**" />
 			<include name="test/bdsky/**" />
