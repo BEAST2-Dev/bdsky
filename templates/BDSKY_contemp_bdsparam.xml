@@ -1,0 +1,112 @@
+<beast version='2.0'
+       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>
+
+<!-- tree priors -->
+<mergewith point='treePriorTemplates'> 
+
+        <subtemplate id='BirthDeathSkylineContemporaryBDSParam' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BirthDeathSkyContemporaryBDSParam.t:$(n)'
+suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.reproductiveNumber,
+	beast.evolution.speciation.BirthDeathSkylineModel.becomeUninfectiousRate,
+	beast.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
+	beast.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	beast.evolution.speciation.BirthDeathSkylineModel.contemp,
+	beast.evolution.speciation.BirthDeathSkylineModel.S0,
+	beast.evolution.speciation.BirthDeathSkylineModel.tree,
+	beast.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	beast.math.distributions.MarkovChainDistribution.parameter,
+	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	beast.evolution.speciation.BirthDeathSkylineModel.origin,
+	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+<![CDATA[
+<!-- Sequential Birth Death Skyline model-->
+	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporaryBDSParam.t:$(n)" tree="@Tree.t:$(n)" conditionOnRoot="true">
+		<parameter name="birthRate" id="birthRateBDS.t:$(n)" value="2.0" lower="0." upper="Infinity" dimension="1"/>
+		<parameter name="deathRate" id="deathRateBDS.t:$(n)" value="0.5" lower="0." upper="Infinity" dimension="1"/>
+		<parameter name="samplingRate" id="samplingRateBDS.t:$(n)" value="0."/> 
+		<parameter name="rho" id="rhoBDS.t:$(n)" value="0.8" lower="0." upper="1."/> 
+	</BirthDeathSkylineModel>
+
+	<distribution id="rhoPriorContemp.t:$(n)" spec="beast.math.distributions.Prior" x="@rhoBDS.t:$(n)">
+		<distr spec="beast.math.distributions.Beta" offset="0.">
+			<parameter name="alpha" value="80" estimate="false"/> 
+			<parameter name="beta" value="20" estimate="false"/> 
+		</distr>	
+	</distribution>
+	<distribution id="deathRatePriorContemp.t:$(n)" spec="beast.math.distributions.Prior" x="@deathRateBDS.t:$(n)">
+				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100"/>		
+	</distribution>
+	<distribution id="birthRatePriorContemp.t:$(n)" spec="beast.math.distributions.Prior" x="@birthRateBDS.t:$(n)">
+				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100"/>	
+	</distribution>
+
+
+	<!-- tree operators -->	
+	<operator id='BDSKY_contemptreeScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemptreeRootScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)" rootOnly='true'/>
+	<operator id='BDSKY_contempUniformOperator.t:$(n)' spec='Uniform' weight="30" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contempSubtreeSlide.t:$(n)' spec='SubtreeSlide' weight="15" gaussian="true" size="1.0" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contempnarrow.t:$(n)' spec='Exchange' isNarrow='true' weight="15" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contempwide.t:$(n)' spec='Exchange' isNarrow='false' weight="3" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contempWilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
+
+	<!-- BDSKY operators -->
+	<operator id='deathRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@deathRateBDS.t:$(n)"/>
+	<operator id='rhoScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rhoBDS.t:$(n)"/>
+	<operator id='birthRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@birthRateBDS.t:$(n)"/>
+
+	<operator id="updownBD.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
+		<up idref="birthRateBDS.t:$(n)"/>
+		<down idref="deathRateBDS.t:$(n)"/>
+	</operator>
+
+]]>
+            <connect srcID='BirthDeathSkyContemporaryBDSParam.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
+            <connect srcID='RandomTree.t:$(n)'                targetID='mcmc' inputName='init'   if='inposterior(Tree.t:$(n))'/>
+
+            <connect srcID='rhoPriorContemp.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and rhoBDS.t:$(n)/estimate=true'>prior on sampling proportion t:$(n)</connect>
+            <connect srcID='deathRatePriorContemp.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and deathRateBDS.t:$(n)/estimate=true'>prior on deathRateBDS.t:$(n)</connect>
+            <connect srcID='birthRatePriorContemp.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and birthRateBDS.t:$(n)/estimate=true'>prior on birthRateBDS.t:$(n)</connect>
+
+            <connect srcID='BDSKY_contemptreeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemptreeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>
+            <connect srcID='BDSKY_contempUniformOperator.t:$(n)'           targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Draws new internal node heights uniformally for tree t:$(n)</connect>
+            <connect srcID='BDSKY_contempSubtreeSlide.t:$(n)'              targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs subtree slide rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contempnarrow.t:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Narrow exchange performs local rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contempwide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Wide exchange performs global rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contempWilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs Wilson-Balding global rearrangement of tree t:$(n)</connect>
+
+            <connect srcID='deathRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and deathRateBDS.t:$(n)/estimate=true'/>
+            <connect srcID='rhoScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and rhoBDS.t:$(n)/estimate=true'/>
+            <connect srcID='birthRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and birthRateBDS.t:$(n)/estimate=true'/>
+            <connect srcID='updownBD.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and birthRateBDS.t:$(n)/estimate=true and deathRateBDS.t:$(n)/estimate=true'/>
+
+
+
+            <connect srcID='BirthDeathSkyContemporaryBDSParam.t:$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n))'/>
+            <plate var='p' range='birthRateBDS,deathRateBDS,rhoBDS'>
+                    <connect srcID='$(p).t:$(n)' targetID='state' inputName='stateNode' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and $(p).t:$(n)/estimate=true'/>
+                    <connect srcID='$(p).t:$(n)' targetID='tracelog' inputName='log' if='inposterior(BirthDeathSkyContemporaryBDSParam.t:$(n)) and $(p).t:$(n)/estimate=true'/>
+            </plate>
+	</subtemplate>
+</mergewith>
+
+</beast>
+
+
+
