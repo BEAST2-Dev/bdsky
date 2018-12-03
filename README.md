@@ -4,6 +4,12 @@
 
 ## Citation
 
-- Birth-death serial skyline: [stadler2013](http://www.pnas.org/content/110/1/228.full)	
-- Birth-death serial sampling: [stadler2013](http://www.pnas.org/content/110/1/228.full)
-- Birth-death incomplete sampling (no ψ): [stadler2009](http://www.ncbi.nlm.nih.gov/pubmed/19631666)
+Please cite [Stadler2013](http://www.pnas.org/content/110/1/228.full) for the following models: 
+
+- Birth-death skyline serial; 	
+- Birth-death skyline contemporary;
+- Birth-death skyline contemporary BDS (birth, death, sampling rate);
+- Birth-death skyline multi-rho.
+
+If sampled ancestors are used, please also cite: 
+[Gavryushkina2014](https://doi.org/10.1371/journal.pcbi.1003919) 
