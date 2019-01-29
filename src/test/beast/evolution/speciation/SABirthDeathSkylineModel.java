@@ -137,6 +137,33 @@ public class SABirthDeathSkylineModel  extends TestCase {
     }
 
     @Test
+    public void testLikelihoodCalculationTwoIntervalsWithRhoConditionOnRhoSamplingAndRoot() throws Exception {
+
+        ArrayList<String> taxa1 = new ArrayList<String>(Arrays.asList("1", "2", "3"));
+        Tree tree1 = new TreeParser(taxa1, "((1:1.5,3:0.0):1.0,2:1.7):0.0", 1, false);
+
+        BirthDeathSkylineModel model = new BirthDeathSkylineModel();
+        model.setInputValue("tree", tree1);
+        model.setInputValue("birthRate", new RealParameter("1.5 0.5"));
+        model.setInputValue("deathRate", new RealParameter("0.4 0.3"));
+        model.setInputValue("samplingRate", new RealParameter("0.3 0.8"));
+        model.setInputValue("rho", new RealParameter("0.9"));
+        model.setInputValue("removalProbability", new RealParameter("0.0"));
+        model.setInputValue("reverseTimeArrays", "true true true true true");
+        model.setInputValue("birthRateChangeTimes", new RealParameter("1. 0."));
+        model.setInputValue("deathRateChangeTimes", new RealParameter("1. 0."));
+        model.setInputValue("samplingRateChangeTimes", new RealParameter("1. 0."));
+        model.setInputValue("rhoSamplingTimes", new RealParameter("0.0"));
+        model.setInputValue("conditionOnRoot", true);
+        model.setInputValue("conditionOnSurvival", false);
+        model.setInputValue("conditionOnRhoSampling", true);
+        model.initAndValidate();
+
+        // the true value is calculated in R 'scripts/LikelihoodForConditionOnRootAndRhoTest.R'
+        assertEquals(-8.55232499940742, model.calculateTreeLogLikelihood(tree1), 1e-14);
+    }
+
+    @Test
     public void testLikelihoodCalculationDiversifiedSampling() throws Exception {
 
         Tree tree = new TreeParser("(f4:12.78,((((f2:5.06,(t5:11.81,t1:11.81):1.25):3.89,t3:16.95):4.88,((f3:1.92,t2:10.92):9.08,f5:0.00):1.83):1.15,(t4:5.00,f1:0.00):17.98):4.80):2.22");

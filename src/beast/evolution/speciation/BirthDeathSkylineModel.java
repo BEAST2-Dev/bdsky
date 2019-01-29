@@ -1017,7 +1017,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                 if (temp == 1)
                     return Double.NEGATIVE_INFINITY;
                 if (conditionOnRootInput.get()) {
-                    temp = log_q(index, times[index], x0) - 2 * Math.log(1 - temp);
+                    temp = log_q(index, times[index], x0) - 2 * Math.log(1 - temp)- Math.log(birth[index]);
                 } else {
                     temp = log_q(index, times[index], x0) - Math.log(1 - temp);
                 }
