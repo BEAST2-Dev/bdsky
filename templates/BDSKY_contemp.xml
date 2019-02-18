@@ -63,25 +63,25 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	</distribution>
 
 	<!-- tree operators -->	
-	<operator id='BDSKY_contemptreeScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)"/>
-	<operator id='BDSKY_contemptreeRootScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)" rootOnly='true'/>
-	<operator id='BDSKY_contempUniformOperator.t:$(n)' spec='Uniform' weight="30" tree="@Tree.t:$(n)"/>
-	<operator id='BDSKY_contempSubtreeSlide.t:$(n)' spec='SubtreeSlide' weight="15" gaussian="true" size="1.0" tree="@Tree.t:$(n)"/>
-	<operator id='BDSKY_contempnarrow.t:$(n)' spec='Exchange' isNarrow='true' weight="15" tree="@Tree.t:$(n)"/>
-	<operator id='BDSKY_contempwide.t:$(n)' spec='Exchange' isNarrow='false' weight="3" tree="@Tree.t:$(n)"/>
-	<operator id='BDSKY_contempWilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemp_treeScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemp_treeRootScaler.t:$(n)' spec='ScaleOperator' scaleFactor="0.5" weight="3" tree="@Tree.t:$(n)" rootOnly='true'/>
+	<operator id='BDSKY_contemp_UniformOperator.t:$(n)' spec='Uniform' weight="30" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemp_SubtreeSlide.t:$(n)' spec='SubtreeSlide' weight="15" gaussian="true" size="1.0" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemp_narrow.t:$(n)' spec='Exchange' isNarrow='true' weight="15" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemp_wide.t:$(n)' spec='Exchange' isNarrow='false' weight="3" tree="@Tree.t:$(n)"/>
+	<operator id='BDSKY_contemp_WilsonBalding.t:$(n)' spec='WilsonBalding' weight="3" tree="@Tree.t:$(n)"/>
 
 	<!-- BDSKY operators -->
-	<operator id='becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate.t:$(n)"/>
-	<operator id='rhoScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho.t:$(n)"/>
-	<operator id='reproductiveNumberScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber.t:$(n)"/>
+	<operator id='BDSKY_contemp_becomeUninfectiousRateScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate.t:$(n)"/>
+	<operator id='BDSKY_contemp_rhoScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho.t:$(n)"/>
+	<operator id='BDSKY_contemp_reproductiveNumberScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber.t:$(n)"/>
 
-	<operator id="updownBD.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
+	<operator id="BDSKY_contemp_updownBD.t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
 		<up idref="reproductiveNumber.t:$(n)"/>
 		<down idref="becomeUninfectiousRate.t:$(n)"/>
 	</operator>
 
-	<operator id='origScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin.t:$(n)"/>
+	<operator id='BDSKY_contemp_origScaler.t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin.t:$(n)"/>
 ]]>
             <connect srcID='BirthDeathSkyContemporary.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
             <connect srcID='RandomTree.t:$(n)'                targetID='mcmc' inputName='init'   if='inposterior(Tree.t:$(n))'/>
@@ -91,19 +91,19 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
             <connect srcID='becomeUninfectiousRatePriorContemp.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'>prior on becomeUninfectiousRate.t:$(n)</connect>
             <connect srcID='reproductiveNumberPriorContemp.t:$(n)' targetID='prior' inputName='distribution' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'>prior on reproductiveNumber.t:$(n)</connect>
 
-            <connect srcID='BDSKY_contemptreeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
-            <connect srcID='BDSKY_contemptreeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>
-            <connect srcID='BDSKY_contempUniformOperator.t:$(n)'           targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Draws new internal node heights uniformally for tree t:$(n)</connect>
-            <connect srcID='BDSKY_contempSubtreeSlide.t:$(n)'              targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs subtree slide rearrangement of tree t:$(n)</connect>
-            <connect srcID='BDSKY_contempnarrow.t:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Narrow exchange performs local rearrangement of tree t:$(n)</connect>
-            <connect srcID='BDSKY_contempwide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Wide exchange performs global rearrangement of tree t:$(n)</connect>
-            <connect srcID='BDSKY_contempWilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs Wilson-Balding global rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_treeScaler.t:$(n)'                targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales all internal nodes for tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_treeRootScaler.t:$(n)'            targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Scales root node for tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_UniformOperator.t:$(n)'           targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Draws new internal node heights uniformally for tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_SubtreeSlide.t:$(n)'              targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs subtree slide rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_narrow.t:$(n)'                    targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Narrow exchange performs local rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_wide.t:$(n)'                      targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Wide exchange performs global rearrangement of tree t:$(n)</connect>
+            <connect srcID='BDSKY_contemp_WilsonBalding.t:$(n)'             targetID='mcmc' inputName='operator' if='inposterior(BirthDeathSkyContemporary.t:$(n)) and inposterior(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'>Performs Wilson-Balding global rearrangement of tree t:$(n)</connect>
 
-            <connect srcID='becomeUninfectiousRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'/>
-            <connect srcID='rhoScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'/>
-            <connect srcID='reproductiveNumberScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'/>
-            <connect srcID='updownBD.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true and becomeUninfectiousRate.t:$(n)/estimate=true'/>
-            <connect srcID='origScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and origin.t:$(n)/estimate=true'/>
+            <connect srcID='BDSKY_contemp_becomeUninfectiousRateScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and becomeUninfectiousRate.t:$(n)/estimate=true'/>
+            <connect srcID='BDSKY_contemp_rhoScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and rho.t:$(n)/estimate=true'/>
+            <connect srcID='BDSKY_contemp_reproductiveNumberScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true'/>
+            <connect srcID='BDSKY_contemp_updownBD.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and reproductiveNumber.t:$(n)/estimate=true and becomeUninfectiousRate.t:$(n)/estimate=true'/>
+            <connect srcID='BDSKY_contemp_origScaler.t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior(BirthDeathSkyContemporary.t:$(n)) and origin.t:$(n)/estimate=true'/>
 
 
 
