@@ -199,12 +199,7 @@
 			<fileset dir="${distBDSSM}" includes="BDSSM.src.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}/templates">
-			<fileset file="templates/BDSKY_contemp.xml" />
-			<fileset file="templates/BDSKY_contemp_bdsparam.xml" />
-			<fileset file="templates/BDSKY_multiRho.xml" />
-			<fileset file="templates/BDSKY_serial.xml" />
-			<fileset file="templates/SABDSKY.xml" />
-			<fileset file="templates/SAFBDSKY.xml" />
+			<fileset dir="templates" includes="*.xml" />
 		</copy>
 
 		<jar jarfile="${distBDSSM}/BDSKY.addon.zip">
