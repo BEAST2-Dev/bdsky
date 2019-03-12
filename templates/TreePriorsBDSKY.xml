@@ -28,10 +28,18 @@
 		</distr>	
 	</distribution>
 
+	<distribution id="samplingProportionPrior_$(b).t:$(n)" spec="beast.math.distributions.Prior" x="@samplingProportion_$(b).t:$(n)">
+		<distr spec='beast.math.distributions.Beta' offset="0.0">
+			<parameter name="alpha" value="1." estimate="false"/>
+			<parameter name="beta" value="1." estimate="false"/>
+		</distr>
+	</distribution>
+
 	<!-- BDSKY operators -->
 	<operator id='becomeUninfectiousRateScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate_$(b).t:$(n)"/>
 	<operator id='rhoScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho_$(b).t:$(n)"/>
 	<operator id='reproductiveNumberScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber_$(b).t:$(n)"/>
+	<operator id='samplingProportionScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@samplingProportion_$(b).t:$(n)"/>
 
 	<operator id="updownBD_$(b).t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
 		<up idref="reproductiveNumber_$(b).t:$(n)"/>
@@ -46,15 +54,17 @@
             <connect srcID='rhoPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and rho_$(b).t:$(n)/estimate=true'>prior on rho__$(b).t:$(n)</connect>
             <connect srcID='becomeUninfectiousRatePrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and becomeUninfectiousRate_$(b).t:$(n)/estimate=true'>prior on becomeUninfectiousRate_$(b).t:$(n)</connect>
             <connect srcID='reproductiveNumberPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and reproductiveNumber_$(b).t:$(n)/estimate=true'>prior on reproductiveNumber_$(b).t:$(n)</connect>
+            <connect srcID='samplingProportionPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and samplingProportion_$(b).t:$(n)/estimate=true'>prior on samplingProportion_$(b).t:$(n)</connect>
         
             <connect srcID='becomeUninfectiousRateScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and becomeUninfectiousRate_$(b).t:$(n)/estimate=true'/>
             <connect srcID='rhoScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and rho_$(b).t:$(n)/estimate=true'/>
             <connect srcID='reproductiveNumberScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and reproductiveNumber_$(b).t:$(n)/estimate=true'/>
+            <connect srcID='samplingProportionScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and samplingProportion_$(b).t:$(n)/estimate=true'/>
             <connect srcID='updownBD_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and reproductiveNumber_$(b).t:$(n)/estimate=true and becomeUninfectiousRate_$(b).t:$(n)/estimate=true'/>
             <connect srcID='origScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and origin_$(b).t:$(n)/estimate=true'/>
 
             <connect srcID='$(b).t:$(n)' targetID='tracelog' inputName='log' if='inposterior($(b).t:$(n))'/>
-            <plate var='p' range='origin,rho,becomeUninfectiousRate,reproductiveNumber'>
+            <plate var='p' range='origin,rho,becomeUninfectiousRate,reproductiveNumber,samplingProportion'>
                     <connect srcID='$(p)_$(b).t:$(n)' targetID='state' inputName='stateNode' if='inposterior($(b).t:$(n)) and $(p)_$(b).t:$(n)/estimate=true'/>
                     <connect srcID='$(p)_$(b).t:$(n)' targetID='tracelog' inputName='log' if='inposterior($(b).t:$(n)) and $(p)_$(b).t:$(n)/estimate=true'/>
             </plate>
