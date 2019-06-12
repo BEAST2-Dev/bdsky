@@ -662,9 +662,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
 //            rho[totalIntervals-1]=rhos[rhos.length-1];
             for (int i = 0; i < totalIntervals; i++) {
-
                 rho[i]= //rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.;
-                        (rhoChanges>0 || rhoSamplingTimes.get()!=null && rhos.length>1)?
+                        (rhoChanges>0 || rhoSamplingTimes.get()!=null)?
                         rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
                                 : rhos[0]
                 ;
