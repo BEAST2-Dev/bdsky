@@ -1,4 +1,4 @@
-package test.bdsky;
+package bdsky;
 
 import bdsky.SkylineSegment;
 import beast.core.parameter.RealParameter;

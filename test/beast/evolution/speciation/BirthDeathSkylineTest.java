@@ -1,4 +1,4 @@
-package test.beast.evolution.speciation;
+package beast.evolution.speciation;
 
 import junit.framework.TestCase;
 import beast.evolution.tree.coalescent.TreeIntervals;

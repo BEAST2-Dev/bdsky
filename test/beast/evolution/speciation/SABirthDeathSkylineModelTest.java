@@ -1,4 +1,4 @@
-package test.beast.evolution.speciation;
+package beast.evolution.speciation;
 
 import beast.core.parameter.RealParameter;
 import beast.evolution.speciation.BirthDeathSkylineDiversifiedSampling;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * @author Alexandra Gavryushkina
  */
-public class SABirthDeathSkylineModel  extends TestCase {
+public class SABirthDeathSkylineModelTest extends TestCase {
 
     @Test
     public void testLikelihoodCalculationNoRho() throws Exception {
