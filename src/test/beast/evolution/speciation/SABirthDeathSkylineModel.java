@@ -150,9 +150,9 @@ public class SABirthDeathSkylineModel  extends TestCase {
         model.setInputValue("rho", new RealParameter("0.9"));
         model.setInputValue("removalProbability", new RealParameter("0.0"));
         model.setInputValue("reverseTimeArrays", "true true true true true");
-        model.setInputValue("birthRateChangeTimes", new RealParameter("1. 0."));
-        model.setInputValue("deathRateChangeTimes", new RealParameter("1. 0."));
-        model.setInputValue("samplingRateChangeTimes", new RealParameter("1. 0."));
+        model.setInputValue("birthRateChangeTimes", new RealParameter("0. 1."));
+        model.setInputValue("deathRateChangeTimes", new RealParameter("0. 1."));
+        model.setInputValue("samplingRateChangeTimes", new RealParameter("0. 1."));
         model.setInputValue("rhoSamplingTimes", new RealParameter("0.0"));
         model.setInputValue("conditionOnRoot", true);
         model.setInputValue("conditionOnSurvival", false);
