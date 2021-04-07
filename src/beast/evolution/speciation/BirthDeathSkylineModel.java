@@ -379,7 +379,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                         }
                     }
                     if (!isOK) {
-                        Log.err.println("ERROR: " + op.getClass().getSimpleName() +
+                        throw new RuntimeException("ERROR: " + op.getClass().getSimpleName() +
                                 " is not a valid operator for a sampled ancestor analysis.\n" +
                                 "Either remove the operator (id=" + op.getID() + ") or fix the " +
                                 "removal probability to 1.0 so this is not a sampled ancestor " +
@@ -660,13 +660,15 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             Double[] rhos = m_rho.get().getValues();
             rho = new Double[totalIntervals];
 
-//            rho[totalIntervals-1]=rhos[rhos.length-1];
             for (int i = 0; i < totalIntervals; i++) {
-                rho[i]= //rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.;
-                        (rhoChanges>0 || rhoSamplingTimes.get()!=null)?
-                        rhoSamplingChangeTimes.contains(times[i]) ? rhos[rhoSamplingChangeTimes.indexOf(times[i])] : 0.
-                                : rhos[0]
-                ;
+
+                if (rhoChanges > 0 || rhoSamplingTimes.getName() != null) {
+                    rho[i] = rhoSamplingChangeTimes.contains(times[i])
+                            ? rhos[rhoSamplingChangeTimes.indexOf(times[i])]
+                            : 0.0;
+                } else {
+                    rho[i] = rhos[0];
+                }
             }
         }
 
