@@ -108,6 +108,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     public Input<RealParameter> reproductiveNumberInput =
             new Input<RealParameter>("reproductiveNumber", "The basic / effective reproduction number");
+    public Input<RealParameter> baseReproductiveNumberInput =
+            new Input<RealParameter>("baseReproductiveNumber", "The basic / effective reproduction number for the base cluster / pathogen class");
+    public Input<RealParameter> lambda_ratioInput =
+            new Input<>("lambda_ratio",
+                    "The factor with which to scale the transmission rate.");
+
     public Input<RealParameter> becomeUninfectiousRate =
             new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (through recovery or sampling)");
     public Input<RealParameter> samplingProportion =
@@ -190,7 +196,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected Double[] times = new Double[]{0.};
 
-    protected Boolean transform, transform_d_r_s;
+    protected Boolean transform, transform_d_r_s, transform_lambda_base;
     Boolean m_forceRateChange;
 
     Boolean birthRateTimesRelative = false;
@@ -246,7 +252,13 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         // rhoSamplingCount = 0;
         printTempResults = false;
 
-        transform = transform_d_r_s = false;
+        transform = transform_d_r_s = transform_lambda_base = false;
+
+        if ((baseReproductiveNumberInput.get()!=null) && (lambda_ratioInput.get()!=null)){
+            transform_lambda_base = true;
+        }
+
+
         if (birthRate.get() != null && deathRate.get() != null && samplingRate.get() != null) {
 
             birth = birthRate.get().getValues();
@@ -254,7 +266,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             psi = samplingRate.get().getValues();
             if (SAModel) r = removalProbability.get().getValues();
 
-        } else if (reproductiveNumberInput.get() != null && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
+        } else if (( reproductiveNumberInput.get() != null || transform_lambda_base) && becomeUninfectiousRate.get() != null && samplingProportion.get() != null) {
 
             transform = true;
 
@@ -268,9 +280,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
                     "OR specify netDiversification, turnOver and samplingProportion!");
         }
 
-        if (transform) {
+        if (transform || transform_lambda_base) {
 
-            if (birthChanges < 1) birthChanges = reproductiveNumberInput.get().getDimension() - 1;
+            if (birthChanges < 1) birthChanges = transform_lambda_base ? (baseReproductiveNumberInput.get().getDimension()-1) : (reproductiveNumberInput.get().getDimension() - 1) ;
             samplingChanges = samplingProportion.get().getDimension() - 1;
             deathChanges = becomeUninfectiousRate.get().getDimension() - 1;
 
@@ -619,7 +631,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             return Double.NEGATIVE_INFINITY;
         }
 
-        if (transform)
+        if (transform || transform_lambda_base)
             transformParameters();
         else if (transform_d_r_s)
             transformParameters_d_r_s();
@@ -908,7 +920,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected void transformParameters() {
 
-        Double[] R = reproductiveNumberInput.get().getValues(); // if SAModel: reproductiveNumber = lambda/delta
+        Double[] R = transform_lambda_base ?  baseReproductiveNumberInput.get().getValues() : reproductiveNumberInput.get().getValues(); // if SAModel: reproductiveNumber = lambda/delta
+        Double birth_ratio = transform_lambda_base ? lambda_ratioInput.get().getValue() : 1;
         Double[] b = becomeUninfectiousRate.get().getValues(); // delta = mu + psi*r
         Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi)
         Double[] removalProbabilities = new Double[1];
@@ -923,11 +936,11 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         for (int i = 0; i < totalIntervals; i++) {
             if (!SAModel) {
-                if (!isBDSIR()) birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                if (!isBDSIR()) birth[i] = birth_ratio * R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
                 psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
                 death[i] = b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0] - psi[i];
             } else {
-                birth[i] = R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
+                birth[i] = birth_ratio * R[birthChanges > 0 ? index(times[i], birthRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0];
                 r[i] = removalProbabilities[rChanges > 0 ? index(times[i], rChangeTimes) : 0];
                 psi[i] = p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0] * b[deathChanges > 0 ? index(times[i], deathRateChangeTimes) : 0]
                         / (1+(r[i]-1)*p[samplingChanges > 0 ? index(times[i], samplingRateChangeTimes) : 0]);
