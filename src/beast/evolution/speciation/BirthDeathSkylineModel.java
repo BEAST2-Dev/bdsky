@@ -1,13 +1,7 @@
 package beast.evolution.speciation;
 
 
-import beast.core.BEASTInterface;
-import beast.core.Citation;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.MCMC;
-import beast.core.Operator;
-import beast.core.StateNode;
+import beast.core.*;
 import beast.core.parameter.BooleanParameter;
 import beast.core.parameter.IntegerParameter;
 import beast.core.parameter.RealParameter;
@@ -106,12 +100,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> contemp =
             new Input<Boolean>("contemp", "Only contemporaneous sampling (i.e. all tips are from same sampling time, default false)", false);
 
-    public Input<RealParameter> reproductiveNumberInput =
-            new Input<RealParameter>("reproductiveNumber", "The basic / effective reproduction number");
-    public Input<RealParameter> becomeUninfectiousRate =
-            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (through recovery or sampling)");
-    public Input<RealParameter> samplingProportion =
-            new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate");
+    public Input<Function> reproductiveNumberInput =
+            new Input<>("reproductiveNumber", "The basic / effective reproduction number");
+    public Input<Function> becomeUninfectiousRate =
+            new Input<>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (through recovery or sampling)");
+    public Input<Function> samplingProportion =
+            new Input<>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate");
 
     public Input<RealParameter> netDiversification = new Input<RealParameter>("netDiversification", "The net diversification rate");
     public Input<RealParameter> turnOver = new Input<RealParameter>("turnOver", "The turn over rate");
@@ -908,9 +902,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected void transformParameters() {
 
-        Double[] R = reproductiveNumberInput.get().getValues(); // if SAModel: reproductiveNumber = lambda/delta
-        Double[] b = becomeUninfectiousRate.get().getValues(); // delta = mu + psi*r
-        Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi)
+        double[] R = reproductiveNumberInput.get().getDoubleValues(); // if SAModel: reproductiveNumber = lambda/delta
+        double[] b = becomeUninfectiousRate.get().getDoubleValues(); // delta = mu + psi*r
+        double[] p = samplingProportion.get().getDoubleValues(); // if SAModel: s = psi/(mu+psi)
         Double[] removalProbabilities = new Double[1];
         if (SAModel) removalProbabilities = removalProbability.get().getValues();
 
