@@ -297,7 +297,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             // constantRho = !(m_rho.get().getDimension() > 1);
 
             if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get()==null || rhoSamplingTimes.get().getDimension() < 2) {
-                if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getValue() == 0.) ||
+                if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getArrayValue() == 0.) ||
                         (samplingRate.get() != null && samplingRate.get().getDimension() == 1 && samplingRate.get().getValue() == 0.))) {
                     contempData = true;
                     if (printTempResults)
@@ -943,7 +943,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
            SAModel: 0 <= r < 1;  No SA: r = 1
            Relation to transform: nd = (R0 - 1) * delta, to = 1/R0, sp = s  */
         Double[] to = turnOver.get().getValues();
-        Double[] sp = samplingProportion.get().getValues();
+        double[] sp = samplingProportion.get().getDoubleValues();
 
         if (netDiversification.get() != null) {  // netdiversification-turnover-samplingproportion parametrization
             Double[] nd = netDiversification.get().getValues();
