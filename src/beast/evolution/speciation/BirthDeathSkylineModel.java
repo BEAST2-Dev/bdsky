@@ -527,7 +527,6 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         for (int k = 0; k < totalIntervals; k++) {
 
-
             for (int i = 0; i < tipCount; i++) {
 
                 if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-8) {

@@ -28,28 +28,28 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
     protected Double updateRatesAndTimes(TreeInterface tree) {
         Double value = super.updateRatesAndTimes(tree);
 
+        final double maxTime;
+        if (origin.get() == null)
+            maxTime = treeInput.get().getRoot().getHeight();
+        else
+            maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() : origin.get().getValue();
+
         /* the cut-off time (x_cut) should be smaller than the youngest internal node and fossil, as we assume sampling
            exactly one representative extant species per clade and no fossil sampling between x_cut and the present */
-        double minTime = tree.getRoot().getHeight();
+        double minTime = maxTime;
         numExtant = 0;
         for(Node node: tree.getNodesAsArray()) {
             if (node.isLeaf()) {
-                if (node.getHeight() > 0.0 && node.getHeight() < minTime)
+                if (node.getHeight()/maxTime > 1e-8 && node.getHeight() < minTime)
                     minTime = node.getHeight();
-                else if (node.getHeight() == 0.0)
-                    numExtant++;
+                else if (node.getHeight()/maxTime <= 1e-8)  // allow some tolerance
+                    numExtant++;  // count the number of extant species for later use
             } else {
                 if(!node.isFake() && node.getHeight() < minTime)
                     minTime = node.getHeight();
             }
         }
         /* further more, we assume no rate shifting between x_cut and the present (for convenience) */
-        double maxTime;
-        if (origin.get() == null)
-            maxTime = treeInput.get().getRoot().getHeight();
-        else
-            maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() :origin.get().getValue();
-
         if (totalIntervals > 1 && minTime > maxTime - times[totalIntervals - 2])
             minTime = maxTime - times[totalIntervals - 2];
 
