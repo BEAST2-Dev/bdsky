@@ -5,7 +5,7 @@
     <mergewith point='misc' fragment="@TreeOperators"/>
  
     <mergewith point='misc'>
-        <fragment id='BDSKY_params' spec="beast.app.beauti.Fragment">
+        <fragment id='BDSKY_params' spec="beastfx.app.beauti.Fragment">
             <![CDATA[
 	<distribution  id='originPrior_$(b).t:$(n)' x="@origin_$(b).t:$(n)" spec='beast.base.inference.distribution.Prior'>
 		<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="Infinity"/>	</distribution>
@@ -74,38 +74,38 @@
     <!-- A range of configurations for BirthDeathSkylineModel tree priors -->
     <mergewith point='treePriorTemplates'>
         <!-- BDSKY_multiRho -->
-               <subtemplate id='BirthDeathSkylineMultiRho' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_multiRho.t:$(n)'
-suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.contemp,
-	beast.evolution.speciation.BirthDeathSkylineModel.S0,
-	beast.evolution.speciation.BirthDeathSkylineModel.tree,
-	beast.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
-	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+               <subtemplate id='BirthDeathSkylineMultiRho' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_multiRho.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
 	beast.base.inference.distribution.MarkovChainDistribution.parameter,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
-	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
-	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
-	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
 	
 		<plate var="b" range="BDSKY_multiRho">
 
 <![CDATA[
 
-	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_multiRho.t:$(n)" tree="@Tree.t:$(n)">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_multiRho.t:$(n)" tree="@Tree.t:$(n)">
 		<parameter name="origin" id="origin_$(b).t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
 		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
@@ -123,42 +123,42 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 			
 	</subtemplate>
 	
-	        <subtemplate id='BirthDeathSkylineContemporary' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_Contemp.t:$(n)'
-suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
-	beast.evolution.speciation.BirthDeathSkylineModel.rho,
-	beast.evolution.speciation.BirthDeathSkylineModel.S0,
-	beast.evolution.speciation.BirthDeathSkylineModel.tree,
-	beast.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
-	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
-	beast.evolution.speciation.BirthDeathSkylineModel.contemp, 
+	        <subtemplate id='BirthDeathSkylineContemporary' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_Contemp.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rho,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp, 
 	beast.base.inference.distribution.MarkovChainDistribution.parameter,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
-	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
-	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
-	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
-	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
 
 
 		<plate var="b" range="BDSKY_Contemp">
 
 <![CDATA[
 
-	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_Contemp.t:$(n)" tree="@Tree.t:$(n)" contemp="true">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_Contemp.t:$(n)" tree="@Tree.t:$(n)" contemp="true">
 		<parameter name="origin" id="origin_$(b).t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
 		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
@@ -173,41 +173,41 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 			
 	</subtemplate>
 	
-        <subtemplate id='BirthDeathSkylineSerial' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_Serial.t:$(n)'
-suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.rho,
-	beast.evolution.speciation.BirthDeathSkylineModel.contemp,
-	beast.evolution.speciation.BirthDeathSkylineModel.S0,
-	beast.evolution.speciation.BirthDeathSkylineModel.tree,
-	beast.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
-	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+        <subtemplate id='BirthDeathSkylineSerial' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_Serial.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rho,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
 	beast.base.inference.distribution.MarkovChainDistribution.parameter,
-	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
-	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
-	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
-	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
-	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
 
 
 		<plate var="b" range="BDSKY_Serial">
 
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
-	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_Serial.t:$(n)" tree="@Tree.t:$(n)">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_Serial.t:$(n)" tree="@Tree.t:$(n)">
 		<parameter name="origin" id="origin_$(b).t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
 		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
@@ -224,42 +224,42 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 			
 	</subtemplate>
 
-        <subtemplate id='BirthDeathSkylineSerialCondRoot' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_SerialCondRoot.t:$(n)'
-suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.rho,
-	beast.evolution.speciation.BirthDeathSkylineModel.contemp,
-	beast.evolution.speciation.BirthDeathSkylineModel.S0,
-	beast.evolution.speciation.BirthDeathSkylineModel.tree,
-	beast.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
-	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+        <subtemplate id='BirthDeathSkylineSerialCondRoot' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_SerialCondRoot.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rho,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
 	beast.base.inference.distribution.MarkovChainDistribution.parameter,
-	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
-	beast.evolution.speciation.BirthDeathSkylineModel.origin,
-	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
-	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
-	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
-	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.origin,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
 
 
 		<plate var="b" range="BDSKY_SerialCondRoot">
 
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
-	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_SerialCondRoot.t:$(n)" tree="@Tree.t:$(n)" conditionOnRoot="true">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_SerialCondRoot.t:$(n)" tree="@Tree.t:$(n)" conditionOnRoot="true">
 		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
 		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
 		<parameter name="samplingProportion" id="samplingProportion_$(b).t:$(n)" value="0.01" lower="0." upper="1." dimension ="1"/> 

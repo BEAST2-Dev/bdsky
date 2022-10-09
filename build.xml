@@ -7,6 +7,7 @@
 
     <!-- Location to check for local copy of beast2 repository -->
     <property name="beastDir" location="../beast2"/>
+    <property name="BeastFXDir" location="../BeastFX"/>
 
     <!-- BEAST 2 currently uses Java 1.8 -->
     <property name="sourceVersion" value="1.8"/>
@@ -16,7 +17,7 @@
     <property name="doc" location="doc"/>
     <property name="examples" location="examples"/>
     <property name="scripts" location="scripts"/>
-    <property name="templates" location="templates"/>
+    <property name="fxtemplates" location="fxtemplates"/>
 
     <!-- BEAST branch and version to build against
          (only different for version tags because of
@@ -45,8 +46,8 @@
 
         <!-- Read package name and version from xml file -->
         <xmlproperty file="version.xml" prefix="fromVersionFile" />
-        <property name="projName" value="${fromVersionFile.addon(name)}" />
-        <property name="projVersion" value="${fromVersionFile.addon(version)}" />
+        <property name="projName" value="${fromVersionFile.package(name)}" />
+        <property name="projVersion" value="${fromVersionFile.package(version)}" />
 
         <mkdir dir="${build}"/>
         <mkdir dir="${build-lib}"/>
@@ -178,7 +179,7 @@
         <mkdir dir="${pack}"/>
         <mkdir dir="${pack}/examples"/>
         <mkdir dir="${pack}/scripts"/>
-        <mkdir dir="${pack}/templates"/>
+        <mkdir dir="${pack}/fxtemplates"/>
         <mkdir dir="${pack}/lib"/>
         <mkdir dir="${pack}/doc"/>
 
@@ -188,7 +189,11 @@
         <copy todir="${pack}/lib">
             <fileset dir="${lib}" includes="*.jar" />
         </copy>
-        <jar jarfile="${pack}/lib/${fullName}.jar" basedir="${build}" />
+        <jar jarfile="${pack}/lib/${fullName}.jar">
+            <fileset  dir="${build}">
+                <include name="bdsky/**/*.class"/>
+            </fileset>
+        </jar>
 
         <copy file="README.md" tofile="${pack}/README" />
         <copy file="COPYING" todir="${pack}" />
@@ -211,8 +216,8 @@
 
 
         <mkdir dir="${templates}" />
-        <copy todir="${pack}/templates">
-            <fileset dir="${templates}" includes="*.xml" />
+        <copy todir="${pack}/fxtemplates">
+            <fileset dir="${fxtemplates}" includes="*.xml" />
         </copy>
 
         <mkdir dir="${doc}" />
@@ -305,7 +310,7 @@
         <mkdir dir="${test}"/>
         <mkdir dir="${lib}"/>
         <mkdir dir="${examples}"/>
-        <mkdir dir="${templates}"/>
+        <mkdir dir="${fxtemplates}"/>
         <mkdir dir="${doc}"/>
 
         <echo/>
@@ -316,7 +321,7 @@
         <echo>${test} - your junit tests go here (You _are_ going to write, those, aren't you!)</echo>
         <echo>${doc} - your documentation goes here</echo>
         <echo>${examples} - your example XML scripts go here</echo>
-        <echo>${templates} - your BEAUti templates go here</echo>
+        <echo>${fxtemplates} - your BEAUti templates go here</echo>
         <echo/>
         <echo>To build your package, just type "ant" at the command line.</echo>
         <echo/>

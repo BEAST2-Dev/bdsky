@@ -1,4 +1,4 @@
-package beast.evolution.speciation;
+package bdsky.evolution.speciation;
 
 
 import beast.base.inference.parameter.BooleanParameter;

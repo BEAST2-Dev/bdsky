@@ -1,4 +1,4 @@
-package util;
+package bdsky.util;
 
 import beast.base.core.BEASTObject;
 import beast.base.core.Description;

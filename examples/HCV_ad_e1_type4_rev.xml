@@ -70,7 +70,7 @@
 
     <tree spec='beast.base.evolution.tree.ClusterTree' id='tree' clusterType='upgma' taxa='@alignment'/>
 
-	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true" birthRateTimesRelative="true" deathRateTimesRelative="true">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true" birthRateTimesRelative="true" deathRateTimesRelative="true">
 
 		<parameter name="intervalTimes" id="intervalTimes" value="0 0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9"/>
 		<parameter name="origin" id="orig_root" value ="1" lower="0." upper="1000."/>

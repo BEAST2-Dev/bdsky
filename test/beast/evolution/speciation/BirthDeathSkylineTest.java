@@ -4,12 +4,13 @@ import junit.framework.TestCase;
 import beast.base.evolution.tree.TreeIntervals;
 import beast.base.evolution.tree.Tree;
 import beast.base.evolution.tree.Node;
-import beast.evolution.speciation.BirthDeathSkylineModel;
 import beast.base.inference.parameter.RealParameter;
 import beast.base.inference.parameter.IntegerParameter;
 import beast.base.core.Description;
 import beast.base.evolution.tree.TreeParser;
 import org.junit.Test;
+
+import bdsky.evolution.speciation.BirthDeathSkylineModel;
 
 import java.io.PrintStream;
 

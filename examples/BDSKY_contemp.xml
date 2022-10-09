@@ -32,7 +32,7 @@
    
 	<tree spec="beast.base.evolution.tree.ClusterTree" clusterType="upgma" taxa="@alignment" id="tree"/>
 
-	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true">
 		<parameter name="origin" id="origin" value ="100" lower="0."/>  	
 
 		<!-- dimension of reproductiveNumber, becomeUninfectiousRate and samplingProportion must be either equal to intervalNumber, or 1 (i.e. rate is constant over time) -->
