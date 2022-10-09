@@ -2,25 +2,26 @@ package test.beast.app.beauti;
 
 import java.io.File;
 
-import org.fest.swing.fixture.JTabbedPaneFixture;
 import org.junit.Test;
+import org.testfx.api.FxRobot;
+
+import test.beastfx.app.beauti.BeautiBase;
 
 public class BeautiBDSKYTest extends BeautiBase {
 
 	@Test
-	public void simpleTest() throws Exception {
+	public void simpleTest(FxRobot robot) throws Exception {
 		
 		importAlignment("../beast2/examples/nexus", new File("anolis.nex"));
-		JTabbedPaneFixture f = beautiFrame.tabbedPane();
-		f.selectTab("Priors");
+		robot.clickOn("#Priors");
 		
 		warning("Change Tree prior to Birth Death Skyline");
-		beautiFrame.comboBox("TreeDistribution").selectItem("Birth Death Skyline Contemporary");
-		printBeautiState(f);
+		selectFromCombobox(robot, "TreeDistribution", "Birth Death Skyline Contemporary");
+		printBeautiState();
 
 		warning("Change Tree prior to Birth Death Skyline");
-		beautiFrame.comboBox("TreeDistribution").selectItem("Birth Death Skyline Serial");
-		printBeautiState(f);
+		selectFromCombobox(robot, "TreeDistribution", "Birth Death Skyline Serial");
+		printBeautiState();
 
 		makeSureXMLParses();
 	}

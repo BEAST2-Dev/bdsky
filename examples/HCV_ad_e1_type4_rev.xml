@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.alignment:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.speciation:beast.pkgmgmt:beast.base.core:beast.base.inference.parameter" version="2.0">
 
 	<!-- HCV analysis from the Birth-death skyline PNAS paper -->
 
@@ -68,7 +68,7 @@
                     <sequence id="seq_AF271825i_0800" taxon="AF271825i_0800" totalcount="4" value="CTCTTGGCACTTCTTTCGTGCTTGACTGTCCCCGCTTCGGCCATCAACTACCGCAATGCTTCGGGCGTCTACCACGTCACCAACGACTGCCCGAATTCAAGCATAGTGTTTGAGGCCGACCATCACATCTTACACCTTCCAGGTTGCGTGCCCTGCGTGAGAGAGGGGAATCAGTCTCGTTGCTGGGTGGCTCTTACTCCTACTGTCGCAGCGCCACACATCGGCGCGCCGCTTGAATCCTTGCGGAGTCATGTGGATCTGATGGTGGGGGCTGCCACTGCTTGTTCGGCCCTTTACATCGGGGACTTGTGTGGCGGCTTGTTCTTGGTCGGTCAGATGTTCTCTTTCCGACCACGACGCCACTGGACTACCCAGGACTGCAATTGTTCTATCTATACAGGGCACATCACT"/>
                 </data>
 
-    <tree spec='beast.util.ClusterTree' id='tree' clusterType='upgma' taxa='@alignment'/>
+    <tree spec='beast.base.evolution.tree.ClusterTree' id='tree' clusterType='upgma' taxa='@alignment'/>
 
 	<BirthDeathSkylineModel spec="BirthDeathSkylineModel" id="birthDeath" tree="@tree" contemp="true" birthRateTimesRelative="true" deathRateTimesRelative="true">
 
@@ -90,49 +90,49 @@
 			</frequencies>
 		</substModel>
 	</siteModel>
-	<branchRateModel id="StrictClock" spec="beast.evolution.branchratemodel.StrictClockModel">
+	<branchRateModel id="StrictClock" spec="beast.base.evolution.branchratemodel.StrictClockModel">
 		<parameter dimension="1" id="clock.rate" name="clock.rate" value="0.79e-3" lower="0." upper="1."/> <!-- 0.79 × 10−3 substitutions/site/year (Pybus et al. 2001). This rate was estimated for the E1 gene of HCV, which is the genome region used in this study.-->
 	</branchRateModel>
-   <Sum spec="beast.core.util.Sum" id="reproductiveNumber_sum" arg="@reproductiveNumber"/> 
+   <Sum spec="beast.base.evolution.Sum" id="reproductiveNumber_sum" arg="@reproductiveNumber"/> 
 
    
-    <distribution id="posterior" spec="util.CompoundDistribution">
-		<distribution id="prior" spec="util.CompoundDistribution">
-			<distribution id="BDlikelihood" spec="util.CompoundDistribution">
+    <distribution id="posterior" spec="beast.base.inference.CompoundDistribution">
+		<distribution id="prior" spec="beast.base.inference.CompoundDistribution">
+			<distribution id="BDlikelihood" spec="beast.base.inference.CompoundDistribution">
 				<distribution idref="birthDeath"/>		
 			</distribution>
-			<distribution id="reproductiveNumber_prior" spec="beast.math.distributions.Prior" x="@reproductiveNumber">
-				<distr spec="beast.math.distributions.LogNormalDistributionModel" M=".5" S="1." meanInRealSpace="false" offset="0."/>
+			<distribution id="reproductiveNumber_prior" spec="beast.base.inference.distribution.Prior" x="@reproductiveNumber">
+				<distr spec="beast.base.inference.distribution.LogNormalDistributionModel" M=".5" S="1." meanInRealSpace="false" offset="0."/>
 			</distribution>
-			<distribution id="becomeUninf_prior" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate">
-				<distr spec='beast.math.distributions.LogNormalDistributionModel' M="-1." S="1." offset="0.0" meanInRealSpace="false"/>
+			<distribution id="becomeUninf_prior" spec="beast.base.inference.distribution.Prior" x="@becomeUninfectiousRate">
+				<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' M="-1." S="1." offset="0.0" meanInRealSpace="false"/>
 			</distribution>
-			<distribution  id='orig_root_Prior' x="@orig_root" spec='beast.math.distributions.Prior'>
-				<distr spec='beast.math.distributions.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
+			<distribution  id='orig_root_Prior' x="@orig_root" spec='beast.base.inference.distribution.Prior'>
+				<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' M="1." S="1.25" offset="0.0" meanInRealSpace="false"/>
 			</distribution>
-			<distribution id="rho_prior" spec="beast.math.distributions.Prior" x="@rho">
-				<distr spec="beast.math.distributions.Beta" alpha="1." beta="9999." offset="0."/> 
+			<distribution id="rho_prior" spec="beast.base.inference.distribution.Prior" x="@rho">
+				<distr spec="beast.base.inference.distribution.Beta" alpha="1." beta="9999." offset="0."/> 
 			</distribution>
 			<!--
-			<distribution id='delta_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@becomeUninfectiousRate"/>
-            <distribution id='reproductiveNumber_smoother' spec="beast.math.distributions.MarkovChainDistribution" parameter="@reproductiveNumber"/>
+			<distribution id='delta_smoother' spec="beast.base.inference.distribution.MarkovChainDistribution" parameter="@becomeUninfectiousRate"/>
+            <distribution id='reproductiveNumber_smoother' spec="beast.base.inference.distribution.MarkovChainDistribution" parameter="@reproductiveNumber"/>
 			-->
     	</distribution>
-        <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">      
+        <distribution id="jointTreeLikelihood" spec="beast.base.inference.CompoundDistribution">      
 			<distribution data="@alignment" id="treeLikelihood" spec="TreeLikelihood" tree="@tree" siteModel="@SiteModel" branchRateModel="@StrictClock"/>           
         </distribution>    	
     </distribution>
 
 	
-	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="birth" expression="reproductiveNumber becomeUninfectiousRate *"> <!-- s/(d+s) -->
+	<RPNcalculator spec="beast.base.inference.util.RPNcalculator" id="birth" expression="reproductiveNumber becomeUninfectiousRate *"> <!-- s/(d+s) -->
 		<parameter idref="becomeUninfectiousRate"/>
 		<parameter idref="reproductiveNumber"/>        
 	</RPNcalculator>
-	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="sampling" expression="becomeUninfectiousRate samplingProportion *"> 
+	<RPNcalculator spec="beast.base.inference.util.RPNcalculator" id="sampling" expression="becomeUninfectiousRate samplingProportion *"> 
 		<parameter idref="becomeUninfectiousRate"/>
 		<parameter idref="samplingProportion"/>        
 	</RPNcalculator>
-	<RPNcalculator spec="beast.math.statistic.RPNcalculator" id="death" expression="becomeUninfectiousRate 1 samplingProportion - *"> <!-- b*S0/(d+s) -->
+	<RPNcalculator spec="beast.base.inference.util.RPNcalculator" id="death" expression="becomeUninfectiousRate 1 samplingProportion - *"> <!-- b*S0/(d+s) -->
 		<parameter idref="becomeUninfectiousRate"/>
 		<parameter idref="samplingProportion"/>        
 	</RPNcalculator>
@@ -189,7 +189,7 @@
 			<distribution idref="posterior" name="log"/>
 			<log idref="BDlikelihood"/>
 			<log idref="jointTreeLikelihood"/>
-			<log id="TreeHeight" spec="beast.evolution.tree.TreeHeightLogger" tree="@tree"/>
+			<log id="TreeHeight" spec="beast.base.evolution.tree.TreeHeightLogger" tree="@tree"/>
 			<log idref="orig_root"/>
 			<log idref='rho'/>
 
@@ -239,7 +239,7 @@
 		</logger>
 		
 		<logger fileName="HCV_ad_e1_type4_rev_$(seed).trees" id="treelog" logEvery="10000" mode="tree">
-			<log spec='beast.evolution.tree.TreeWithMetaDataLogger' tree='@tree'>
+			<log spec='beast.base.evolution.TreeWithMetaDataLogger' tree='@tree'>
 				<metadata idref="posterior"/>
 			</log>
 		</logger>

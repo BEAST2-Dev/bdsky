@@ -1,5 +1,5 @@
 <beast version='2.0'
-       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.math.distributions'>
 
        
     <mergewith point='misc' fragment="@TreeOperators"/>
@@ -7,29 +7,29 @@
     <mergewith point='misc'>
         <fragment id='BDSKY_params' spec="beast.app.beauti.Fragment">
             <![CDATA[
-	<distribution  id='originPrior_$(b).t:$(n)' x="@origin_$(b).t:$(n)" spec='beast.math.distributions.Prior'>
-		<distr spec='beast.math.distributions.Uniform' lower="0." upper="Infinity"/>	</distribution>
-	<distribution id="rhoPrior_$(b).t:$(n)" spec="beast.math.distributions.Prior" x="@rho_$(b).t:$(n)">
-		<distr spec="beast.math.distributions.Beta" offset="0.">
+	<distribution  id='originPrior_$(b).t:$(n)' x="@origin_$(b).t:$(n)" spec='beast.base.inference.distribution.Prior'>
+		<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="Infinity"/>	</distribution>
+	<distribution id="rhoPrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@rho_$(b).t:$(n)">
+		<distr spec="beast.base.inference.distribution.Beta" offset="0.">
 			<parameter name="alpha" value="1." estimate="false"/> 
 			<parameter name="beta" value="1." estimate="false"/> 
 		</distr>	
 	</distribution>
-	<distribution id="becomeUninfectiousRatePrior_$(b).t:$(n)" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate_$(b).t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
+	<distribution id="becomeUninfectiousRatePrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@becomeUninfectiousRate_$(b).t:$(n)">
+		<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
 			<parameter name="M" value="0." estimate="false"/> 
 			<parameter name="S" value="1." estimate="false"/> 
 		</distr>	
 	</distribution>
-	<distribution id="reproductiveNumberPrior_$(b).t:$(n)" spec="beast.math.distributions.Prior" x="@reproductiveNumber_$(b).t:$(n)">
-		<distr spec='beast.math.distributions.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
+	<distribution id="reproductiveNumberPrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@reproductiveNumber_$(b).t:$(n)">
+		<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
 			<parameter name="M" value="0." estimate="false"/> 
 			<parameter name="S" value="1." estimate="false"/> 
 		</distr>	
 	</distribution>
 
-	<distribution id="samplingProportionPrior_$(b).t:$(n)" spec="beast.math.distributions.Prior" x="@samplingProportion_$(b).t:$(n)">
-		<distr spec='beast.math.distributions.Beta' offset="0.0">
+	<distribution id="samplingProportionPrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@samplingProportion_$(b).t:$(n)">
+		<distr spec='beast.base.inference.distribution.Beta' offset="0.0">
 			<parameter name="alpha" value="1." estimate="false"/>
 			<parameter name="beta" value="1." estimate="false"/>
 		</distr>
@@ -86,7 +86,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
-	beast.math.distributions.MarkovChainDistribution.parameter,
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
@@ -137,7 +137,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
 	beast.evolution.speciation.BirthDeathSkylineModel.contemp, 
-	beast.math.distributions.MarkovChainDistribution.parameter,
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
@@ -186,7 +186,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
-	beast.math.distributions.MarkovChainDistribution.parameter,
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
 	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
 	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
 	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
@@ -237,7 +237,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
-	beast.math.distributions.MarkovChainDistribution.parameter,
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
 	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
 	beast.evolution.speciation.BirthDeathSkylineModel.origin,
 	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,

@@ -1,5 +1,5 @@
 <beast version='2.0'
-       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.math.distributions'>
 
 <!-- tree priors -->
 <mergewith point='treePriorTemplates'> 
@@ -16,7 +16,7 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
 	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
-	beast.math.distributions.MarkovChainDistribution.parameter,
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
 	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
 	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
@@ -41,17 +41,17 @@ suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
 		<parameter name="rho" id="rhoBDS.t:$(n)" value="0.8" lower="0." upper="1."/> 
 	</BirthDeathSkylineModel>
 
-	<distribution id="rhoPriorContempBDS.t:$(n)" spec="beast.math.distributions.Prior" x="@rhoBDS.t:$(n)">
-		<distr spec="beast.math.distributions.Beta" offset="0.">
+	<distribution id="rhoPriorContempBDS.t:$(n)" spec="beast.base.inference.distribution.Prior" x="@rhoBDS.t:$(n)">
+		<distr spec="beast.base.inference.distribution.Beta" offset="0.">
 			<parameter name="alpha" value="80" estimate="false"/> 
 			<parameter name="beta" value="20" estimate="false"/> 
 		</distr>	
 	</distribution>
-	<distribution id="deathRatePriorContempBDS.t:$(n)" spec="beast.math.distributions.Prior" x="@deathRateBDS.t:$(n)">
-				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100"/>		
+	<distribution id="deathRatePriorContempBDS.t:$(n)" spec="beast.base.inference.distribution.Prior" x="@deathRateBDS.t:$(n)">
+				<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="100"/>		
 	</distribution>
-	<distribution id="birthRatePriorContempBDS.t:$(n)" spec="beast.math.distributions.Prior" x="@birthRateBDS.t:$(n)">
-				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100"/>	
+	<distribution id="birthRatePriorContempBDS.t:$(n)" spec="beast.base.inference.distribution.Prior" x="@birthRateBDS.t:$(n)">
+				<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="100"/>	
 	</distribution>
 
 

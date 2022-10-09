@@ -2,7 +2,7 @@ package bdsky;
 
 import bdsky.MultiSkyline;
 import bdsky.SimpleSkyline;
-import beast.core.parameter.RealParameter;
+import beast.base.inference.parameter.RealParameter;
 import org.junit.Test;
 
 import java.util.ArrayList;

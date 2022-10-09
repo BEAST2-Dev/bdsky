@@ -1,6 +1,6 @@
 package bdsky;
 
-import beast.core.Input;
+import beast.base.core.Input;
 
 /**
  * Created by alexeid on 7/12/15.

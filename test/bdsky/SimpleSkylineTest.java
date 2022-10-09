@@ -1,7 +1,7 @@
 package bdsky;
 
 import bdsky.SkylineSegment;
-import beast.core.parameter.RealParameter;
+import beast.base.inference.parameter.RealParameter;
 import bdsky.SimpleSkyline;
 import org.junit.Test;
 

@@ -1,7 +1,7 @@
 package bdsky;
 
-import beast.core.Input;
-import beast.core.parameter.RealParameter;
+import beast.base.core.Input;
+import beast.base.inference.parameter.RealParameter;
 
 import java.util.Arrays;
 
