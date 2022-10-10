@@ -215,7 +215,7 @@
         </copy>
 
 
-        <mkdir dir="${templates}" />
+        <mkdir dir="${fxtemplates}" />
         <copy todir="${pack}/fxtemplates">
             <fileset dir="${fxtemplates}" includes="*.xml" />
         </copy>
