@@ -13,6 +13,7 @@
         <provider classname="bdsky.R0Parameterization"/>
         <provider classname="bdsky.SimpleSkyline"/>
         <provider classname="bdsky.util.ElementwiseMultiplication"/>
+        <provider classname="bdsky.JointDiversificationTurnoverOperator"/>
     </service>
 
 </package>
