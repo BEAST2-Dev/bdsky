@@ -1,12 +1,13 @@
 package beast.evolution.speciation;
 
-import beast.core.parameter.RealParameter;
-import beast.evolution.speciation.BirthDeathSkylineDiversifiedSampling;
-import beast.evolution.speciation.BirthDeathSkylineModel;
-import beast.evolution.tree.Tree;
-import beast.util.TreeParser;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeParser;
 import junit.framework.TestCase;
 import org.junit.Test;
+
+import bdsky.evolution.speciation.BirthDeathSkylineDiversifiedSampling;
+import bdsky.evolution.speciation.BirthDeathSkylineModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;

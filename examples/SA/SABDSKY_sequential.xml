@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.core:beast.evolution.alignment:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution.speciation:beast.core.parameter" version="2.0">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><beast namespace="beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.alignment:beast.base.evolution.tree.coalescent:beast.base.util:beast.base.math:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.base.evolution.speciation:beast.pkgmgmt:beast.base.core:beast.base.inference.parameter" version="2.0">
 
 
     <data dataType="nucleotide" id="alignment" name="alignment">
@@ -13,7 +13,7 @@
     </data>
 
     <tree id="Tree">
-        <trait id="tipDates" spec='beast.evolution.tree.TraitSet' traitname='date-forward' units='year' value='
+        <trait id="tipDates" spec='beast.base.evolution.tree.TraitSet' traitname='date-forward' units='year' value='
         00-124388 = 1999.9589,
 		00-101559 = 2000.0548,
 		00103979br = 2000.1425,
@@ -22,13 +22,13 @@
 		02-104730 = 2002.1041,
 		03-105365 = 2003.1342,
 		03117546br = 2003.5'>
-            <taxa id="TaxonSet" spec='beast.evolution.alignment.TaxonSet' alignment='@alignment'/>
+            <taxa id="TaxonSet" spec='beast.base.evolution.alignment.TaxonSet' alignment='@alignment'/>
         </trait>
         <taxonset idref="TaxonSet"/>
     </tree>        
 
     
-    <init id="RandomTree" spec="beast.evolution.tree.RandomTree" estimate="false" initial="@Tree" taxa="@alignment">
+    <init id="RandomTree" spec="beast.base.evolution.tree.coalescent.RandomTree" estimate="false" initial="@Tree" taxa="@alignment">
         <populationModel id="ConstantPopulation0" spec="ConstantPopulation">
             <parameter id="randomPopSize." name="popSize">0.1</parameter>
         </populationModel>
@@ -56,36 +56,36 @@
             </frequencies>
         </substModel>
     </siteModel>
-    <branchRateModel id="StrictClock" spec="beast.evolution.branchratemodel.StrictClockModel">
+    <branchRateModel id="StrictClock" spec="beast.base.evolution.branchratemodel.StrictClockModel">
         <parameter dimension="1" id="clock.rate" name="clock.rate" value="2.48e-3" lower="0." upper="1."/>
     </branchRateModel>
 
     <!-- likelihood and priors: -->
-    <distribution id="posterior" spec="util.CompoundDistribution">
-        <distribution id="prior" spec="util.CompoundDistribution">
-            <distribution id="hky.frequencies.prior" spec="beast.math.distributions.Prior" x="@freqParameter">
-                <distr id="Uniform " lower="0.0" upper="1.0" spec="beast.math.distributions.Uniform" />
+    <distribution id="posterior" spec="beast.base.inference.CompoundDistribution">
+        <distribution id="prior" spec="beast.base.inference.CompoundDistribution">
+            <distribution id="hky.frequencies.prior" spec="beast.base.inference.distribution.Prior" x="@freqParameter">
+                <distr id="Uniform " lower="0.0" upper="1.0" spec="beast.base.inference.distribution.Uniform" />
             </distribution>
-            <distribution id="reproductiveNumber_prior" spec="beast.math.distributions.Prior" x="@reproductiveNumber">
-                <distr spec="beast.math.distributions.LogNormalDistributionModel" M="0.5" S="1." offset="0."/>
+            <distribution id="reproductiveNumber_prior" spec="beast.base.inference.distribution.Prior" x="@reproductiveNumber">
+                <distr spec="beast.base.inference.distribution.LogNormalDistributionModel" M="0.5" S="1." offset="0."/>
             </distribution>
-            <distribution id="becomeUninf_prior" spec="beast.math.distributions.Prior" x="@becomeUninfectiousRate">
-                <distr spec="beast.math.distributions.LogNormalDistributionModel" M="-1." S="1." offset="0."/>
+            <distribution id="becomeUninf_prior" spec="beast.base.inference.distribution.Prior" x="@becomeUninfectiousRate">
+                <distr spec="beast.base.inference.distribution.LogNormalDistributionModel" M="-1." S="1." offset="0."/>
             </distribution>
-            <distribution id="samplingProportion_prior" spec="beast.math.distributions.Prior" x="@samplingProportion">
-                <distr spec="beast.math.distributions.Uniform" lower="0." upper="1." offset="0."/>
+            <distribution id="samplingProportion_prior" spec="beast.base.inference.distribution.Prior" x="@samplingProportion">
+                <distr spec="beast.base.inference.distribution.Uniform" lower="0." upper="1." offset="0."/>
             </distribution>
-            <distribution id="removalProbability_prior" spec="beast.math.distributions.Prior" x="@removalProbability">
-                <distr spec="beast.math.distributions.Beta" alpha="5.0" beta="2.0"/>
+            <distribution id="removalProbability_prior" spec="beast.base.inference.distribution.Prior" x="@removalProbability">
+                <distr spec="beast.base.inference.distribution.Beta" alpha="5.0" beta="2.0"/>
             </distribution>
-            <distribution  id='origin_Prior' x="@origin" spec='beast.math.distributions.Prior'>
-                <distr spec="beast.math.distributions.LogNormalDistributionModel" M="30.0" S="0.5" meanInRealSpace="true" offset="0."/>
+            <distribution  id='origin_Prior' x="@origin" spec='beast.base.inference.distribution.Prior'>
+                <distr spec="beast.base.inference.distribution.LogNormalDistributionModel" M="30.0" S="0.5" meanInRealSpace="true" offset="0."/>
             </distribution>
-            <distribution id="BDlikelihood" spec="util.CompoundDistribution">
+            <distribution id="BDlikelihood" spec="beast.base.inference.CompoundDistribution">
                 <distribution idref="birthDeath"/>
             </distribution>
         </distribution>
-        <distribution id="jointTreeLikelihood" spec="util.CompoundDistribution">
+        <distribution id="jointTreeLikelihood" spec="beast.base.inference.CompoundDistribution">
             <distribution data="@alignment" id="treeLikelihood" spec="TreeLikelihood" tree="@Tree" siteModel="@SiteModel" branchRateModel="@StrictClock"/>
         </distribution>
     </distribution>
@@ -151,7 +151,7 @@
             <distribution idref="posterior" name="log"/>
             <log idref="BDlikelihood"/>
             <log idref="jointTreeLikelihood"/>
-            <log id="treeHeight" spec="beast.evolution.tree.TreeHeightLogger" tree="@Tree"/>
+            <log id="treeHeight" spec="beast.base.evolution.tree.TreeHeightLogger" tree="@Tree"/>
             <log id="SACount" spec="beast.evolution.tree.SampledAncestorLogger" tree="@Tree"/>
             <log idref="origin"/>
             <log idref="reproductiveNumber"/>
@@ -177,7 +177,7 @@
         </logger>
 
         <logger fileName="SABDSKY_sequential.trees" id="treelog" logEvery="1000" mode="tree">
-            <log spec='beast.evolution.tree.TreeWithMetaDataLogger' tree='@Tree'>
+            <log spec='beast.base.evolution.TreeWithMetaDataLogger' tree='@Tree'>
                 <metadata idref="posterior"/>
                 <branchratemodel idref="StrictClock"/>
             </log>

@@ -1,0 +1,283 @@
+<beast version='2.0'
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.math.distributions'>
+
+       
+    <mergewith point='misc' fragment="@TreeOperators"/>
+ 
+    <mergewith point='misc'>
+        <fragment id='BDSKY_params' spec="beastfx.app.beauti.Fragment">
+            <![CDATA[
+	<distribution  id='originPrior_$(b).t:$(n)' x="@origin_$(b).t:$(n)" spec='beast.base.inference.distribution.Prior'>
+		<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="Infinity"/>	</distribution>
+	<distribution id="rhoPrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@rho_$(b).t:$(n)">
+		<distr spec="beast.base.inference.distribution.Beta" offset="0.">
+			<parameter name="alpha" value="1." estimate="false"/> 
+			<parameter name="beta" value="1." estimate="false"/> 
+		</distr>	
+	</distribution>
+	<distribution id="becomeUninfectiousRatePrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@becomeUninfectiousRate_$(b).t:$(n)">
+		<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
+			<parameter name="M" value="0." estimate="false"/> 
+			<parameter name="S" value="1." estimate="false"/> 
+		</distr>	
+	</distribution>
+	<distribution id="reproductiveNumberPrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@reproductiveNumber_$(b).t:$(n)">
+		<distr spec='beast.base.inference.distribution.LogNormalDistributionModel' offset="0.0" meanInRealSpace="false">
+			<parameter name="M" value="0." estimate="false"/> 
+			<parameter name="S" value="1." estimate="false"/> 
+		</distr>	
+	</distribution>
+
+	<distribution id="samplingProportionPrior_$(b).t:$(n)" spec="beast.base.inference.distribution.Prior" x="@samplingProportion_$(b).t:$(n)">
+		<distr spec='beast.base.inference.distribution.Beta' offset="0.0">
+			<parameter name="alpha" value="1." estimate="false"/>
+			<parameter name="beta" value="1." estimate="false"/>
+		</distr>
+	</distribution>
+
+	<!-- BDSKY operators -->
+	<operator id='becomeUninfectiousRateScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="2" parameter="@becomeUninfectiousRate_$(b).t:$(n)"/>
+	<operator id='rhoScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@rho_$(b).t:$(n)"/>
+	<operator id='reproductiveNumberScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@reproductiveNumber_$(b).t:$(n)"/>
+	<operator id='samplingProportionScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="10" parameter="@samplingProportion_$(b).t:$(n)"/>
+
+	<operator id="updownBD_$(b).t:$(n)" spec="UpDownOperator" scaleFactor=".75" weight="2">
+		<up idref="reproductiveNumber_$(b).t:$(n)"/>
+		<down idref="becomeUninfectiousRate_$(b).t:$(n)"/>
+	</operator>
+
+	<operator id='origScaler_$(b).t:$(n)' spec='ScaleOperator' scaleFactor=".75" weight="1" parameter="@origin_$(b).t:$(n)"/>
+            ]]>
+            <connect srcID='$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and inlikelihood(Tree.t:$(n)) and Tree.t:$(n)/estimate=true'/>
+
+            <connect srcID='originPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and origin_$(b).t:$(n)/estimate=true'>prior on origin_$(b).t:$(n)</connect>
+            <connect srcID='rhoPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and rho_$(b).t:$(n)/estimate=true'>prior on rho__$(b).t:$(n)</connect>
+            <connect srcID='becomeUninfectiousRatePrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and becomeUninfectiousRate_$(b).t:$(n)/estimate=true'>prior on becomeUninfectiousRate_$(b).t:$(n)</connect>
+            <connect srcID='reproductiveNumberPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and reproductiveNumber_$(b).t:$(n)/estimate=true'>prior on reproductiveNumber_$(b).t:$(n)</connect>
+            <connect srcID='samplingProportionPrior_$(b).t:$(n)' targetID='prior' inputName='distribution' if='inposterior($(b).t:$(n)) and samplingProportion_$(b).t:$(n)/estimate=true'>prior on samplingProportion_$(b).t:$(n)</connect>
+        
+            <connect srcID='becomeUninfectiousRateScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and becomeUninfectiousRate_$(b).t:$(n)/estimate=true'/>
+            <connect srcID='rhoScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and rho_$(b).t:$(n)/estimate=true'/>
+            <connect srcID='reproductiveNumberScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and reproductiveNumber_$(b).t:$(n)/estimate=true'/>
+            <connect srcID='samplingProportionScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and samplingProportion_$(b).t:$(n)/estimate=true'/>
+            <connect srcID='updownBD_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and reproductiveNumber_$(b).t:$(n)/estimate=true and becomeUninfectiousRate_$(b).t:$(n)/estimate=true'/>
+            <connect srcID='origScaler_$(b).t:$(n)' targetID='mcmc' inputName='operator'     if='inposterior($(b).t:$(n)) and origin_$(b).t:$(n)/estimate=true'/>
+
+            <connect srcID='$(b).t:$(n)' targetID='tracelog' inputName='log' if='inposterior($(b).t:$(n))'/>
+            <plate var='p' range='origin,rho,becomeUninfectiousRate,reproductiveNumber,samplingProportion'>
+                    <connect srcID='$(p)_$(b).t:$(n)' targetID='state' inputName='stateNode' if='inposterior($(b).t:$(n)) and $(p)_$(b).t:$(n)/estimate=true'/>
+                    <connect srcID='$(p)_$(b).t:$(n)' targetID='tracelog' inputName='log' if='inposterior($(b).t:$(n)) and $(p)_$(b).t:$(n)/estimate=true'/>
+            </plate>
+        </fragment>
+    </mergewith>
+            
+    <!-- A range of configurations for BirthDeathSkylineModel tree priors -->
+    <mergewith point='treePriorTemplates'>
+        <!-- BDSKY_multiRho -->
+               <subtemplate id='BirthDeathSkylineMultiRho' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_multiRho.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+	
+		<plate var="b" range="BDSKY_multiRho">
+
+<![CDATA[
+
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_multiRho.t:$(n)" tree="@Tree.t:$(n)">
+		<parameter name="origin" id="origin_$(b).t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
+		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
+		<parameter name="samplingProportion" id="samplingProportion_$(b).t:$(n)" value="0."/> 
+		<parameter name="rho" id="rho_$(b).t:$(n)" value="0.01 0.1" lower="0." upper="1."/> 
+		<parameter name="rhoSamplingTimes" id="rhoChangeTimes_$(b).t:$(n)" value="0.0 1.0" lower="0." estimate="false"/> 
+        <reverseTimeArrays spec='parameter.BooleanParameter' value='false false false true false'/>
+	</BirthDeathSkylineModel>
+
+]]>
+        </plate>
+
+			<plate fragment="TreeOperators" var="m" range="BDSKY_multiRho"/>
+			<plate fragment="BDSKY_params" var="b" range="BDSKY_multiRho"/>
+			
+	</subtemplate>
+	
+	        <subtemplate id='BirthDeathSkylineContemporary' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_Contemp.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rho,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp, 
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+
+
+		<plate var="b" range="BDSKY_Contemp">
+
+<![CDATA[
+
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_Contemp.t:$(n)" tree="@Tree.t:$(n)" contemp="true">
+		<parameter name="origin" id="origin_$(b).t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
+		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
+		<parameter name="samplingProportion" id="samplingProportion_$(b).t:$(n)" value="0." estimate="false"/> 
+		<parameter name="rho" id="rho_$(b).t:$(n)" value="0.01" lower="0." upper="1."/> 
+	</BirthDeathSkylineModel>
+]]>
+        </plate>
+
+			<plate fragment="TreeOperators" var="m" range="BDSKY_Contemp"/>
+			<plate fragment="BDSKY_params" var="b" range="BDSKY_Contemp"/>
+			
+	</subtemplate>
+	
+        <subtemplate id='BirthDeathSkylineSerial' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_Serial.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rho,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+
+
+		<plate var="b" range="BDSKY_Serial">
+
+<![CDATA[
+<!-- Sequential Birth Death Skyline model-->
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_Serial.t:$(n)" tree="@Tree.t:$(n)">
+		<parameter name="origin" id="origin_$(b).t:$(n)" value ="1000" lower="0." upper="Infinity"/>  	
+		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
+		<parameter name="samplingProportion" id="samplingProportion_$(b).t:$(n)" value="0.01" lower="0." upper="1." dimension ="1"/> 
+	</BirthDeathSkylineModel>
+
+		<parameter name="rho" id="rho_$(b).t:$(n)" value="0" lower="0." upper="1." estimate="false"/>  <!-- dummy rho, not used! --> 
+
+]]>
+        </plate>
+
+			<plate fragment="TreeOperators" var="m" range="BDSKY_Serial"/>
+			<plate fragment="BDSKY_params" var="b" range="BDSKY_Serial"/>
+			
+	</subtemplate>
+
+        <subtemplate id='BirthDeathSkylineSerialCondRoot' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BDSKY_SerialCondRoot.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rho,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.contemp,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.origin,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+
+
+		<plate var="b" range="BDSKY_SerialCondRoot">
+
+<![CDATA[
+<!-- Sequential Birth Death Skyline model-->
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BDSKY_SerialCondRoot.t:$(n)" tree="@Tree.t:$(n)" conditionOnRoot="true">
+		<parameter name="reproductiveNumber" id="reproductiveNumber_$(b).t:$(n)" value="2" lower="0." dimension ="10" upper="Infinity"/>
+		<parameter name="becomeUninfectiousRate" id="becomeUninfectiousRate_$(b).t:$(n)" value="1." lower="0." upper="Infinity" dimension ="1"/>
+		<parameter name="samplingProportion" id="samplingProportion_$(b).t:$(n)" value="0.01" lower="0." upper="1." dimension ="1"/> 
+	</BirthDeathSkylineModel>
+
+		<parameter name="rho" id="rho_$(b).t:$(n)" value="0" lower="0." upper="1." estimate="false"/>  <!-- dummy parameter, not used! --> 
+		<parameter name="origin" id="origin_$(b).t:$(n)" value="0" lower="0." upper="Infinity" estimate="false"/>   <!-- dummy parameter, not used! --> 	
+
+]]>
+        </plate>
+
+			<plate fragment="TreeOperators" var="m" range="BDSKY_SerialCondRoot"/>
+			<plate fragment="BDSKY_params" var="b" range="BDSKY_SerialCondRoot"/>
+			
+	</subtemplate>
+
+	
+    </mergewith>
+</beast>
+
+

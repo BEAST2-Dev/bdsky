@@ -1,12 +1,11 @@
-package beast.evolution.speciation;
+package bdsky;
 
-import beast.core.Distribution;
-import beast.core.Function;
-import beast.core.Input;
-import beast.core.State;
-import beast.core.parameter.RealParameter;
-import beast.evolution.tree.TreeInterface;
-import beast.math.distributions.ParametricDistribution;
+import beast.base.inference.Distribution;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.inference.State;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.inference.distribution.ParametricDistribution;
 
 import java.util.List;
 import java.util.Random;
@@ -18,8 +17,6 @@ import java.util.Random;
  */
 public class OUPrior extends Distribution {
 
-    public Input<TreeInterface> treeInput = new Input<>("tree", "tree over which to calculate a prior or likelihood");
-
 
     // the trajectory to compute Ornstein-Uhlenbeck prior of
     public Input<Function> xInput =
@@ -28,9 +25,6 @@ public class OUPrior extends Distribution {
     // the times associated with the x_i values
     public Input<Function> timeInput =
             new Input<>("times", "The times t_i specifying when x changes", (Function) null);
-
-    public Input<Boolean> timeRelativeInput =
-            new Input<Boolean>("timesRelative", "Whether are the times specified relative to tree height? Default false", false);
 
     // mean
     public Input<RealParameter> meanInput =
@@ -69,15 +63,6 @@ public class OUPrior extends Distribution {
         }
 
         int n = x.length - 1;
-
-        if (!timeRelativeInput.get()) {
-            // assuming {t_i} are absolute times in descending order
-            double treeHeight = treeInput.get().getRoot().getHeight();
-            for (int i = n; i > 0; i--) {
-                t[i] = (treeHeight - t[i - 1]) / treeHeight;
-            }
-            t[0] = 0.0;
-        }   // {t_i} have been converted to relative times in ascending order
 
         double logL = -n/2.0 * Math.log(sigsq / (2.0*nu));
 

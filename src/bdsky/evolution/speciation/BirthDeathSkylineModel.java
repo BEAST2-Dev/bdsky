@@ -1,27 +1,29 @@
-package beast.evolution.speciation;
+package bdsky.evolution.speciation;
 
 
-import beast.core.BEASTInterface;
-import beast.core.Citation;
-import beast.core.Description;
-import beast.core.Input;
-import beast.core.MCMC;
-import beast.core.Operator;
-import beast.core.StateNode;
-import beast.core.parameter.BooleanParameter;
-import beast.core.parameter.IntegerParameter;
-import beast.core.parameter.RealParameter;
-import beast.core.util.Log;
-import beast.evolution.alignment.Taxon;
-import beast.evolution.operators.Exchange;
-import beast.evolution.operators.ScaleOperator;
-import beast.evolution.operators.SubtreeSlide;
-import beast.evolution.operators.TipDatesRandomWalker;
-import beast.evolution.operators.WilsonBalding;
-import beast.evolution.tree.Node;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.TreeInterface;
-import beast.math.distributions.Uniform;
+import beast.base.inference.parameter.BooleanParameter;
+import beast.base.inference.parameter.IntegerParameter;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.core.BEASTInterface;
+import beast.base.core.Citation;
+import beast.base.core.Description;
+import beast.base.core.Function;
+import beast.base.core.Input;
+import beast.base.core.Log;
+import beast.base.evolution.alignment.Taxon;
+import beast.base.evolution.operator.Exchange;
+import beast.base.evolution.operator.ScaleOperator;
+import beast.base.evolution.operator.SubtreeSlide;
+import beast.base.evolution.operator.TipDatesRandomWalker;
+import beast.base.evolution.operator.WilsonBalding;
+import beast.base.evolution.speciation.SpeciesTreeDistribution;
+import beast.base.evolution.tree.Node;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.TreeInterface;
+import beast.base.inference.MCMC;
+import beast.base.inference.Operator;
+import beast.base.inference.StateNode;
+import beast.base.inference.distribution.Uniform;
 
 import java.util.*;
 
@@ -106,12 +108,12 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public Input<Boolean> contemp =
             new Input<Boolean>("contemp", "Only contemporaneous sampling (i.e. all tips are from same sampling time, default false)", false);
 
-    public Input<RealParameter> reproductiveNumberInput =
-            new Input<RealParameter>("reproductiveNumber", "The basic / effective reproduction number");
-    public Input<RealParameter> becomeUninfectiousRate =
-            new Input<RealParameter>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (through recovery or sampling)");
-    public Input<RealParameter> samplingProportion =
-            new Input<RealParameter>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate");
+    public Input<Function> reproductiveNumberInput =
+            new Input<>("reproductiveNumber", "The basic / effective reproduction number");
+    public Input<Function> becomeUninfectiousRate =
+            new Input<>("becomeUninfectiousRate", "Rate at which individuals become uninfectious (through recovery or sampling)");
+    public Input<Function> samplingProportion =
+            new Input<>("samplingProportion", "The samplingProportion = samplingRate / becomeUninfectiousRate");
 
     public Input<RealParameter> netDiversification = new Input<RealParameter>("netDiversification", "The net diversification rate");
     public Input<RealParameter> turnOver = new Input<RealParameter>("turnOver", "The turn over rate");
@@ -237,7 +239,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         samplingRateTimesRelative = samplingRateChangeTimesRelativeInput.get();
         if (SAModel) rTimesRelative = removalProbabilityChangeTimesRelativeInput.get();
 
-        if (reverseTimeArraysInput.get() != null)
+        if (reverseTimeArraysInput.get()!= null )
             reverseTimeArrays = reverseTimeArraysInput.get().getValues();
         else
             reverseTimeArrays = new Boolean[]{false, false, false, false, false};
@@ -292,7 +294,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (SAModel) rChanges = removalProbability.get().getDimension() -1;
 
-        if (m_rho.get() != null) {
+        if (m_rho.get()!=null) {
             rho = m_rho.get().getValues();
             rhoChanges = m_rho.get().getDimension() - 1;
         }
@@ -302,8 +304,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         if (m_rho.get() != null) {
             // constantRho = !(m_rho.get().getDimension() > 1);
 
-            if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get() == null || rhoSamplingTimes.get().getDimension() < 2) {
-                if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getValue() == 0.) ||
+            if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get()==null || rhoSamplingTimes.get().getDimension() < 2) {
+                if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getArrayValue() == 0.) ||
                         (samplingRate.get() != null && samplingRate.get().getDimension() == 1 && samplingRate.get().getValue() == 0.))) {
                     contempData = true;
                     if (printTempResults)
@@ -400,8 +402,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             taxonName = taxonInput.get().getID();
             TreeInterface tree = treeInput.get();
             taxonAge = 0.0;
-            for (int i = 0; i < tree.getLeafNodeCount(); i++) {
-                Node node = tree.getNode(i);
+            for (int i=0; i<tree.getLeafNodeCount(); i++) {
+                Node node=tree.getNode(i);
                 if (taxonName.equals(node.getID())) {
                     taxonAge = node.getHeight();
                 }
@@ -527,9 +529,10 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         for (int k = 0; k < totalIntervals; k++) {
 
+
             for (int i = 0; i < tipCount; i++) {
 
-                if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-8) {
+                if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-10) {
                     if (rho[k] == 0 && psi[k] == 0) {
                         return Double.NEGATIVE_INFINITY;
                     }
@@ -893,7 +896,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         }
         for (int i = 0; i < tipCount; i++) {
             if (tree.getNode(i).getHeight() > time) count -= 1;
-            if (Math.abs(tree.getNode(i).getHeight() - time) < 1e-8) {
+            if (Math.abs(tree.getNode(i).getHeight() - time) < 1e-10) {
                 count -= 1;
                 if (tree.getNode(i).isDirectAncestor()) {
                     count -= 1;
@@ -907,9 +910,9 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
     protected void transformParameters() {
 
-        Double[] R = reproductiveNumberInput.get().getValues(); // if SAModel: reproductiveNumber = lambda/delta
-        Double[] b = becomeUninfectiousRate.get().getValues(); // delta = mu + psi*r
-        Double[] p = samplingProportion.get().getValues(); // if SAModel: s = psi/(mu+psi)
+        double[] R = reproductiveNumberInput.get().getDoubleValues(); // if SAModel: reproductiveNumber = lambda/delta
+        double[] b = becomeUninfectiousRate.get().getDoubleValues(); // delta = mu + psi*r
+        double[] p = samplingProportion.get().getDoubleValues(); // if SAModel: s = psi/(mu+psi)
         Double[] removalProbabilities = new Double[1];
         if (SAModel) removalProbabilities = removalProbability.get().getValues();
 
@@ -948,7 +951,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
            SAModel: 0 <= r < 1;  No SA: r = 1
            Relation to transform: nd = (R0 - 1) * delta, to = 1/R0, sp = s  */
         Double[] to = turnOver.get().getValues();
-        Double[] sp = samplingProportion.get().getValues();
+        double[] sp = samplingProportion.get().getDoubleValues();
 
         if (netDiversification.get() != null) {  // netdiversification-turnover-samplingproportion parametrization
             Double[] nd = netDiversification.get().getValues();

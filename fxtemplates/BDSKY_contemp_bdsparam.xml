@@ -1,57 +1,57 @@
 <beast version='2.0'
-       namespace='beast.app.beauti:beast.core:beast.evolution.branchratemodel:beast.evolution.speciation:beast.evolution.tree.coalescent:beast.core.util:beast.evolution.nuc:beast.evolution.operators:beast.evolution.sitemodel:beast.evolution.substitutionmodel:beast.evolution.likelihood:beast.evolution:beast.math.distributions'>
+       namespace='beast.app.beauti:beast.pkgmgmt:beast.base.core:beast.base.inference:beast.base.evolution.branchratemodel:beast.base.evolution.speciation:beast.base.evolution.tree.coalescent:beast.pkgmgmt:beast.base.core:beast.base.inference.util:beast.evolution.nuc:beast.base.evolution.operator:beast.base.inference.operator:beast.base.evolution.sitemodel:beast.base.evolution.substitutionmodel:beast.base.evolution.likelihood:beast.evolution:beast.base.math.distributions'>
 
 <!-- tree priors -->
 <mergewith point='treePriorTemplates'> 
 
-        <subtemplate id='BirthDeathSkylineContemporaryBDSParam' class='beast.evolution.speciation.BirthDeathSkylineModel' mainid='BirthDeathSkyContemporaryBDSParam.t:$(n)'
-suppressInputs='beast.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.reproductiveNumber,
-	beast.evolution.speciation.BirthDeathSkylineModel.becomeUninfectiousRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRate,
-	beast.evolution.speciation.BirthDeathSkylineModel.S0,
-	beast.evolution.speciation.BirthDeathSkylineModel.tree,
-	beast.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
-	beast.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
-	beast.math.distributions.MarkovChainDistribution.parameter,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
-	beast.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
-	beast.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
-	beast.evolution.speciation.BirthDeathSkylineModel.origin,
-	beast.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
-	beast.evolution.speciation.BirthDeathSkylineModel.removalProbability,
-	beast.evolution.speciation.BirthDeathSkylineModel.turnOver,
-	beast.evolution.speciation.BirthDeathSkylineModel.netDiversification,
-	beast.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
+        <subtemplate id='BirthDeathSkylineContemporaryBDSParam' class='bdsky.evolution.speciation.BirthDeathSkylineModel' mainid='BirthDeathSkyContemporaryBDSParam.t:$(n)'
+suppressInputs='bdsky.evolution.speciation.BirthDeathSkylineModel.intervalTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reproductiveNumber,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.becomeUninfectiousRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingProportion,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRate,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.S0,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.tree,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.treeIntervals,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.forceRateChange, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnSurvival, 
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRoot, 
+	beast.base.inference.distribution.MarkovChainDistribution.parameter,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateTimesRelative,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.reverseTimeArrays,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.originIsRootEdge,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.origin,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.rhoSamplingTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.deathRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.samplingRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.birthRateChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbabilityChangeTimes,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.removalProbability,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.turnOver,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.netDiversification,
+	bdsky.evolution.speciation.BirthDeathSkylineModel.conditionOnRhoSampling'>
 <![CDATA[
 <!-- Sequential Birth Death Skyline model-->
-	<BirthDeathSkylineModel spec="beast.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporaryBDSParam.t:$(n)" tree="@Tree.t:$(n)" conditionOnRoot="true" contemp="true">
+	<BirthDeathSkylineModel spec="bdsky.evolution.speciation.BirthDeathSkylineModel" id="BirthDeathSkyContemporaryBDSParam.t:$(n)" tree="@Tree.t:$(n)" conditionOnRoot="true" contemp="true">
 		<parameter name="birthRate" id="birthRateBDS.t:$(n)" value="2.0" lower="0." upper="Infinity" dimension="1"/>
 		<parameter name="deathRate" id="deathRateBDS.t:$(n)" value="0.5" lower="0." upper="Infinity" dimension="1"/>
 		<parameter name="samplingRate" id="samplingRateBDS.t:$(n)" value="0."/> 
 		<parameter name="rho" id="rhoBDS.t:$(n)" value="0.8" lower="0." upper="1."/> 
 	</BirthDeathSkylineModel>
 
-	<distribution id="rhoPriorContempBDS.t:$(n)" spec="beast.math.distributions.Prior" x="@rhoBDS.t:$(n)">
-		<distr spec="beast.math.distributions.Beta" offset="0.">
+	<distribution id="rhoPriorContempBDS.t:$(n)" spec="beast.base.inference.distribution.Prior" x="@rhoBDS.t:$(n)">
+		<distr spec="beast.base.inference.distribution.Beta" offset="0.">
 			<parameter name="alpha" value="80" estimate="false"/> 
 			<parameter name="beta" value="20" estimate="false"/> 
 		</distr>	
 	</distribution>
-	<distribution id="deathRatePriorContempBDS.t:$(n)" spec="beast.math.distributions.Prior" x="@deathRateBDS.t:$(n)">
-				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100"/>		
+	<distribution id="deathRatePriorContempBDS.t:$(n)" spec="beast.base.inference.distribution.Prior" x="@deathRateBDS.t:$(n)">
+				<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="100"/>		
 	</distribution>
-	<distribution id="birthRatePriorContempBDS.t:$(n)" spec="beast.math.distributions.Prior" x="@birthRateBDS.t:$(n)">
-				<distr spec='beast.math.distributions.Uniform' lower="0." upper="100"/>	
+	<distribution id="birthRatePriorContempBDS.t:$(n)" spec="beast.base.inference.distribution.Prior" x="@birthRateBDS.t:$(n)">
+				<distr spec='beast.base.inference.distribution.Uniform' lower="0." upper="100"/>	
 	</distribution>
 
 

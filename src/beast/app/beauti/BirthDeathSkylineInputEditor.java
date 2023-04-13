@@ -1,8 +1,8 @@
 //package beast.app.beauti;
 //
-//import beast.app.draw.InputEditor;
-//import beast.core.BEASTInterface;
-//import beast.core.Input;
+//import beastfx.app.inputeditor.InputEditor;
+//import beast.base.core.BEASTInterface;
+//import beast.base.core.Input;
 //import beast.evolution.speciation.BirthDeathSkylineModel;
 //
 //import javax.swing.*;

@@ -1,15 +1,16 @@
 package beast.evolution.speciation;
 
 import junit.framework.TestCase;
-import beast.evolution.tree.coalescent.TreeIntervals;
-import beast.evolution.tree.Tree;
-import beast.evolution.tree.Node;
-import beast.evolution.speciation.BirthDeathSkylineModel;
-import beast.core.parameter.RealParameter;
-import beast.core.parameter.IntegerParameter;
-import beast.core.Description;
-import beast.util.TreeParser;
+import beast.base.evolution.tree.TreeIntervals;
+import beast.base.evolution.tree.Tree;
+import beast.base.evolution.tree.Node;
+import beast.base.inference.parameter.RealParameter;
+import beast.base.inference.parameter.IntegerParameter;
+import beast.base.core.Description;
+import beast.base.evolution.tree.TreeParser;
 import org.junit.Test;
+
+import bdsky.evolution.speciation.BirthDeathSkylineModel;
 
 import java.io.PrintStream;
 
