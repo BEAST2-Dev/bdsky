@@ -239,7 +239,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         samplingRateTimesRelative = samplingRateChangeTimesRelativeInput.get();
         if (SAModel) rTimesRelative = removalProbabilityChangeTimesRelativeInput.get();
 
-        if (reverseTimeArraysInput.get()!= null )
+        if (reverseTimeArraysInput.get() != null)
             reverseTimeArrays = reverseTimeArraysInput.get().getValues();
         else
             reverseTimeArrays = new Boolean[]{false, false, false, false, false};
@@ -294,7 +294,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
         if (SAModel) rChanges = removalProbability.get().getDimension() -1;
 
-        if (m_rho.get()!=null) {
+        if (m_rho.get() != null) {
             rho = m_rho.get().getValues();
             rhoChanges = m_rho.get().getDimension() - 1;
         }
@@ -304,7 +304,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         if (m_rho.get() != null) {
             // constantRho = !(m_rho.get().getDimension() > 1);
 
-            if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get()==null || rhoSamplingTimes.get().getDimension() < 2) {
+            if (m_rho.get().getDimension() == 1 && rhoSamplingTimes.get() == null || rhoSamplingTimes.get().getDimension() < 2) {
                 if (!contempData && ((samplingProportion.get() != null && samplingProportion.get().getDimension() == 1 && samplingProportion.get().getArrayValue() == 0.) ||
                         (samplingRate.get() != null && samplingRate.get().getDimension() == 1 && samplingRate.get().getValue() == 0.))) {
                     contempData = true;
@@ -402,8 +402,8 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
             taxonName = taxonInput.get().getID();
             TreeInterface tree = treeInput.get();
             taxonAge = 0.0;
-            for (int i=0; i<tree.getLeafNodeCount(); i++) {
-                Node node=tree.getNode(i);
+            for (int i = 0; i < tree.getLeafNodeCount(); i++) {
+                Node node = tree.getNode(i);
                 if (taxonName.equals(node.getID())) {
                     taxonAge = node.getHeight();
                 }
@@ -532,7 +532,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
 
             for (int i = 0; i < tipCount; i++) {
 
-                if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-10) {
+                if (Math.abs(((times[totalIntervals - 1] - times[k]) - dates[i])/maxdate) < 1e-8) {
                     if (rho[k] == 0 && psi[k] == 0) {
                         return Double.NEGATIVE_INFINITY;
                     }
@@ -888,7 +888,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
     public int lineageCountAtTime(double time, TreeInterface tree, int[] k) {
 
         int count = 1;
-        k[0]=0;
+        k[0] = 0;
         int tipCount = tree.getLeafNodeCount();
         for (int i = tipCount; i < tipCount + tree.getInternalNodeCount(); i++) {
             if (tree.getNode(i).getHeight() >= time) count += 1;
@@ -896,7 +896,7 @@ public class BirthDeathSkylineModel extends SpeciesTreeDistribution {
         }
         for (int i = 0; i < tipCount; i++) {
             if (tree.getNode(i).getHeight() > time) count -= 1;
-            if (Math.abs(tree.getNode(i).getHeight() - time) < 1e-10) {
+            if (Math.abs(tree.getNode(i).getHeight() - time) < 1e-8) {
                 count -= 1;
                 if (tree.getNode(i).isDirectAncestor()) {
                     count -= 1;
