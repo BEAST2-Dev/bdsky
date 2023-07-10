@@ -17,6 +17,7 @@ import java.util.Random;
  */
 public class OUPrior extends Distribution {
 
+    public Input<TreeInterface> treeInput = new Input<>("tree", "tree over which to calculate a prior or likelihood");
 
     // the trajectory to compute Ornstein-Uhlenbeck prior of
     public Input<Function> xInput =
@@ -25,6 +26,9 @@ public class OUPrior extends Distribution {
     // the times associated with the x_i values
     public Input<Function> timeInput =
             new Input<>("times", "The times t_i specifying when x changes", (Function) null);
+
+    public Input<Boolean> timeAbsInput =
+            new Input<Boolean>("timesAbsolute", "The times specified are obsolute times (in descrending order, default false)?", false);
 
     // mean
     public Input<RealParameter> meanInput =
@@ -63,6 +67,15 @@ public class OUPrior extends Distribution {
         }
 
         int n = x.length - 1;
+
+        if (timeAbsInput.get()) {
+            // {t_i} are absolute times in descending order
+            double treeHeight = treeInput.get().getRoot().getHeight();
+            for (int i = n; i > 0; i--) {
+                t[i] = (treeHeight - t[i - 1]) / treeHeight;
+            }
+            t[0] = 0.0;
+        }   // {t_i} have been converted to relative times in ascending order
 
         double logL = -n/2.0 * Math.log(sigsq / (2.0*nu));
 
