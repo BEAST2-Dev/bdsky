@@ -1,5 +1,6 @@
 package bdsky;
 
+import beast.base.evolution.tree.TreeInterface;
 import beast.base.inference.Distribution;
 import beast.base.core.Function;
 import beast.base.core.Input;
