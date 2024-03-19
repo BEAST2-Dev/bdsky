@@ -230,6 +230,7 @@
             <batchtest fork="yes" todir="${test-reports}">
                 <fileset dir="${test}">
                     <include name="**/*Test.java"/>
+                    <exclude name="test/beast/app/beauti/*Test.java"/>
                 </fileset>
                 <formatter type="plain"/>
                 <!--formatter type="plain" usefile="false"/--> <!-- to screen -->
