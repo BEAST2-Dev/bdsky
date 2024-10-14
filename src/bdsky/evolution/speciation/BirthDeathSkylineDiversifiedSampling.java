@@ -32,7 +32,7 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
         if (origin.get() == null)
             maxTime = treeInput.get().getRoot().getHeight();
         else
-            maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getValue() : origin.get().getValue();
+            maxTime = originIsRootEdge.get()? treeInput.get().getRoot().getHeight() + origin.get().getArrayValue() : origin.get().getArrayValue();
 
         /* the cut-off time (x_cut) should be smaller than the youngest internal node and fossil, as we assume sampling
            exactly one representative extant species per clade and no fossil sampling between x_cut and the present */
@@ -61,19 +61,19 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
         times = timesSet.toArray(new Double[timesSet.size()]);
 
         // increase dimension of birth rate
-        Double[] tempb = new Double[totalIntervals + 1];
+        double[] tempb = new double[totalIntervals + 1];
         System.arraycopy(birth, 0, tempb, 0, totalIntervals);
         tempb[totalIntervals] = birth[totalIntervals - 1];
         birth = tempb;
 
         // increase dimension of death rate
-        Double[] tempd = new Double[totalIntervals + 1];
+        double[] tempd = new double[totalIntervals + 1];
         System.arraycopy(death, 0, tempd, 0, totalIntervals);
         tempd[totalIntervals] = death[totalIntervals - 1];
         death = tempd;
 
         // increase dimension of sampling rate
-        Double[] tempp = new Double[totalIntervals + 1];
+        double[] tempp = new double[totalIntervals + 1];
         System.arraycopy(psi, 0, tempp, 0, totalIntervals);
         tempp[totalIntervals] = 0.0;  // add 0 to the last entry
         psi = tempp;
@@ -81,7 +81,7 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
         // set extant sampling proportion here as rho will be overwritten
         samplingProp = rho[totalIntervals - 1];
         // increase dimension of rho rate, add 0 to the last entry
-        Double[] tempr = new Double[totalIntervals + 1];
+        double[] tempr = new double[totalIntervals + 1];
         System.arraycopy(rho, 0, tempr, 0, totalIntervals - 1);
         tempr[totalIntervals - 1] = 0.0;
         tempr[totalIntervals] = 1.0;  // assuming complete sampling
@@ -89,7 +89,7 @@ public class BirthDeathSkylineDiversifiedSampling extends BirthDeathSkylineModel
 
         // increase dimension of r rate
         if (SAModel) {
-            Double[] temp = new Double[totalIntervals + 1];
+            double[] temp = new double[totalIntervals + 1];
             System.arraycopy(r, 0, temp, 0, totalIntervals);
             temp[totalIntervals] = r[totalIntervals - 1];
             r = temp;
